@@ -100,4 +100,4 @@ ETQ2PDF was developed with a focus on modularization (separate classes for readi
 
 ## Other Languages
 
-- [Português](docs/README.pt.md)
+- [Português](README.pt.md)
