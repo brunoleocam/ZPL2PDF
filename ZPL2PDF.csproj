@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TargetFramework>net9.0</TargetFramework>
-    <DocumentationFile>bin\Debug\net9.0\ETQ2PDF.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net9.0\ZPL2PDF.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

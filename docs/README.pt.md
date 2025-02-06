@@ -1,10 +1,10 @@
-# Documentação - ETQ2PDF
+# Documentação - ZPL2PDF
 
 ## Introdução
 
 Este projeto é desenvolvido em cima da biblioteca [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl).
 
-O ETQ2PDF é um projeto para conversão de etiquetas no formato ZPL para um arquivo PDF. Ele processa as etiquetas, renderiza imagens em memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
+O ZPL2PDF é um projeto para conversão de etiquetas no formato ZPL para um arquivo PDF. Ele processa as etiquetas, renderiza imagens em memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
 
 ## Funcionalidades
 
@@ -48,7 +48,7 @@ O ETQ2PDF é um projeto para conversão de etiquetas no formato ZPL para um arqu
    - Lê o arquivo `C:\input.txt` e salva em Downloads.
 
       ~~~sh
-      ETQ2PDF.exe
+      ZPL2PDF.exe
       ~~~
 
 2. **Especificando a Entrada:**
@@ -58,7 +58,7 @@ O ETQ2PDF é um projeto para conversão de etiquetas no formato ZPL para um arqu
       - Lê o arquivo especificado e salva em Downloads.
 
          ~~~sh
-         ETQ2PDF.exe "C:\Caminho\para\entrada.txt"
+         ZPL2PDF.exe "C:\Caminho\para\entrada.txt"
          ~~~
 
    2.2 **Informando o conteúdo:**
@@ -66,7 +66,7 @@ O ETQ2PDF é um projeto para conversão de etiquetas no formato ZPL para um arqu
       - Utiliza o conteúdo passado diretamente e salva em Downloads.
 
          ~~~sh
-         ETQ2PDF.exe -c "conteúdo do arquivo em forma de string"
+         ZPL2PDF.exe -c "conteúdo do arquivo em forma de string"
          ~~~
 
 3. **Especificando a Saída:**
@@ -76,19 +76,19 @@ O ETQ2PDF é um projeto para conversão de etiquetas no formato ZPL para um arqu
    3.1 **Com caminho de entrada:**
 
       ~~~sh
-      ETQ2PDF.exe "C:\Caminho\para\entrada.txt" "C:\Caminho\para\saida"
+      ZPL2PDF.exe "C:\Caminho\para\entrada.txt" "C:\Caminho\para\saida"
       ~~~
 
    3.2 **Com conteúdo direto:**
 
       ~~~sh
-      ETQ2PDF.exe -c "conteúdo do arquivo em forma de string" "C:\Caminho\para\saida"
+      ZPL2PDF.exe -c "conteúdo do arquivo em forma de string" "C:\Caminho\para\saida"
       ~~~
 
 
 ## Integração com Outros Sistemas
 
-O programa pode ser compilado em um executável (ETQ2PDF.exe) e chamado a partir de outro aplicativo, como um ERP, utilizando funções para iniciar processos (por exemplo, `Process.Start` em C#) e passando os parâmetros necessários.
+O programa pode ser compilado em um executável (ZPL2PDF.exe) e chamado a partir de outro aplicativo, como um ERP, utilizando funções para iniciar processos (por exemplo, `Process.Start` em C#) e passando os parâmetros necessários.
 
 ## Dependências
 
@@ -97,4 +97,4 @@ O programa pode ser compilado em um executável (ETQ2PDF.exe) e chamado a partir
 
 ## Conclusão
 
-O ETQ2PDF foi desenvolvido com foco na modularização (classes separadas para leitura, renderização e geração do PDF) e flexibilidade, permitindo diferentes opções de entrada e fácil integração com outros sistemas.
+O ZPL2PDF foi desenvolvido com foco na modularização (classes separadas para leitura, renderização e geração do PDF) e flexibilidade, permitindo diferentes opções de entrada e fácil integração com outros sistemas.

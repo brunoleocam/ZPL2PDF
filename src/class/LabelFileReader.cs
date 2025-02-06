@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ETQ2PDF {
+namespace ZPL2PDF {
     /// <summary>
     /// Responsável por ler o arquivo de entrada e separar as etiquetas ZPL.
     /// </summary>

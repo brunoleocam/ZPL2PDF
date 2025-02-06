@@ -1,10 +1,10 @@
-# Documentation - ETQ2PDF
+# Documentation - ZPL2PDF
 
 ## Introduction
 
 This project is built on top of the [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) library.
 
-ETQ2PDF is a project for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
+ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
 
 
 ## Features
@@ -50,7 +50,7 @@ ETQ2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    - Reads the file `C:\input.txt` and saves it in Downloads.
 
       ```sh
-      ETQ2PDF.exe
+      ZPL2PDF.exe
       ```
 
 2. **Specifying the Input:** 
@@ -60,7 +60,7 @@ ETQ2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    - Reads the specified file and saves it in Downloads.
 
       ```sh
-      ETQ2PDF.exe "C:\Path\to\input.txt"
+      ZPL2PDF.exe "C:\Path\to\input.txt"
       ```
 
    2.2 **Specifying the content:**
@@ -68,7 +68,7 @@ ETQ2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    - Uses the directly passed content and saves it in Downloads.
 
       ```sh
-      ETQ2PDF.exe -c "file content as a string"
+      ZPL2PDF.exe -c "file content as a string"
       ```
 
 3. **Specifying the Output:**
@@ -78,19 +78,19 @@ ETQ2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    3.1 **With input path:**
 
       ```sh
-      ETQ2PDF.exe "C:\Path\to\input.txt" "C:\Path\to\output"
+      ZPL2PDF.exe "C:\Path\to\input.txt" "C:\Path\to\output"
       ```
 
    3.2 **With direct content:**
 
       ```sh
-      ETQ2PDF.exe -c "file content as a string" "C:\Path\to\output"
+      ZPL2PDF.exe -c "file content as a string" "C:\Path\to\output"
       ```
 
 
 ## Integration with Other Systems
 
-The program can be compiled into an executable (ETQ2PDF.exe) and called from another application, such as an ERP, using functions to start processes (e.g., Process.Start in C#) and passing the necessary parameters.
+The program can be compiled into an executable (ZPL2PDF.exe) and called from another application, such as an ERP, using functions to start processes (e.g., Process.Start in C#) and passing the necessary parameters.
 
 ## Dependencies
    
@@ -99,7 +99,7 @@ The program can be compiled into an executable (ETQ2PDF.exe) and called from ano
 
 ## Conclusion
 
-ETQ2PDF was developed with a focus on modularization (separate classes for reading, rendering, and generating the PDF) and flexibility, allowing different input options and easy integration with other systems.
+ZPL2PDF was developed with a focus on modularization (separate classes for reading, rendering, and generating the PDF) and flexibility, allowing different input options and easy integration with other systems.
 
 ## Other Languages
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "naRcweQveQo=",
+  "dgSpecHash": "qdmdzIMGi/c=",
   "success": true,
-  "projectFilePath": "C:\\Dev\\ETQ2PDF\\ETQ2PDF.csproj",
+  "projectFilePath": "C:\\Dev\\ZPL2PDF\\ZPL2PDF.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ti09\\.nuget\\packages\\binarykits.zpl.label\\3.2.1\\binarykits.zpl.label.3.2.1.nupkg.sha512",
     "C:\\Users\\ti09\\.nuget\\packages\\binarykits.zpl.protocol\\1.0.1\\binarykits.zpl.protocol.1.0.1.nupkg.sha512",

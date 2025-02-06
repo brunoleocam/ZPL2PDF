@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETQ2PDF", "ETQ2PDF.csproj", "{A59E8F04-E2F4-3288-E86E-47AD3E53516F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZPL2PDF", "ZPL2PDF.csproj", "{A59E8F04-E2F4-3288-E86E-47AD3E53516F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

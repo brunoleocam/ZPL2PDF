@@ -1155,11 +1155,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Dev\\ETQ2PDF\\ETQ2PDF.csproj",
-      "projectName": "ETQ2PDF",
-      "projectPath": "C:\\Dev\\ETQ2PDF\\ETQ2PDF.csproj",
+      "projectUniqueName": "C:\\Dev\\ZPL2PDF\\ZPL2PDF.csproj",
+      "projectName": "ZPL2PDF",
+      "projectPath": "C:\\Dev\\ZPL2PDF\\ZPL2PDF.csproj",
       "packagesPath": "C:\\Users\\ti09\\.nuget\\packages\\",
-      "outputPath": "C:\\Dev\\ETQ2PDF\\obj\\",
+      "outputPath": "C:\\Dev\\ZPL2PDF\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ti09\\AppData\\Roaming\\NuGet\\NuGet.Config",

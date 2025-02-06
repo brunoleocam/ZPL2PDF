@@ -3,7 +3,7 @@ using System.IO;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Drawing;
 
-namespace ETQ2PDF {
+namespace ZPL2PDF {
     /// <summary>
     /// Responsável por gerar um PDF, adicionando cada imagem (dados em byte[]) em uma página.
     /// </summary>

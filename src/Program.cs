@@ -5,7 +5,7 @@ using BinaryKits.Zpl.Viewer.ElementDrawers;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Drawing;
 
-namespace ETQ2PDF {
+namespace ZPL2PDF {
     /// <summary>
     /// Programa principal de conversão de ZPL para PDF.
     /// 

@@ -3,7 +3,7 @@ using BinaryKits.Zpl.Label;
 using BinaryKits.Zpl.Viewer;
 using BinaryKits.Zpl.Viewer.ElementDrawers;
 
-namespace ETQ2PDF {
+namespace ZPL2PDF {
     /// <summary>
     /// Responsável por processar as etiquetas, gerar as imagens na memória e retornar os dados de imagem.
     /// </summary>
