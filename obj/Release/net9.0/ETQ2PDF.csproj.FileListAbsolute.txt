@@ -49,3 +49,4 @@ C:\Dev\ETQ2PDF\obj\Release\net9.0\refint\ETQ2PDF.dll
 C:\Dev\ETQ2PDF\obj\Release\net9.0\ETQ2PDF.pdb
 C:\Dev\ETQ2PDF\obj\Release\net9.0\ETQ2PDF.genruntimeconfig.cache
 C:\Dev\ETQ2PDF\obj\Release\net9.0\ref\ETQ2PDF.dll
+C:\Dev\ETQ2PDF\obj\Release\net9.0\ETQ2PDF.sourcelink.json
