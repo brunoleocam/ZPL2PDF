@@ -28,13 +28,13 @@ ETQ2PDF is a program for converting labels in ZPL format into a PDF file. The pr
    - Otherwise, the first argument is interpreted as the path to the input file. If no parameter is supplied, it uses “C:\input.txt” as the default.
    - The third parameter (or second in `-c` mode) is optional and defines the output directory. If not given, it uses the user's Downloads folder.
 
-2. **Content reading  
+2. **Content reading**  
    If the file is entered, it is read using `LabelFileReader.ReadFile(inputFile)`.
 
 3. **Label separation:**  
    The `LabelFileReader.SplitLabels(fileContent)` method splits the content into individual labels, based on the `^XA` and `^XZ` delimiters.
 
-4. **Image rendering  
+4. **Image rendering**  
    The `LabelRenderer` class processes each label and renders images (in byte[]) with the defined dimensions and density.
 
 5. **PDF generation:**  
