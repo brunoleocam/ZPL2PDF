@@ -43,10 +43,10 @@ C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.GeneratedMSBuildEditorConfig.editorcon
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.AssemblyInfoInputs.cache
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.AssemblyInfo.cs
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.csproj.CoreCompileInputs.cache
+C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.sourcelink.json
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.csproj.Up2Date
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.dll
 C:\Dev\ZPL2PDF\obj\Release\net9.0\refint\ZPL2PDF.dll
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.pdb
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.genruntimeconfig.cache
 C:\Dev\ZPL2PDF\obj\Release\net9.0\ref\ZPL2PDF.dll
-C:\Dev\ZPL2PDF\obj\Release\net9.0\ZPL2PDF.sourcelink.json
