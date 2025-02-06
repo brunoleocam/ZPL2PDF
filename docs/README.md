@@ -4,7 +4,7 @@
 
 This project is built on top of the [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) library.
 
-ETQ2PDF is a program for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
+ETQ2PDF is a project for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
 
 
 ## Features

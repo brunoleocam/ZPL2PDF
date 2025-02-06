@@ -4,7 +4,7 @@
 
 Este projeto é desenvolvido em cima da biblioteca [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl).
 
-O ETQ2PDF é um programa para conversão de etiquetas no formato ZPL para um arquivo PDF. Ele processa as etiquetas, renderiza imagens em memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
+O ETQ2PDF é um projeto para conversão de etiquetas no formato ZPL para um arquivo PDF. Ele processa as etiquetas, renderiza imagens em memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
 
 ## Funcionalidades
 
