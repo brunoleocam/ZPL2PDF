@@ -1,92 +1,103 @@
-# Documentação - ETQ2PDF
+# Documentation - ETQ2PDF
 
-## Introdução
+## Introduction
 
-O ETQ2PDF é um programa para conversão de etiquetas no formato ZPL para um arquivo PDF. Ele processa as etiquetas, renderiza imagens em memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
+ETQ2PDF is a program for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
 
-## Funcionalidades
+## Features
 
-- **Entrada com Dupla Opção:**  
-  Permite passar parâmetros de duas formas:
-  - **Caminho do Arquivo:** Se o conteúdo não for passado explicitamente, o programa interpreta o primeiro parâmetro como o caminho do arquivo de entrada.
-  - **Conteúdo Direto:** Se o primeiro parâmetro for `-c`, o segundo parâmetro é considerado o conteúdo do arquivo.
+- **Dual Input Option:** 
+   Allows passing parameters in two ways:
+  - **File Path:** The program interprets the first parameter as the path to the input file.
+  - **Direct Content:** If the first parameter is `-c`, the second parameter is considered the file content.
 
-- **Processamento das Etiquetas:**  
-  Utiliza a classe `LabelFileReader` para ler o arquivo e separar as etiquetas com base nos delimitadores `^XA` e `^XZ`.
+- **Label Processing:** 
+   Uses the `LabelFileReader` class to read the file and separate the labels based on the `^XA` and `^XZ` delimiters.
 
-- **Renderização em Memória:**  
-  A classe `LabelRenderer` analisa o conteúdo ZPL e renderiza as etiquetas em imagens, mantendo os dados em memória sem necessidade de salvamento temporário.
+- **In-Memory Rendering:** 
+   The `LabelRenderer` class analyzes the ZPL content and renders the labels into images, keeping the data in memory without the need for temporary storage.
 
-- **Geração do PDF:**  
-  A classe `PdfGenerator` gera um PDF onde cada imagem é adicionada em uma página. O arquivo PDF é salvo na pasta Downloads do usuário, usando o mesmo nome base do arquivo de entrada (com extensão `.pdf`). Caso um caminho de saída seja especificado, o PDF será salvo nesse caminho.
+- **PDF Generation:** 
+   The `PdfGenerator` class generates a PDF where each image is added to a page. The PDF file is saved in the user's Downloads folder, using the same base name as the input file (with `.pdf` extension). If an output path is specified, the PDF will be saved to that path.
 
-## Fluxo de Execução
+## Execution Flow
 
-1. **Recebimento dos Parâmetros:**  
-   O método `Main` analisa os argumentos recebidos:
-   - Se o primeiro argumento for `-c`, o segundo é usado como conteúdo.
-   - Caso contrário, o primeiro argumento é interpretado como o caminho para o arquivo de entrada. Se nenhum parâmetro for fornecido, utiliza "C:\input.txt" como padrão.
-   - O terceiro parâmetro (ou segundo no modo `-c`) é opcional e define o diretório de saída. Se não for informado, utiliza a pasta Downloads do usuário.
+1. **Receiving Parameters:**  
+   The `Main` method analyzes the arguments received:
+   - If the first argument is `-c`, the second is used as the content.
+   - Otherwise, the first argument is interpreted as the path to the input file. If no parameter is supplied, it uses “C:\input.txt” as the default.
+   - The third parameter (or second in `-c` mode) is optional and defines the output directory. If not given, it uses the user's Downloads folder.
 
-2. **Leitura do Conteúdo:**  
-   Se o arquivo for informado, é lido através de `LabelFileReader.ReadFile(inputFile)`.
+2. **Content reading  
+   If the file is entered, it is read using `LabelFileReader.ReadFile(inputFile)`.
 
-3. **Separação das Etiquetas:**  
-   O método `LabelFileReader.SplitLabels(fileContent)` divide o conteúdo em etiquetas individuais, com base nos delimitadores `^XA` e `^XZ`.
+3. **Label separation:**  
+   The `LabelFileReader.SplitLabels(fileContent)` method splits the content into individual labels, based on the `^XA` and `^XZ` delimiters.
 
-4. **Renderização das Imagens:**  
-   A classe `LabelRenderer` processa cada etiqueta e renderiza imagens (em byte[]) com as dimensões e densidade definidas.
+4. **Image rendering  
+   The `LabelRenderer` class processes each label and renders images (in byte[]) with the defined dimensions and density.
 
-5. **Geração do PDF:**  
-   O PDF é gerado utilizando a classe `PdfGenerator.GeneratePdf(imageDataList, outputPdf)`, onde `outputPdf` é construído na pasta Downloads do usuário ou no caminho especificado, com o mesmo nome base do arquivo de entrada.
+5. **PDF generation:**  
+   The PDF is generated using the `PdfGenerator.GeneratePdf(imageDataList, outputPdf)` class, where `outputPdf` is built in the user's Downloads folder or in the specified path, with the same base name as the input file.
 
-## Exemplo de Uso
+## Usage Examples
 
-1. **Padrão, sem informar nada:**
-   - Lê o arquivo `C:\input.txt` e salva em Downloads.
+1. **Default, without specifying anything:**
 
-   ~~~sh
-   ETQ2PDF.exe
-   ~~~
+   - Reads the file `C:\input.txt` and saves it in Downloads.
 
-2. **Especificando a Entrada:**
-   2.1 **Informando o caminho:**
-      - Lê o arquivo especificado e salva em Downloads.
+      ```sh
+      ETQ2PDF.exe
+      ```
 
-      ~~~sh
-      ETQ2PDF.exe "C:\Caminho\para\entrada.txt"
-      ~~~
+2. **Specifying the Input:** 
 
-   2.2 **Informando o conteúdo:**
-      - Utiliza o conteúdo passado diretamente e salva em Downloads.
+   2.1 **Specifying the path:**
 
-      ~~~sh
-      ETQ2PDF.exe -c "conteúdo do arquivo em forma de string"
-      ~~~
+   - Reads the specified file and saves it in Downloads.
 
-3. **Especificando a Saída:**
-   - Informando no 2º parâmetro (ou 3º no modo `-c`), caso não informe, salvará em Downloads.
+      ```sh
+      ETQ2PDF.exe "C:\Path\to\input.txt"
+      ```
 
-   3.1 **Com caminho de entrada:**
-      ~~~sh
-      ETQ2PDF.exe "C:\Caminho\para\entrada.txt" "C:\Caminho\para\saida"
-      ~~~
+   2.2 **Specifying the content:**
 
-   3.2 **Com conteúdo direto:**
-      ~~~sh
-      ETQ2PDF.exe -c "conteúdo do arquivo em forma de string" "C:\Caminho\para\saida"
-      ~~~
+   - Uses the directly passed content and saves it in Downloads.
+
+      ```sh
+      ETQ2PDF.exe -c "file content as a string"
+      ```
+
+3. **Specifying the Output:**
+
+   - Specifying in the 2nd parameter (or 3rd in -c mode), if not specified, it will save in Downloads.
+
+   3.1 **With input path:**
+
+      ```sh
+      ETQ2PDF.exe "C:\Path\to\input.txt" "C:\Path\to\output"
+      ```
+
+   3.2 **With direct content:**
+
+      ```sh
+      ETQ2PDF.exe -c "file content as a string" "C:\Path\to\output"
+      ```
 
 
-## Integração com Outros Sistemas
+## Integration with Other Systems
 
-O programa pode ser compilado em um executável (ETQ2PDF.exe) e chamado a partir de outro aplicativo, como um ERP, utilizando funções para iniciar processos (por exemplo, `Process.Start` em C#) e passando os parâmetros necessários.
+The program can be compiled into an executable (ETQ2PDF.exe) and called from another application, such as an ERP, using functions to start processes (e.g., Process.Start in C#) and passing the necessary parameters.
 
-## Dependências
+## Dependencies
+   
+   - **BinaryKits.Zpl:** For analyzing and rendering ZPL labels.
+   - **PdfSharpCore:** For creating and manipulating the PDF file.
 
-- **BinaryKits.Zpl:** Para análise e renderização das etiquetas ZPL.
-- **PdfSharpCore:** Para criação e manipulação do arquivo PDF.
+## Conclusion
 
-## Conclusão
+ETQ2PDF was developed with a focus on modularization (separate classes for reading, rendering, and generating the PDF) and flexibility, allowing different input options and easy integration with other systems.
 
-O ETQ2PDF foi desenvolvido com foco na modularização (classes separadas para leitura, renderização e geração do PDF) e flexibilidade, permitindo diferentes opções de entrada e fácil integração com outros sistemas.
+## Other Languages
+
+- [Português](docs/README.pt.md)
