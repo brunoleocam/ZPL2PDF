@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TargetFramework>net9.0</TargetFramework>
+    <DocumentationFile>bin\Debug\net9.0\ETQ2PDF.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BinaryKits.Zpl.Label" Version="3.2.1" />
+    <PackageReference Include="BinaryKits.Zpl.Protocol" Version="1.0.1" />
+    <PackageReference Include="BinaryKits.Zpl.Viewer" Version="1.2.1" />
+    <PackageReference Include="PdfSharpCore" Version="1.3.65" />
+  </ItemGroup>
+
+</Project>
