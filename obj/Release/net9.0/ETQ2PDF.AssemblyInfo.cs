@@ -10,12 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("ETQ2PDF")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("ZPL2PDF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46703015d00efab6b9a5a9a8e3ab1efecde5cb80")]
-[assembly: System.Reflection.AssemblyProductAttribute("ETQ2PDF")]
-[assembly: System.Reflection.AssemblyTitleAttribute("ETQ2PDF")]
+[assembly: System.Reflection.AssemblyProductAttribute("ZPL2PDF")]
+[assembly: System.Reflection.AssemblyTitleAttribute("ZPL2PDF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.

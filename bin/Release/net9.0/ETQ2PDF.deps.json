@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v9.0": {
-      "ETQ2PDF/1.0.0": {
+      "ZPL2PDF/1.0.0": {
         "dependencies": {
           "BinaryKits.Zpl.Label": "3.2.1",
           "BinaryKits.Zpl.Protocol": "1.0.1",
@@ -14,7 +14,7 @@
           "PdfSharpCore": "1.3.65"
         },
         "runtime": {
-          "ETQ2PDF.dll": {}
+          "ZPL2PDF.dll": {}
         }
       },
       "BinaryKits.Zpl.Label/3.2.1": {
@@ -320,7 +320,7 @@
     }
   },
   "libraries": {
-    "ETQ2PDF/1.0.0": {
+    "ZPL2PDF/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

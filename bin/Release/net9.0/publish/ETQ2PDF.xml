@@ -1,50 +1,50 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>ETQ2PDF</name>
+        <name>ZPL2PDF</name>
     </assembly>
     <members>
-        <member name="T:ETQ2PDF.LabelFileReader">
+        <member name="T:ZPL2PDF.LabelFileReader">
             <summary>
             Responsável por ler o arquivo de entrada e separar as etiquetas ZPL.
             </summary>
         </member>
-        <member name="M:ETQ2PDF.LabelFileReader.ReadFile(System.String)">
+        <member name="M:ZPL2PDF.LabelFileReader.ReadFile(System.String)">
             <summary>
             Lê o arquivo e retorna o conteúdo.
             </summary>
         </member>
-        <member name="M:ETQ2PDF.LabelFileReader.SplitLabels(System.String)">
+        <member name="M:ZPL2PDF.LabelFileReader.SplitLabels(System.String)">
             <summary>
             Separa o conteúdo em uma lista de etiquetas ZPL baseadas nos delimitadores "^XA" e "^XZ".
             </summary>
         </member>
-        <member name="T:ETQ2PDF.LabelRenderer">
+        <member name="T:ZPL2PDF.LabelRenderer">
             <summary>
             Responsável por processar as etiquetas, gerar as imagens na memória e retornar os dados de imagem.
             </summary>
         </member>
-        <member name="M:ETQ2PDF.LabelRenderer.#ctor">
+        <member name="M:ZPL2PDF.LabelRenderer.#ctor">
             <summary>
             Inicializa uma nova instância da classe LabelRenderer, configurando as dependências necessárias para a renderização de etiquetas em imagens.
             </summary>
         </member>
-        <member name="M:ETQ2PDF.LabelRenderer.RenderLabels(System.Collections.Generic.List{System.String})">
+        <member name="M:ZPL2PDF.LabelRenderer.RenderLabels(System.Collections.Generic.List{System.String})">
             <summary>
             Processa uma lista de etiquetas ZPL e retorna uma lista de imagens (em byte[]).
             </summary>
         </member>
-        <member name="T:ETQ2PDF.PdfGenerator">
+        <member name="T:ZPL2PDF.PdfGenerator">
             <summary>
             Responsável por gerar um PDF, adicionando cada imagem (dados em byte[]) em uma página.
             </summary>
         </member>
-        <member name="M:ETQ2PDF.PdfGenerator.GeneratePdf(System.Collections.Generic.List{System.Byte[]},System.String)">
+        <member name="M:ZPL2PDF.PdfGenerator.GeneratePdf(System.Collections.Generic.List{System.Byte[]},System.String)">
             <summary>
             Gera um PDF com uma imagem por página e salva o arquivo no caminho especificado.
             </summary>
         </member>
-        <member name="T:ETQ2PDF.Program">
+        <member name="T:ZPL2PDF.Program">
             <summary>
             Programa principal de conversão de ZPL para PDF.
             
