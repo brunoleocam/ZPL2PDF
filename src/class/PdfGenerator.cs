@@ -5,26 +5,26 @@ using PdfSharpCore.Drawing;
 
 namespace ZPL2PDF {
     /// <summary>
-    /// Responsável por gerar um PDF, adicionando cada imagem (dados em byte[]) em uma página.
+    /// Responsible for generating a PDF, adding each image (byte[] data) to a page.
     /// </summary>
     public static class PdfGenerator {
         /// <summary>
-        /// Gera um PDF com uma imagem por página e salva o arquivo no caminho especificado.
+        /// Generates a PDF with one image per page and saves the file to the specified path.
         /// </summary>
-        public static void GeneratePdf(List<byte[]> imageDataList, string outputPdfPath) {
-            var document = new PdfDocument();
-            foreach (var imageData in imageDataList) {
-                PdfPage page = document.AddPage();
-                using (var ms = new MemoryStream(imageData)) {
-                    XImage image = XImage.FromStream(() => ms);
-                    page.Width = image.PixelWidth;
-                    page.Height = image.PixelHeight;
-                    using (XGraphics gfx = XGraphics.FromPdfPage(page)) {
-                        gfx.DrawImage(image, 0, 0, image.PixelWidth, image.PixelHeight);
+        /// <param name="imageDataList">List of image data in byte arrays.</param>
+        /// <param name="outputPdf">Path to save the generated PDF file.</param>
+        public static void GeneratePdf(List<byte[]> imageDataList, string outputPdf) {
+            using (var document = new PdfDocument()) {
+                foreach (var imageData in imageDataList) {
+                    var page = document.AddPage();
+                    using (var graphics = XGraphics.FromPdfPage(page)) {
+                        using (var image = XImage.FromStream(() => new MemoryStream(imageData))) {
+                            graphics.DrawImage(image, 0, 0, page.Width, page.Height);
+                        }
                     }
                 }
+                document.Save(outputPdf);
             }
-            document.Save(outputPdfPath);
         }
     }
 }

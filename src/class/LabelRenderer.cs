@@ -5,7 +5,7 @@ using BinaryKits.Zpl.Viewer.ElementDrawers;
 
 namespace ZPL2PDF {
     /// <summary>
-    /// Responsável por processar as etiquetas, gerar as imagens na memória e retornar os dados de imagem.
+    /// Responsible for processing labels, generating images in memory, and returning image data.
     /// </summary>
     public class LabelRenderer {
         private readonly IPrinterStorage _printerStorage;
@@ -16,7 +16,7 @@ namespace ZPL2PDF {
         private readonly int _printDensityDpmm;
 
         /// <summary>
-        /// Inicializa uma nova instância da classe LabelRenderer, configurando as dependências necessárias para a renderização de etiquetas em imagens.
+        /// Initializes a new instance of the LabelRenderer class, setting up the necessary dependencies for rendering labels into images.
         /// </summary>
         public LabelRenderer() {
             _printerStorage = new PrinterStorage();
@@ -28,8 +28,10 @@ namespace ZPL2PDF {
         }
 
         /// <summary>
-        /// Processa uma lista de etiquetas ZPL e retorna uma lista de imagens (em byte[]).
+        /// Processes a list of ZPL labels and returns a list of images (in byte[]).
         /// </summary>
+        /// <param name="labels">List of ZPL labels.</param>
+        /// <returns>List of images in byte arrays.</returns>
         public List<byte[]> RenderLabels(List<string> labels) {
             var images = new List<byte[]>();
             foreach (var labelText in labels) {

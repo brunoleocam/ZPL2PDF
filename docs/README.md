@@ -6,13 +6,7 @@ This project is built on top of the [BinaryKits.Zpl](https://github.com/BinaryKi
 
 ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
 
-
 ## Features
-
-- **Dual Input Option:** 
-   Allows passing parameters in two ways:
-  - **File Path:** The program interprets the first parameter as the path to the input file.
-  - **Direct Content:** If the first parameter is `-c`, the second parameter is considered the file content.
 
 - **Label Processing:** 
    Uses the `LabelFileReader` class to read the file and separate the labels based on the `^XA` and `^XZ` delimiters.
@@ -21,18 +15,19 @@ ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    The `LabelRenderer` class analyzes the ZPL content and renders the labels into images, keeping the data in memory without the need for temporary storage.
 
 - **PDF Generation:** 
-   The `PdfGenerator` class generates a PDF where each image is added to a page. The PDF file is saved in the user's Downloads folder, using the same base name as the input file (with `.pdf` extension). If an output path is specified, the PDF will be saved to that path.
+   The `PdfGenerator` class generates a PDF where each image is added to a page. The PDF file is saved in the user's specified output folder, using the specified output file name or a default name based on the current date and time.
 
 ## Execution Flow
 
 1. **Receiving Parameters:**  
    The `Main` method analyzes the arguments received:
-   - If the first argument is `-c`, the second is used as the content.
-   - Otherwise, the first argument is interpreted as the path to the input file. If no parameter is supplied, it uses “C:\input.txt” as the default.
-   - The third parameter (or second in `-c` mode) is optional and defines the output directory. If not given, it uses the user's Downloads folder.
+   - The `-i` parameter specifies the input file path.
+   - The `-z` parameter specifies the ZPL content directly.
+   - The `-o` parameter specifies the output folder path.
+   - The `-n` parameter specifies the output file name (optional).
 
 2. **Content reading**  
-   If the file is entered, it is read using `LabelFileReader.ReadFile(inputFile)`.
+   The file is read using `LabelFileReader.ReadFile(inputFile)` or the ZPL content is used directly.
 
 3. **Label separation:**  
    The `LabelFileReader.SplitLabels(fileContent)` method splits the content into individual labels, based on the `^XA` and `^XZ` delimiters.
@@ -41,52 +36,33 @@ ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    The `LabelRenderer` class processes each label and renders images (in byte[]) with the defined dimensions and density.
 
 5. **PDF generation:**  
-   The PDF is generated using the `PdfGenerator.GeneratePdf(imageDataList, outputPdf)` class, where `outputPdf` is built in the user's Downloads folder or in the specified path, with the same base name as the input file.
+   The PDF is generated using the `PdfGenerator.GeneratePdf(imageDataList, outputPdf)` class, where `outputPdf` is built in the specified output folder with the specified output file name or a default name.
 
 ## Usage Examples
 
-1. **Default, without specifying anything:**
+1. **Specifying the Input and Output:** 
 
-   - Reads the file `C:\input.txt` and saves it in Downloads.
-
-      ```sh
-      ZPL2PDF.exe
-      ```
-
-2. **Specifying the Input:** 
-
-   2.1 **Specifying the path:**
-
-   - Reads the specified file and saves it in Downloads.
+   - Reads the specified file and saves it in the specified output folder.
 
       ```sh
-      ZPL2PDF.exe "C:\Path\to\input.txt"
+      ZPL2PDF.exe -i "C:\Path\to\input.txt" -o "C:\Path\to\output"
       ```
 
-   2.2 **Specifying the content:**
+2. **Specifying the ZPL Content Directly:**
 
-   - Uses the directly passed content and saves it in Downloads.
+   - Uses the specified ZPL content and saves it in the specified output folder.
 
       ```sh
-      ZPL2PDF.exe -c "file content as a string"
+      ZPL2PDF.exe -z "^XA^FO50,50^ADN,36,20^FDHello, World!^FS^XZ" -o "C:\Path\to\output"
       ```
 
-3. **Specifying the Output:**
+3. **Specifying the Output File Name:**
 
-   - Specifying in the 2nd parameter (or 3rd in -c mode), if not specified, it will save in Downloads.
-
-   3.1 **With input path:**
+   - Reads the specified file, saves it in the specified output folder with the specified output file name.
 
       ```sh
-      ZPL2PDF.exe "C:\Path\to\input.txt" "C:\Path\to\output"
+      ZPL2PDF.exe -i "C:\Path\to\input.txt" -o "C:\Path\to\output" -n "output_filename.pdf"
       ```
-
-   3.2 **With direct content:**
-
-      ```sh
-      ZPL2PDF.exe -c "file content as a string" "C:\Path\to\output"
-      ```
-
 
 ## Integration with Other Systems
 

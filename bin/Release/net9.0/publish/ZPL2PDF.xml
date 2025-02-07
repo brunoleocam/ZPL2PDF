@@ -4,58 +4,101 @@
         <name>ZPL2PDF</name>
     </assembly>
     <members>
+        <member name="T:ZPL2PDF.ArgumentProcessor">
+            <summary>
+            Responsible for processing command line arguments.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.InputFilePath">
+            <summary>
+            Gets or sets the input file path.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ZplContent">
+            <summary>
+            Gets or sets the ZPL content.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.OutputFolderPath">
+            <summary>
+            Gets or sets the output folder path.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.OutputFileName">
+            <summary>
+            Gets or sets the output file name.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessArguments(System.String[])">
+            <summary>
+            Processes the command line arguments.
+            </summary>
+            <param name="args">Array of command line arguments.</param>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ShowHelp">
+            <summary>
+            Displays the help message.
+            </summary>
+        </member>
         <member name="T:ZPL2PDF.LabelFileReader">
             <summary>
-            Responsável por ler o arquivo de entrada e separar as etiquetas ZPL.
+            Responsible for reading the input file and splitting the ZPL labels.
             </summary>
         </member>
         <member name="M:ZPL2PDF.LabelFileReader.ReadFile(System.String)">
             <summary>
-            Lê o arquivo e retorna o conteúdo.
+            Reads the file and returns its content.
             </summary>
+            <param name="filePath">Path to the input file.</param>
+            <returns>Content of the file.</returns>
         </member>
         <member name="M:ZPL2PDF.LabelFileReader.SplitLabels(System.String)">
             <summary>
-            Separa o conteúdo em uma lista de etiquetas ZPL baseadas nos delimitadores "^XA" e "^XZ".
+            Splits the content into a list of ZPL labels based on the delimiters "^XA" and "^XZ".
             </summary>
+            <param name="content">Content of the file.</param>
+            <returns>List of ZPL labels.</returns>
         </member>
         <member name="T:ZPL2PDF.LabelRenderer">
             <summary>
-            Responsável por processar as etiquetas, gerar as imagens na memória e retornar os dados de imagem.
+            Responsible for processing labels, generating images in memory, and returning image data.
             </summary>
         </member>
         <member name="M:ZPL2PDF.LabelRenderer.#ctor">
             <summary>
-            Inicializa uma nova instância da classe LabelRenderer, configurando as dependências necessárias para a renderização de etiquetas em imagens.
+            Initializes a new instance of the LabelRenderer class, setting up the necessary dependencies for rendering labels into images.
             </summary>
         </member>
         <member name="M:ZPL2PDF.LabelRenderer.RenderLabels(System.Collections.Generic.List{System.String})">
             <summary>
-            Processa uma lista de etiquetas ZPL e retorna uma lista de imagens (em byte[]).
+            Processes a list of ZPL labels and returns a list of images (in byte[]).
             </summary>
+            <param name="labels">List of ZPL labels.</param>
+            <returns>List of images in byte arrays.</returns>
         </member>
         <member name="T:ZPL2PDF.PdfGenerator">
             <summary>
-            Responsável por gerar um PDF, adicionando cada imagem (dados em byte[]) em uma página.
+            Responsible for generating a PDF, adding each image (byte[] data) to a page.
             </summary>
         </member>
         <member name="M:ZPL2PDF.PdfGenerator.GeneratePdf(System.Collections.Generic.List{System.Byte[]},System.String)">
             <summary>
-            Gera um PDF com uma imagem por página e salva o arquivo no caminho especificado.
+            Generates a PDF with one image per page and saves the file to the specified path.
             </summary>
+            <param name="imageDataList">List of image data in byte arrays.</param>
+            <param name="outputPdf">Path to save the generated PDF file.</param>
         </member>
         <member name="T:ZPL2PDF.Program">
             <summary>
-            Programa principal de conversão de ZPL para PDF.
+            Main program for converting ZPL to PDF.
             
-            O programa suporta duas formas de entrada:
-            1. Conteúdo direto: Se o primeiro argumento for "-c", o segundo argumento será tratado como o conteúdo do arquivo.
-            2. Caminho do arquivo: Caso contrário, o primeiro argumento é interpretado como o caminho do arquivo de entrada. Se nenhum parâmetro for fornecido, utiliza "C:\input.txt" como padrão.
+            The program requires the following parameters:
+            1. Input file path: Specified with the -i parameter.
+            2. Output folder path: Specified with the -o parameter.
             
-            O caminho de saída para o PDF pode ser especificado como:
-            - Terceiro parâmetro se no modo "-c", ou segundo parâmetro se no modo de caminho.
-            Caso não seja informado, o PDF será salvo na pasta Downloads do usuário.
-            O nome do arquivo PDF será o mesmo nome do arquivo de input (ou "input.pdf" no modo "-c").
+            The output file name can be specified using the -n parameter.
+            If not specified, the PDF file name will be "ZPL2PDF_DDMMYYYYHHMM.pdf".
+            Alternatively, the ZPL content can be provided directly using the -z parameter.
             </summary>
         </member>
     </members>

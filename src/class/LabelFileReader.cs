@@ -4,22 +4,26 @@ using System.IO;
 
 namespace ZPL2PDF {
     /// <summary>
-    /// Responsável por ler o arquivo de entrada e separar as etiquetas ZPL.
+    /// Responsible for reading the input file and splitting the ZPL labels.
     /// </summary>
     public static class LabelFileReader {
         /// <summary>
-        /// Lê o arquivo e retorna o conteúdo.
+        /// Reads the file and returns its content.
         /// </summary>
+        /// <param name="filePath">Path to the input file.</param>
+        /// <returns>Content of the file.</returns>
         public static string ReadFile(string filePath) {
             if (!File.Exists(filePath)) {
-                throw new FileNotFoundException($"Arquivo não encontrado: {filePath}");
+                throw new FileNotFoundException($"File not found: {filePath}");
             }
             return File.ReadAllText(filePath);
         }
 
         /// <summary>
-        /// Separa o conteúdo em uma lista de etiquetas ZPL baseadas nos delimitadores "^XA" e "^XZ".
+        /// Splits the content into a list of ZPL labels based on the delimiters "^XA" and "^XZ".
         /// </summary>
+        /// <param name="content">Content of the file.</param>
+        /// <returns>List of ZPL labels.</returns>
         public static List<string> SplitLabels(string content) {
             var labels = new List<string>();
             var tokens = content.Split(new string[] { "^XA" }, StringSplitOptions.RemoveEmptyEntries);
