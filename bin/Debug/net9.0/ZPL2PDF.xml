@@ -55,6 +55,8 @@
         <member name="M:ZPL2PDF.LabelFileReader.SplitLabels(System.String)">
             <summary>
             Splits the content into a list of ZPL labels based on the delimiters "^XA" and "^XZ".
+            If there is any content before the first "^XA", this is considered as graphic elements
+            and will be prepended to each label.
             </summary>
             <param name="content">Content of the file.</param>
             <returns>List of ZPL labels.</returns>
