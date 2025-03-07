@@ -27,11 +27,31 @@ namespace ZPL2PDF {
         public string OutputFileName { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the label width in inches.
+        /// </summary>
+        public double LabelWidth { get; set; } = 60 / 8.0;  // 7.5 inches
+
+        /// <summary>
+        /// Gets or sets the label height in inches.
+        /// </summary>
+        public double LabelHeight { get; set; } = 120 / 8.0;  // 15 inches
+
+        /// <summary>
+        /// Gets or sets the print density in dots per millimeter.
+        /// </summary>
+        public int PrintDensityDpmm { get; set; } = 8;
+
+        /// <summary>
+        /// Gets or sets the unit of measurement for width and height.
+        /// </summary>
+        public string Unit { get; set; } = string.Empty;
+
+        /// <summary>
         /// Processes the command line arguments.
         /// </summary>
         /// <param name="args">Array of command line arguments.</param>
         public void ProcessArguments(string[] args) {
-            if (args.Length == 0 || args[0].Equals("-h", StringComparison.OrdinalIgnoreCase)) {
+            if (args.Length == 0 || args[0].Equals("-help", StringComparison.OrdinalIgnoreCase)) {
                 ShowHelp();
                 Environment.Exit(0);
             }
@@ -76,6 +96,38 @@ namespace ZPL2PDF {
                         }
                         i++;
                         break;
+                    case "-w":
+                        if (i + 1 < args.Length && double.TryParse(args[i + 1], out double width)) {
+                            LabelWidth = width;
+                        } else {
+                            throw new ArgumentException("Invalid width value.");
+                        }
+                        i++;
+                        break;
+                    case "-h":
+                        if (i + 1 < args.Length && double.TryParse(args[i + 1], out double height)) {
+                            LabelHeight = height;
+                        } else {
+                            throw new ArgumentException("Invalid height value.");
+                        }
+                        i++;
+                        break;
+                    case "-d":
+                        if (i + 1 < args.Length && int.TryParse(args[i + 1], out int density)) {
+                            PrintDensityDpmm = density;
+                        } else {
+                            throw new ArgumentException("Invalid print density value.");
+                        }
+                        i++;
+                        break;
+                    case "-u":
+                        if (i + 1 < args.Length && (args[i + 1] == "in" || args[i + 1] == "cm" || args[i + 1] == "mm")) {
+                            Unit = args[i + 1];
+                        } else {
+                            throw new ArgumentException("Invalid unit value. Must be 'in', 'cm', or 'mm'.");
+                        }
+                        i++;
+                        break;
                     default:
                         throw new ArgumentException($"Unknown parameter: {args[i]}");
                 }
@@ -92,6 +144,10 @@ namespace ZPL2PDF {
             if (string.IsNullOrEmpty(OutputFileName)) {
                 OutputFileName = $"ZPL2PDF_{DateTime.Now:ddMMyyyyHHmm}.pdf";
             }
+
+            if ((LabelWidth != 60 / 8.0 || LabelHeight != 120 / 8.0) && string.IsNullOrEmpty(Unit)) {
+                throw new ArgumentException("Parameter -u is mandatory when -w or -h is specified.");
+            }
         }
 
         /// <summary>
@@ -104,7 +160,11 @@ namespace ZPL2PDF {
             Console.WriteLine("  -z <zpl_content>           ZPL content as a string");
             Console.WriteLine("  -o <output_folder_path>    Path to the folder where the PDF file will be saved");
             Console.WriteLine("  -n <output_file_name>      Name of the output PDF file (optional)");
-            Console.WriteLine("  -h                         Show this help message");
+            Console.WriteLine("  -w <width>                 Width of the label");
+            Console.WriteLine("  -h <height>                Height of the label");
+            Console.WriteLine("  -d <density>               Print density in dots per millimeter");
+            Console.WriteLine("  -u <unit>                  Unit of measurement for width and height ('in', 'cm', 'mm')");
+            Console.WriteLine("  -help                      Show this help message");
         }
     }
 }

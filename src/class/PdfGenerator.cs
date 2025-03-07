@@ -16,10 +16,21 @@ namespace ZPL2PDF {
         public static void GeneratePdf(List<byte[]> imageDataList, string outputPdf) {
             using (var document = new PdfDocument()) {
                 foreach (var imageData in imageDataList) {
-                    var page = document.AddPage();
-                    using (var graphics = XGraphics.FromPdfPage(page)) {
-                        using (var image = XImage.FromStream(() => new MemoryStream(imageData))) {
-                            graphics.DrawImage(image, 0, 0, page.Width, page.Height);
+                    using (var image = XImage.FromStream(() => new MemoryStream(imageData))) {
+                        // Debugging: Print the image dimensions
+                        //Console.WriteLine($"Image Width: {image.PixelWidth}, Image Height: {image.PixelHeight}");
+
+                        // Create a new page with the same dimensions as the image
+                        var page = document.AddPage();
+                        page.Width = image.PixelWidth;
+                        page.Height = image.PixelHeight;
+
+                        // Debugging: Print the page dimensions
+                        //Console.WriteLine($"Page Width: {page.Width}, Page Height: {page.Height}");
+
+                        using (var graphics = XGraphics.FromPdfPage(page)) {
+                            // Draw the image with the correct dimensions
+                            graphics.DrawImage(image, 0, 0, image.PixelWidth, image.PixelHeight);
                         }
                     }
                 }

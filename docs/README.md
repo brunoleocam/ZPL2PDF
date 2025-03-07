@@ -25,6 +25,10 @@ ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The pr
    - The `-z` parameter specifies the ZPL content directly.
    - The `-o` parameter specifies the output folder path.
    - The `-n` parameter specifies the output file name (optional).
+   - The `-w` and `-h` parameters specify the width and height of the label, respectively.
+   - The `-d` parameter specifies the print density in dots per millimeter.
+   - The `-u` parameter specifies the unit of measurement for width and height ("in", "cm", "mm").
+   - The `-help` parameter displays the help message.
 
 2. **Content reading**  
    The file is read using `LabelFileReader.ReadFile(inputFile)` or the ZPL content is used directly.
@@ -62,6 +66,22 @@ ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The pr
 
       ```sh
       ZPL2PDF.exe -i "C:\Path\to\input.txt" -o "C:\Path\to\output" -n "output_filename.pdf"
+      ```
+
+4. **Specifying Width, Height, and Print Density:**
+
+   - Reads the specified file, sets the width, height, and print density, and saves it in the specified output folder.
+
+      ```sh
+      ZPL2PDF.exe -i "C:\Path\to\input.txt" -o "C:\Path\to\output" -w 6 -h 12 -u "cm" -d 8
+      ```
+
+5. **Displaying the Help Message:**
+
+   - Displays the help message with the description of the parameters.
+
+      ```sh
+      ZPL2PDF.exe -help
       ```
 
 ## Integration with Other Systems

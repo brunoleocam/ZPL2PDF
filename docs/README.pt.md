@@ -25,6 +25,10 @@ ZPL2PDF é um projeto para converter etiquetas no formato ZPL em um arquivo PDF.
    - O parâmetro `-z` especifica o conteúdo ZPL diretamente.
    - O parâmetro `-o` especifica o caminho da pasta de saída.
    - O parâmetro `-n` especifica o nome do arquivo de saída (opcional).
+   - Os parâmetros `-w` e `-h` especificam a largura e altura da etiqueta, respectivamente.
+   - O parâmetro `-d` especifica a densidade de impressão em pontos por milímetro.
+   - O parâmetro `-u` especifica a unidade de medida para largura e altura ("in", "cm", "mm").
+   - O parâmetro `-help` exibe a mensagem de ajuda.
 
 2. **Leitura do Conteúdo**  
    O arquivo é lido usando `LabelFileReader.ReadFile(inputFile)` ou o conteúdo ZPL é usado diretamente.
@@ -62,6 +66,22 @@ ZPL2PDF é um projeto para converter etiquetas no formato ZPL em um arquivo PDF.
 
       ```sh
       ZPL2PDF.exe -i "C:\Caminho\para\input.txt" -o "C:\Caminho\para\output" -n "nome_arquivo_saida.pdf"
+      ```
+
+4. **Especificando Largura, Altura e Densidade de Impressão:**
+
+   - Lê o arquivo especificado, define a largura, altura e densidade de impressão, e salva na pasta de saída especificada.
+
+      ```sh
+      ZPL2PDF.exe -i "C:\Caminho\para\input.txt" -o "C:\Caminho\para\output" -w 6 -h 12 -u "cm" -d 8
+      ```
+
+5. **Exibindo a Mensagem de Ajuda:**
+
+   - Exibe a mensagem de ajuda com a descrição dos parâmetros.
+
+      ```sh
+      ZPL2PDF.exe -help
       ```
 
 ## Integração com Outros Sistemas

@@ -37,7 +37,6 @@ namespace ZPL2PDF {
 
             var labels = new List<string>();
             var tokens = content.Split(new string[] { "^XA" }, StringSplitOptions.RemoveEmptyEntries);
-            int labelCounter = 1;
             foreach (var token in tokens) {
                 int posEnd = token.IndexOf("^XZ", StringComparison.OrdinalIgnoreCase);
                 if (posEnd > -1) {
@@ -48,8 +47,6 @@ namespace ZPL2PDF {
                         label = graphicElements + Environment.NewLine + label;
                     }
                     labels.Add(label);
-                    
-                    labelCounter++;
                 }
             }
             return labels;
