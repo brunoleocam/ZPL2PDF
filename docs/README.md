@@ -6,6 +6,36 @@ This project is built on top of the [BinaryKits.Zpl](https://github.com/BinaryKi
 
 ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
 
+## Installation
+
+1. Download the installer [`Setup.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) from the **Releases** section.
+2. Run the installer.
+3. The program will be installed in:
+
+```sh
+C:\Program Files\ZPL2PDF
+```
+
+## How to Use
+
+1. Open **Command Prompt (cmd)** or **PowerShell**.  
+2. Navigate to the installation folder:
+
+```sh
+cd "C:\Program Files\ZPL2PDF"
+```
+3. Run the converter with the parameters:
+
+```sh
+.\ZPL2PDF.exe -i "C:\Users\user\Documents\exemple_zpl.txt" -n "exemple_zpl.pdf" -o "C:\Users\user\Documents\"
+```
+
+-  **-i** → Path to the input ZPL file
+-  **-n** → Name of the output PDF file
+-  **-o** → Output directory where the PDF will be saved
+
+In the example above, the file exemple_zpl.pdf will be generated inside the user’s Documents folder.
+
 ## Features
 
 - **Label Processing:** 
