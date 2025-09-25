@@ -30,9 +30,9 @@ cd "C:\Program Files\ZPL2PDF"
 .\ZPL2PDF.exe -i "C:\Users\user\Documents\exemple_zpl.txt" -n "exemple_zpl.pdf" -o "C:\Users\user\Documents\"
 ```
 
-. -i → Path to the input ZPL file
-. -n → Name of the output PDF file
-. -o → Output directory where the PDF will be saved
+-  **-i** → Path to the input ZPL file
+-  **-n** → Name of the output PDF file
+-  **-o** → Output directory where the PDF will be saved
 
 In the example above, the file exemple_zpl.pdf will be generated inside the user’s Documents folder.
 
