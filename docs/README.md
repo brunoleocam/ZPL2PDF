@@ -1,8 +1,6 @@
-![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
 ![License](https://img.shields.io/github/license/brunoleocam/ZPL2PDF)
+![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
-![.NET](https://img.shields.io/badge/.NET-9.0-blue)
-![GitHub top language](https://img.shields.io/github/languages/top/brunoleocam/ZPL2PDF)
 
 # Documentation - ZPL2PDF
 
