@@ -24,6 +24,7 @@ C:\Program Files\ZPL2PDF
 ```sh
 cd "C:\Program Files\ZPL2PDF"
 ```
+
 3. Run the converter with the parameters:
 
 ```sh
@@ -34,7 +35,7 @@ cd "C:\Program Files\ZPL2PDF"
 -  **-n** → Name of the output PDF file
 -  **-o** → Output directory where the PDF will be saved
 
-In the example above, the file exemple_zpl.pdf will be generated inside the user’s Documents folder.
+In the example above, the file **exemple_zpl.pdf** will be generated inside the user’s **Documents** folder.
 
 ## Features
 

@@ -6,6 +6,37 @@ Este projeto é construído com base na biblioteca [BinaryKits.Zpl](https://gith
 
 ZPL2PDF é um projeto para converter etiquetas no formato ZPL em um arquivo PDF. O programa processa as etiquetas, renderiza imagens na memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
 
+## Instalação
+
+1. Baixe o instalador [`Setup.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) na seção **Releases** do projeto.
+2. Execute o instalador.
+3. O programa será instalado em:
+
+```sh
+C:\Program Files\ZPL2PDF
+```
+
+## How to Use
+
+1. Abra o **Prompt de Comando (cmd)** ou **PowerShell**.   
+2. Navegue até a pasta de instalação:
+
+```sh
+cd "C:\Program Files\ZPL2PDF"
+```
+
+3. Execute o conversor passando os parâmetros:
+
+```sh
+.\ZPL2PDF.exe -i "C:\Users\user\Documents\exemple_zpl.txt" -n "exemple_zpl.pdf" -o "C:\Users\user\Documents\"
+```
+
+-  **-i** → Caminho do arquivo ZPL de entrada
+-  **-n** → Nome do PDF de saída
+-  **-o** → Pasta de destino para salvar o PDF
+
+No exemplo acima, o arquivo **exemple_zpl.pdf** será criado dentro da pasta **Documentos** do usuário.
+
 ## Funcionalidades
 
 - **Processamento de Etiquetas:** 
