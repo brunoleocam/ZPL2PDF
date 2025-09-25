@@ -16,7 +16,7 @@ ZPL2PDF é um projeto para converter etiquetas no formato ZPL em um arquivo PDF.
 C:\Program Files\ZPL2PDF
 ```
 
-![Exemplo 1](docs\Image\example_1.png)
+![Exemplo 1](docs/Image/example_1.png)
 
 ## How to Use
 
@@ -37,7 +37,7 @@ cd "C:\Program Files\ZPL2PDF"
 -  **-n** → Nome do PDF de saída
 -  **-o** → Pasta de destino para salvar o PDF
 
-![Exemplo 2](docs\Image\example_2.png)
+![Exemplo 2](docs/Image/example_2.png)
 
 No exemplo acima, o arquivo **exemple_zpl.pdf** será criado dentro da pasta **Documentos** do usuário.
 
