@@ -1,3 +1,7 @@
+![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
+![License](https://img.shields.io/github/license/brunoleocam/ZPL2PDF)
+![Build](https://img.shields.io/github/actions/workflow/status/brunoleocam/ZPL2PDF/dotnet.yml)
+
 # Documentação - ZPL2PDF
 
 ## Introdução
