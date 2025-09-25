@@ -41,6 +41,8 @@ cd "C:\Program Files\ZPL2PDF"
 
 No exemplo acima, o arquivo **exemple_zpl.pdf** será criado dentro da pasta **Documentos** do usuário.
 
+![Exemplo 3](Image/example_3.png)
+
 ## Funcionalidades
 
 - **Processamento de Etiquetas:** 

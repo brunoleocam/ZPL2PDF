@@ -41,6 +41,8 @@ cd "C:\Program Files\ZPL2PDF"
 
 In the example above, the file **exemple_zpl.pdf** will be generated inside the user’s **Documents** folder.
 
+![Example 3](Image/example_3.png)
+
 ## Features
 
 - **Label Processing:** 
