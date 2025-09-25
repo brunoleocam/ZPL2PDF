@@ -16,6 +16,8 @@ ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The pr
 C:\Program Files\ZPL2PDF
 ```
 
+![Example 1](C:\Dev\ZPL2PDF\docs\Image\example_1.png)
+
 ## How to Use
 
 1. Open **Command Prompt (cmd)** or **PowerShell**.  
@@ -34,6 +36,8 @@ cd "C:\Program Files\ZPL2PDF"
 -  **-i** → Path to the input ZPL file
 -  **-n** → Name of the output PDF file
 -  **-o** → Output directory where the PDF will be saved
+
+![Example 2](C:\Dev\ZPL2PDF\docs\Image\example_2.png)
 
 In the example above, the file **exemple_zpl.pdf** will be generated inside the user’s **Documents** folder.
 

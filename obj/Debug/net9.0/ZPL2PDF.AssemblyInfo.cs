@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZPL2PDF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c98a3eb4f1146a0aa7dfe8910e0dda3816ea90ec")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4fbe0efefa81e34c4c253e57eb1d2caf5173556c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZPL2PDF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZPL2PDF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
