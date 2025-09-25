@@ -2,13 +2,26 @@
 ![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 
-# Documentação - ZPL2PDF
+# Conversor ZPL para PDF (ZPL2PDF) – Converter etiquetas ZPL em PDF
 
 ## Introdução
 
-Este projeto é construído com base na biblioteca [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl).
+ZPL2PDF é um conversor rápido e offline de ZPL para PDF. Ele lê etiquetas no Zebra Programming Language (ZPL/ZPL II), renderiza-as na memória e exporta um PDF multi‑página onde cada página é uma etiqueta. Construído sobre a confiável stack [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl), é ideal para integrações com ERP/warehouse, processamento em lote e pipelines automatizados de impressão.
 
-ZPL2PDF é um projeto para converter etiquetas no formato ZPL em um arquivo PDF. O programa processa as etiquetas, renderiza imagens na memória e compila essas imagens em um PDF, onde cada página contém uma etiqueta.
+Palavras‑chave: ZPL para PDF, Etiqueta para PDF, conversor de etiquetas Zebra, renderizador ZPL, CLI para Windows, conversão offline, integração com ERP.
+
+## Sumário
+
+- [Instalação](#instalação)
+- [Início rápido](#início-rápido)
+- [Como usar](#como-usar)
+- [Funcionalidades](#funcionalidades)
+- [Fluxo de Execução](#fluxo-de-execução)
+- [Exemplos de Uso](#exemplos-de-uso)
+- [Opções da CLI](#opções-da-cli)
+- [Integração com Outros Sistemas](#integração-com-outros-sistemas)
+- [Dependências](#dependências)
+- [Outros Idiomas](#outros-idiomas)
 
 ## Instalação
 
@@ -20,9 +33,17 @@ ZPL2PDF é um projeto para converter etiquetas no formato ZPL em um arquivo PDF.
 C:\Program Files\ZPL2PDF
 ```
 
-![Exemplo 1](Image/example_1.png)
+![Exemplo da interface do conversor ZPL para PDF](Image/example_1.png)
 
-## How to Use
+## Início rápido
+
+Converta um arquivo ZPL para PDF com um comando:
+
+```powershell
+& "C:\Program Files\ZPL2PDF\ZPL2PDF.exe" -i "C:\Users\user\Documents\exemple_zpl.txt" -o "C:\Users\user\Documents" -n "exemple_zpl.pdf"
+```
+
+## Como usar
 
 1. Abra o **Prompt de Comando (cmd)** ou **PowerShell**.   
 2. Navegue até a pasta de instalação:
@@ -41,22 +62,25 @@ cd "C:\Program Files\ZPL2PDF"
 -  **-n** → Nome do PDF de saída
 -  **-o** → Pasta de destino para salvar o PDF
 
-![Exemplo 2](Image/example_2.png)
+![Exemplo de uso no terminal convertendo ZPL para PDF](Image/example_2.png)
 
 No exemplo acima, o arquivo **exemple_zpl.pdf** será criado dentro da pasta **Documentos** do usuário.
 
-![Exemplo 3](Image/example_3.png)
+![Pré‑visualização do PDF resultante de etiquetas ZPL convertidas](Image/example_3.png)
 
 ## Funcionalidades
 
-- **Processamento de Etiquetas:** 
-   Utiliza a classe `LabelFileReader` para ler o arquivo e separar as etiquetas com base nos delimitadores `^XA` e `^XZ`.
+- **Renderização precisa de ZPL (ZPL/ZPL II):**
+   Renderiza etiquetas ZPL em imagens de alta qualidade totalmente na memória, sem arquivos temporários.
 
-- **Renderização na Memória:** 
-   A classe `LabelRenderer` analisa o conteúdo ZPL e renderiza as etiquetas em imagens, mantendo os dados na memória sem a necessidade de armazenamento temporário.
+- **Conversão em lote para PDF:**
+   Várias etiquetas tornam‑se um PDF multi‑página (uma etiqueta por página).
 
-- **Geração de PDF:** 
-   A classe `PdfGenerator` gera um PDF onde cada imagem é adicionada a uma página. O arquivo PDF é salvo na pasta de saída especificada pelo usuário, usando o nome de arquivo de saída especificado ou um nome padrão baseado na data e hora atuais.
+- **CLI amigável no Windows:**
+   Interface de linha de comando simples, ideal para scripts, ERPs e serviços.
+
+- **Tamanho de página e densidade configuráveis:**
+   Controle largura, altura, unidades e densidade para combinar com as impressoras.
 
 ## Fluxo de Execução
 
@@ -128,6 +152,20 @@ No exemplo acima, o arquivo **exemple_zpl.pdf** será criado dentro da pasta **D
 ## Integração com Outros Sistemas
 
 O programa pode ser compilado em um executável (ZPL2PDF.exe) e chamado a partir de outra aplicação, como um ERP, usando funções para iniciar processos (por exemplo, Process.Start em C#) e passando os parâmetros necessários.
+
+## Opções da CLI
+
+| Opção | Descrição | Exemplo |
+|---|---|---|
+| `-i` | Arquivo de entrada com conteúdo ZPL | `-i "C:\Caminho\para\input.txt"` |
+| `-z` | Conteúdo ZPL bruto passado diretamente | `-z "^XA^FO50,50...^XZ"` |
+| `-o` | Pasta de saída para o PDF gerado | `-o "C:\Caminho\para\output"` |
+| `-n` | Nome do arquivo PDF de saída | `-n "etiquetas.pdf"` |
+| `-w` | Largura da etiqueta (com `-u`) | `-w 4` |
+| `-h` | Altura da etiqueta (com `-u`) | `-h 6` |
+| `-u` | Unidade para largura/altura: `in`, `cm`, `mm` | `-u "cm"` |
+| `-d` | Densidade de impressão em pontos por milímetro | `-d 8` |
+| `-help` | Exibe ajuda | `-help` |
 
 ## Dependências
    

@@ -2,13 +2,26 @@
 ![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 
-# Documentation - ZPL2PDF
+# ZPL to PDF Converter (ZPL2PDF) – Convert ZPL Labels to PDF
 
 ## Introduction
 
-This project is built on top of the [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) library.
+ZPL2PDF is a fast, offline ZPL to PDF converter. It reads Zebra Programming Language (ZPL/ZPL II) labels, renders them in memory, and exports a multi-page PDF where each page is a label. Built on top of the trusted [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) stack, it is ideal for ERP/warehouse integrations, bulk label processing, and automated print pipelines.
 
-ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The program processes the labels, renders images in memory and compiles these images into a PDF, where each page contains a label.
+Keywords: ZPL to PDF, Label to PDF, Zebra label converter, ZPL renderer, Windows CLI, offline conversion, ERP integration.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Quickstart](#quickstart)
+- [How to Use](#how-to-use)
+- [Features](#features)
+- [Execution Flow](#execution-flow)
+- [Usage Examples](#usage-examples)
+- [CLI Options](#cli-options)
+- [Integration with Other Systems](#integration-with-other-systems)
+- [Dependencies](#dependencies)
+- [Other Languages](#other-languages)
 
 ## Installation
 
@@ -20,7 +33,15 @@ ZPL2PDF is a project for converting labels in ZPL format into a PDF file. The pr
 C:\Program Files\ZPL2PDF
 ```
 
-![Example 1](Image/example_1.png)
+![ZPL to PDF converter UI example](Image/example_1.png)
+
+## Quickstart
+
+Convert a ZPL file to PDF in one command:
+
+```powershell
+& "C:\Program Files\ZPL2PDF\ZPL2PDF.exe" -i "C:\Users\user\Documents\exemple_zpl.txt" -o "C:\Users\user\Documents" -n "exemple_zpl.pdf"
+```
 
 ## How to Use
 
@@ -41,22 +62,25 @@ cd "C:\Program Files\ZPL2PDF"
 -  **-n** → Name of the output PDF file
 -  **-o** → Output directory where the PDF will be saved
 
-![Example 2](Image/example_2.png)
+![Command-line usage example converting ZPL to PDF](Image/example_2.png)
 
 In the example above, the file **exemple_zpl.pdf** will be generated inside the user’s **Documents** folder.
 
-![Example 3](Image/example_3.png)
+![Resulting PDF preview of converted ZPL labels](Image/example_3.png)
 
 ## Features
 
-- **Label Processing:** 
-   Uses the `LabelFileReader` class to read the file and separate the labels based on the `^XA` and `^XZ` delimiters.
+- **Accurate ZPL rendering (ZPL/ZPL II):**
+   Renders ZPL labels to high-quality images fully in memory, no temp files.
 
-- **In-Memory Rendering:** 
-   The `LabelRenderer` class analyzes the ZPL content and renders the labels into images, keeping the data in memory without the need for temporary storage.
+- **Batch conversion to PDF:**
+   Multiple labels become a multi-page PDF (one label per page).
 
-- **PDF Generation:** 
-   The `PdfGenerator` class generates a PDF where each image is added to a page. The PDF file is saved in the user's specified output folder, using the specified output file name or a default name based on the current date and time.
+- **Windows-friendly CLI:**
+   Simple command-line interface suitable for scripts, ERPs, and services.
+
+- **Configurable page size and density:**
+   Control width, height, units, and print density to match printers.
 
 ## Execution Flow
 
@@ -128,6 +152,20 @@ In the example above, the file **exemple_zpl.pdf** will be generated inside the 
 ## Integration with Other Systems
 
 The program can be compiled into an executable (ZPL2PDF.exe) and called from another application, such as an ERP, using functions to start processes (e.g., Process.Start in C#) and passing the necessary parameters.
+
+## CLI Options
+
+| Option | Description | Example |
+|---|---|---|
+| `-i` | Input file with ZPL content | `-i "C:\Path\to\input.txt"` |
+| `-z` | Raw ZPL content passed directly | `-z "^XA^FO50,50...^XZ"` |
+| `-o` | Output folder for the resulting PDF | `-o "C:\Path\to\output"` |
+| `-n` | Output PDF filename | `-n "labels.pdf"` |
+| `-w` | Label width (with `-u`) | `-w 4` |
+| `-h` | Label height (with `-u`) | `-h 6` |
+| `-u` | Unit for width/height: `in`, `cm`, `mm` | `-u "cm"` |
+| `-d` | Print density in dots per millimeter | `-d 8` |
+| `-help` | Show help | `-help` |
 
 ## Dependencies
    
