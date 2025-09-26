@@ -1,6 +1,7 @@
 ![License](https://img.shields.io/github/license/brunoleocam/ZPL2PDF)
 ![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
+[![Tradução: Português-BR](https://img.shields.io/badge/Tradução-Português--BR-green.svg)](https://github.com/brunoleocam/ZPL2PDF/blob/main/docs/README.pt.md)
 
 # ZPL to PDF Converter (ZPL2PDF) – Convert ZPL Labels to PDF
 
@@ -22,6 +23,17 @@ Keywords: ZPL to PDF, Label to PDF, Zebra label converter, ZPL renderer, Windows
 - [Integration with Other Systems](#integration-with-other-systems)
 - [Dependencies](#dependencies)
 - [Other Languages](#other-languages)
+
+## Building after clone
+
+If you clone or fork this repository, run the following commands to generate all required output files:
+
+```sh
+dotnet build
+dotnet publish -c Release
+```
+
+This will automatically recreate all build outputs and dependencies.
 
 ## Installation
 

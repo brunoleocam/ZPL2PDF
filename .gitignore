@@ -1,0 +1,44 @@
+# Build output
+bin/
+obj/
+
+# Inno Setup output
+Install/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# Publish outputs
+*.publish/
+*.PublishOutputs*.txt
+
+# DLLs, executáveis, pdbs, etc.
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# EditorConfig gerado
+*.editorconfig
+
+# Arquivos de dependências e configuração gerados
+*.deps.json
+*.runtimeconfig.json
+
+# Arquivos de recursos
+*.resources.dll
+
+# Outros arquivos temporários
+*.tmp
+*.bak
+
+# Pastas de sistema
+Thumbs.db
+Desktop.ini

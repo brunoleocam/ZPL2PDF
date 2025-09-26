@@ -1,6 +1,7 @@
 ![License](https://img.shields.io/github/license/brunoleocam/ZPL2PDF)
 ![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
+[![Translation: English](https://img.shields.io/badge/Translation-English-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/blob/main/README.md)
 
 # Conversor ZPL para PDF (ZPL2PDF) – Converter etiquetas ZPL em PDF
 
@@ -22,6 +23,17 @@ Palavras‑chave: ZPL para PDF, Etiqueta para PDF, conversor de etiquetas Zebra,
 - [Integração com Outros Sistemas](#integração-com-outros-sistemas)
 - [Dependências](#dependências)
 - [Outros Idiomas](#outros-idiomas)
+
+## Compilando após clonar
+
+Se você clonar ou fizer fork do projeto, execute os comandos abaixo para gerar os arquivos necessários:
+
+```sh
+dotnet build
+dotnet publish -c Release
+```
+
+Isso irá recriar todos os arquivos de saída e dependências automaticamente.
 
 ## Instalação
 
