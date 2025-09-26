@@ -38,7 +38,7 @@ Palavras‑chave: ZPL para PDF, Etiqueta para PDF, conversor de etiquetas Zebra,
 
 ## Instalação
 
-1. Baixe o instalador [`Setup.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) na seção **Releases** do projeto.
+1. Baixe o instalador [`ZPL2PDF.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) na seção **Releases** do projeto.
 2. Execute o instalador.
 3. O programa será instalado em:
 

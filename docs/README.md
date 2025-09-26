@@ -38,7 +38,7 @@ Keywords: ZPL to PDF, Label to PDF, Zebra label converter, ZPL renderer, Windows
 
 ## Installation
 
-1. Download the installer [`Setup.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) from the **Releases** section.
+1. Download the installer [`ZPL2PDF.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) from the **Releases** section.
 2. Run the installer.
 3. The program will be installed in:
 
