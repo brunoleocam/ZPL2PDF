@@ -26,7 +26,8 @@ Palavras‑chave: ZPL para PDF, Etiqueta para PDF, conversor de etiquetas Zebra,
 
 ## Compilando após clonar
 
-Se você clonar ou fizer fork do projeto, execute os comandos abaixo para gerar os arquivos necessários:
+> [!ATENÇÃO]
+> Se você clonar ou fizer fork do projeto, execute os comandos abaixo para gerar os arquivos necessários:
 
 ```sh
 dotnet build

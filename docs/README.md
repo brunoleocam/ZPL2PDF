@@ -26,7 +26,8 @@ Keywords: ZPL to PDF, Label to PDF, Zebra label converter, ZPL renderer, Windows
 
 ## Building after clone
 
-If you clone or fork this repository, run the following commands to generate all required output files:
+> [!CAUTION]
+> If you clone or fork this repository, run the following commands to generate all required output files:
 
 ```sh
 dotnet build
