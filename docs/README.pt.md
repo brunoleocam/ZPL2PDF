@@ -53,7 +53,7 @@ C:\Program Files\ZPL2PDF
 Converta um arquivo ZPL para PDF com um comando:
 
 ```powershell
-& "C:\Program Files\ZPL2PDF\ZPL2PDF.exe" -i "C:\Users\user\Documents\exemple_zpl.txt" -o "C:\Users\user\Documents" -n "exemple_zpl.pdf"
+"C:\Program Files\ZPL2PDF\ZPL2PDF.exe" -i "C:\Users\user\Documents\exemple_zpl.txt" -o "C:\Users\user\Documents" -n "exemple_zpl.pdf"
 ```
 
 ## Como usar
