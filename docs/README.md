@@ -33,8 +33,8 @@ Keywords: ZPL to PDF, Label to PDF, Zebra label converter, ZPL renderer, Windows
 > dotnet build
 > dotnet publish -c Release
 > ```
-
-This will automatically recreate all build outputs and dependencies.
+>
+> This will automatically recreate all build outputs and dependencies.
 
 ## Installation
 

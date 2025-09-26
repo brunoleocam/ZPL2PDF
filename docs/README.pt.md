@@ -33,8 +33,8 @@ Palavras‑chave: ZPL para PDF, Etiqueta para PDF, conversor de etiquetas Zebra,
 > dotnet build
 > dotnet publish -c Release
 > ```
-
-Isso irá recriar todos os arquivos de saída e dependências automaticamente.
+>
+> Isso irá recriar todos os arquivos de saída e dependências automaticamente.
 
 ## Instalação
 
