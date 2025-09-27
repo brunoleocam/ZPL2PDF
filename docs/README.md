@@ -6,6 +6,8 @@
 
 # ZPL to PDF Converter (ZPL2PDF) – Convert ZPL Labels to PDF
 
+![ZPL2PDF Logo](Image/ZPL2PDF.png)
+
 ## Introduction
 
 ZPL2PDF is a fast, offline ZPL to PDF converter. It reads Zebra Programming Language (ZPL/ZPL II) labels, renders them in memory, and exports a multi-page PDF where each page is a label. Built on top of the trusted [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) stack, it is ideal for ERP/warehouse integrations, bulk label processing, and automated print pipelines.
