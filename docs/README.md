@@ -1,5 +1,6 @@
 ![License](https://img.shields.io/github/license/brunoleocam/ZPL2PDF)
 ![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
+[![WinGet package](https://img.shields.io/badge/winget-brunoleocam.ZPL2PDF-blue)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/b/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![Tradução: Português-BR](https://img.shields.io/badge/Tradução-Português--BR-green.svg)](https://github.com/brunoleocam/ZPL2PDF/blob/main/docs/README.pt.md)
 
@@ -37,6 +38,16 @@ Keywords: ZPL to PDF, Label to PDF, Zebra label converter, ZPL renderer, Windows
 > This will automatically recreate all build outputs and dependencies.
 
 ## Installation
+
+### Method 1: Windows Package Manager (WinGet)
+
+If you use WinGet, you can install it with a single command in PowerShell:
+
+```sh
+winget install brunoleocam.ZPL2PDF
+```
+
+### Method 2: Installer (Direct Download)
 
 1. Download the installer [`ZPL2PDF.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) from the **Releases** section.
 2. Run the installer.

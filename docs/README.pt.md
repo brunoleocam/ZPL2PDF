@@ -1,5 +1,6 @@
 ![License](https://img.shields.io/github/license/brunoleocam/ZPL2PDF)
 ![Release](https://img.shields.io/github/v/release/brunoleocam/ZPL2PDF)
+[![WinGet package](https://img.shields.io/badge/winget-brunoleocam.ZPL2PDF-blue)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/b/brunoleocam/ZPL2PDF)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![Translation: English](https://img.shields.io/badge/Translation-English-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/blob/main/README.md)
 
@@ -37,6 +38,16 @@ Palavras‑chave: ZPL para PDF, Etiqueta para PDF, conversor de etiquetas Zebra,
 > Isso irá recriar todos os arquivos de saída e dependências automaticamente.
 
 ## Instalação
+
+### Método 1: Windows Package Manager (WinGet)
+
+Se você utiliza o WinGet, pode instalar com um único comando no PowerShell:
+
+```sh
+winget install brunoleocam.ZPL2PDF
+```
+
+### Método 2: Instalador (Download Direto)
 
 1. Baixe o instalador [`ZPL2PDF.exe`](https://github.com/brunoleocam/ZPL2PDF/releases) na seção **Releases** do projeto.
 2. Execute o instalador.
