@@ -4,8 +4,6 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![Translation: English](https://img.shields.io/badge/Translation-English-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/blob/main/README.md)
 
-<img src="Image/ZPL2PDF.png" alt="ZPL2PDF Logo" width="80"/> 
-
 # Conversor ZPL para PDF (ZPL2PDF) – Converter etiquetas ZPL em PDF
 
 ## Introdução
