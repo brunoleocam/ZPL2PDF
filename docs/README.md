@@ -6,7 +6,7 @@
 
 # ZPL to PDF Converter (ZPL2PDF) – Convert ZPL Labels to PDF
 
-![ZPL2PDF Logo](Image/ZPL2PDF.png)
+<img src="Image/ZPL2PDF.png" alt="ZPL2PDF Logo" width="180"/>
 
 ## Introduction
 
