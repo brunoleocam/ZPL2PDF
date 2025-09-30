@@ -62,10 +62,15 @@ namespace ZPL2PDF {
                         if (!string.IsNullOrEmpty(ZplContent)) {
                             throw new ArgumentException("Cannot specify both -i and -z parameters.");
                         }
-                        if (i + 1 < args.Length && File.Exists(args[i + 1]) && Path.GetExtension(args[i + 1]).Equals(".txt", StringComparison.OrdinalIgnoreCase)) {
-                            InputFilePath = args[i + 1];
+                        if (i + 1 < args.Length && File.Exists(args[i + 1])) {
+                            string extension = Path.GetExtension(args[i + 1]).ToLowerInvariant();
+                            if (extension == ".txt" || extension == ".prn") {
+                                InputFilePath = args[i + 1];
+                            } else {
+                                throw new ArgumentException("Invalid input file extension. Only .txt and .prn files are supported.");
+                            }
                         } else {
-                            throw new ArgumentException("Invalid input file path or the file is not a .txt file.");
+                            throw new ArgumentException("Invalid input file path or the file does not exist.");
                         }
                         i++;
                         break;
@@ -154,9 +159,9 @@ namespace ZPL2PDF {
         /// Displays the help message.
         /// </summary>
         private void ShowHelp() {
-            Console.WriteLine("Usage: ZPL2PDF.exe -i <input_file_path.txt> -o <output_folder_path> [-n <output_file_name>] | -z <zpl_content>");
+            Console.WriteLine("Usage: ZPL2PDF.exe -i <input_file_path> -o <output_folder_path> [-n <output_file_name>] | -z <zpl_content>");
             Console.WriteLine("Parameters:");
-            Console.WriteLine("  -i <input_file_path.txt>   Path to the input .txt file");
+            Console.WriteLine("  -i <input_file_path>       Path to the input .txt or .prn file");
             Console.WriteLine("  -z <zpl_content>           ZPL content as a string");
             Console.WriteLine("  -o <output_folder_path>    Path to the folder where the PDF file will be saved");
             Console.WriteLine("  -n <output_file_name>      Name of the output PDF file (optional)");
