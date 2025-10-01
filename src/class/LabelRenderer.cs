@@ -16,29 +16,31 @@ namespace ZPL2PDF {
         private readonly ZplElementDrawer _drawer;
         private readonly double _labelWidthMm;
         private readonly double _labelHeightMm;
-        private readonly int _printDensityDpmm;
+        private readonly int _printDpi;
 
         private const double InchesToMm = 25.4;
         private const double CmToMm = 10.0;
+        private const double DpiToDpmm = 25.4;
 
         /// <summary>
         /// Initializes a new instance of the LabelRenderer class, setting up the necessary dependencies for rendering labels into images.
         /// </summary>
-        public LabelRenderer(double labelWidth, double labelHeight, int printDensityDpmm, string unit) {
+        /// <param name="labelWidth">Label width</param>
+        /// <param name="labelHeight">Label height</param>
+        /// <param name="printDpi">Print density in DPI (e.g., 203)</param>
+        /// <param name="unit">Unit of measurement (mm, cm, in)</param>
+        public LabelRenderer(double labelWidth, double labelHeight, int printDpi, string unit) {
             _printerStorage = new PrinterStorage();
             _analyzer = new ZplAnalyzer(_printerStorage);
 
-            // Define as opções de renderização com alta qualidade
+            // Define rendering options with high quality
             var drawerOptions = new DrawerOptions {
                 RenderFormat = SKEncodedImageFormat.Png,
-                RenderQuality = 100, // Qualidade máxima
+                RenderQuality = 100, // Maximum quality
                 PdfOutput = false,
                 OpaqueBackground = false
             };
             _drawer = new ZplElementDrawer(_printerStorage, drawerOptions);
-
-            // Debugging: Print the input values
-            //Console.WriteLine($"labelWidth: {labelWidth}, labelHeight: {labelHeight}, printDensityDpmm: {printDensityDpmm}, unit: {unit}");
 
             // Convert width and height to millimeters based on the unit
             switch (unit) {
@@ -57,20 +59,34 @@ namespace ZPL2PDF {
                 default:
                     _labelWidthMm = 60;   // 60 mm
                     _labelHeightMm = 120;  // 120 mm
-                    _printDensityDpmm = 8;
                     break;
             }
 
-            // Multiplicar a densidade de impressão por 2,25 para aumentar a resolução
-            //Console.WriteLine($"_printDensityDpmm A: {_printDensityDpmm}, printDensityDpmm A: {printDensityDpmm}");
-            
-            _printDensityDpmm = printDensityDpmm;
+            // Store DPI (will be converted to DPMM when rendering)
+            _printDpi = printDpi;
+        }
 
-            //_printDensityDpmm = (int)(printDensityDpmm * 2.25);
-            //Console.WriteLine($"_printDensityDpmm D: {_printDensityDpmm}, printDensityDpmm D: {printDensityDpmm}");
+        /// <summary>
+        /// Initializes a new instance of the LabelRenderer class using LabelDimensions (for daemon mode).
+        /// </summary>
+        /// <param name="dimensions">Label dimensions extracted from ZPL</param>
+        public LabelRenderer(LabelDimensions dimensions) {
+            _printerStorage = new PrinterStorage();
+            _analyzer = new ZplAnalyzer(_printerStorage);
 
-            // Debugging: Print the calculated values
-            //Console.WriteLine($"_labelWidthMm: {_labelWidthMm}, _labelHeightMm: {_labelHeightMm}, _printDensityDpmm: {_printDensityDpmm}");
+            // Define rendering options with high quality
+            var drawerOptions = new DrawerOptions {
+                RenderFormat = SKEncodedImageFormat.Png,
+                RenderQuality = 100, // Maximum quality
+                PdfOutput = false,
+                OpaqueBackground = false
+            };
+            _drawer = new ZplElementDrawer(_printerStorage, drawerOptions);
+
+            // Use dimensions extracted from ZPL
+            _labelWidthMm = dimensions.WidthMm;
+            _labelHeightMm = dimensions.HeightMm;
+            _printDpi = dimensions.Dpi;  // Store DPI
         }
 
         /// <summary>
@@ -80,19 +96,17 @@ namespace ZPL2PDF {
         /// <returns>List of images in byte arrays.</returns>
         public List<byte[]> RenderLabels(List<string> labels) {
             var images = new List<byte[]>();
+            
+            // Convert DPI to DPMM for the drawer
+            int dpmm = (int)Math.Round(_printDpi / DpiToDpmm);
+            
             for (int i = 0; i < labels.Count; i++) {
                 var labelText = labels[i];
                 var analyzeInfo = _analyzer.Analyze(labelText);
                 foreach (var labelInfo in analyzeInfo.LabelInfos) {
-                    // Convert double to int safely
-                    int widthUnits = (int)Math.Round(_labelWidthMm * _printDensityDpmm);
-                    int heightUnits = (int)Math.Round(_labelHeightMm * _printDensityDpmm);
-                    //Console.WriteLine($"widthUnits: {widthUnits}, heightUnits: {heightUnits}, _printDensityDpmm: {_printDensityDpmm}");
-                    byte[] imageData = _drawer.Draw(labelInfo.ZplElements, _labelWidthMm, _labelHeightMm, _printDensityDpmm);
+                    // Use DPMM for Draw (BinaryKits library expects DPMM)
+                    byte[] imageData = _drawer.Draw(labelInfo.ZplElements, _labelWidthMm, _labelHeightMm, dpmm);
                     images.Add(imageData);
-
-                    // Save the image to a file for testing
-                    //SaveImageToFile(imageData, Path.Combine(@"C:\Dev", $"Imagem_{i + 1}.png"));
                 }
             }
             return images;
