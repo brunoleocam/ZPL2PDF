@@ -42,3 +42,6 @@ Install/
 # Pastas de sistema
 Thumbs.db
 Desktop.ini
+
+# Cursor
+.cursor/

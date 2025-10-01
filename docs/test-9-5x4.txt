@@ -1,0 +1,24 @@
+^FX Example 3 - Shipping Label 9.5cm x 4cm
+^XA
+^PW759
+^LL320
+
+^FX Text Block 1 - Sender/Reference
+^CF0,25
+^FO30,30^FDINTERSHIPPING, INC.^FS
+^CF0,20
+^FO30,65^FDRMA: X34B-1^FS
+^FO30,90^FDREF: F00B47^FS
+
+^FX Text Block 2 - Recipient (Align Right)
+^CF0,25
+^FO500,30^FDJOHN DOE^FS
+^CF0,20
+^FO500,65^FD100 MAIN STREET^FS
+^FO500,90^FDSPRINGFIELD, TN^FS
+
+^FX Barcode at the bottom
+^BY2,2,60
+^FO250,150^BC^FD1234567890^FS
+
+^XZ
