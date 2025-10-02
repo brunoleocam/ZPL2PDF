@@ -166,39 +166,43 @@ namespace ZPL2PDF
         /// <param name="explicitHeight">Explicit height (parameter -h)</param>
         /// <param name="explicitUnit">Explicit unit (parameter -u)</param>
         /// <param name="zplDimensions">Dimensions extracted from ZPL</param>
+        /// <param name="dpi">DPI to use for conversions</param>
         /// <returns>Final dimensions to be used</returns>
-        public LabelDimensions ApplyPriorityLogic(double? explicitWidth, double? explicitHeight, string explicitUnit, LabelDimensions zplDimensions)
+        public LabelDimensions ApplyPriorityLogic(double? explicitWidth, double? explicitHeight, string explicitUnit, LabelDimensions zplDimensions, int dpi = 203)
         {
             var result = new LabelDimensions
             {
-                Dpi = DefaultSettings.DEFAULT_DPI,
+                Dpi = dpi,
                 HasDimensions = true
             };
 
-            // Priority 1: Explicit parameters
-            if (explicitWidth.HasValue && explicitHeight.HasValue)
-            {
-                result.Width = ConvertMmToPoints(explicitWidth.Value, DefaultSettings.DEFAULT_DPI);
-                result.Height = ConvertMmToPoints(explicitHeight.Value, DefaultSettings.DEFAULT_DPI);
-                result.WidthMm = explicitWidth.Value;
-                result.HeightMm = explicitHeight.Value;
-                result.Source = "explicit_parameters";
-                return result;
-            }
-
-            // Priority 2: Dimensions extracted from ZPL
+            // Priority 1: Dimensions extracted from ZPL (^PW and ^LL)
             if (zplDimensions.HasDimensions && ValidateDimensions(zplDimensions))
             {
                 result.Width = zplDimensions.Width;
                 result.Height = zplDimensions.Height;
                 result.WidthMm = zplDimensions.WidthMm;
                 result.HeightMm = zplDimensions.HeightMm;
+                result.Dpi = dpi; // Use the provided DPI
                 result.Source = "zpl_extraction";
+                return result;
+            }
+
+            // Priority 2: Explicit parameters (-w and -h)
+            if (explicitWidth.HasValue && explicitHeight.HasValue)
+            {
+                result.Width = ConvertMmToPoints(explicitWidth.Value, dpi);
+                result.Height = ConvertMmToPoints(explicitHeight.Value, dpi);
+                result.WidthMm = explicitWidth.Value;
+                result.HeightMm = explicitHeight.Value;
+                result.Dpi = dpi; // Use the provided DPI
+                result.Source = "explicit_parameters";
                 return result;
             }
 
             // Priority 3: Default dimensions
             result = GetDefaultDimensions();
+            result.Dpi = dpi; // Use the provided DPI
             result.Source = "default";
             return result;
         }

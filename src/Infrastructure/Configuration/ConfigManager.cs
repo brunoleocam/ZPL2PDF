@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -243,7 +244,7 @@ namespace ZPL2PDF
             Console.WriteLine("Current ZPL2PDF configuration:");
             Console.WriteLine($"   Monitoring folder: {_config.DefaultListenFolder}");
             Console.WriteLine($"   Label dimensions: {_config.LabelWidth} x {_config.LabelHeight} {_config.Unit}");
-            Console.WriteLine($"   DPI: {_config.Dpi}");
+            Console.WriteLine($"   Print Density: {ApplicationConstants.ConvertDpiToDpmm(ApplicationConstants.DEFAULT_DPI):F1} dpmm ({ApplicationConstants.DEFAULT_DPI} dpi)");
             Console.WriteLine($"   Log level: {_config.LogLevel}");
             Console.WriteLine($"   Retry delay: {_config.RetryDelay}ms");
             Console.WriteLine($"   Max retries: {_config.MaxRetries}");

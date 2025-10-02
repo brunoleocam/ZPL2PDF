@@ -18,6 +18,11 @@ namespace ZPL2PDF
         private readonly LabelDimensions _fixedDimensions;
         private readonly bool _useFixedDimensions;
         private bool _isDisposed = false;
+        private readonly HashSet<string> _processedFiles = new HashSet<string>();
+        private readonly HashSet<string> _processingFiles = new HashSet<string>();
+        private readonly object _lockObject = new object();
+        private Timer? _pollingTimer;
+        private readonly int _pollingIntervalMs = 2000; // 2 segundos
 
         /// <summary>
         /// Event fired when a file is detected
@@ -76,8 +81,17 @@ namespace ZPL2PDF
 
                 // Configure events
                 _fileSystemWatcher.Created += OnFileCreated;
-                _fileSystemWatcher.Changed += OnFileChanged;
                 _fileSystemWatcher.Error += OnError;
+                
+                Console.WriteLine($"FileSystemWatcher configured:");
+                Console.WriteLine($"  Path: {_fileSystemWatcher.Path}");
+                Console.WriteLine($"  Filter: {_fileSystemWatcher.Filter}");
+                Console.WriteLine($"  EnableRaisingEvents: {_fileSystemWatcher.EnableRaisingEvents}");
+                Console.WriteLine($"  IncludeSubdirectories: {_fileSystemWatcher.IncludeSubdirectories}");
+
+                // Start polling timer as backup for FileSystemWatcher
+                _pollingTimer = new Timer(PollForNewFiles, null, _pollingIntervalMs, _pollingIntervalMs);
+                Console.WriteLine($"Polling timer started (interval: {_pollingIntervalMs}ms)");
 
                 Console.WriteLine($"Monitoring folder: {_listenFolder}");
                 Console.WriteLine($"File types: .txt, .prn");
@@ -88,6 +102,9 @@ namespace ZPL2PDF
                     Console.WriteLine($"   Width: {_fixedDimensions.WidthMm:F1}mm");
                     Console.WriteLine($"   Height: {_fixedDimensions.HeightMm:F1}mm");
                 }
+
+                // Process existing files in the folder
+                ProcessExistingFiles();
             }
             catch (Exception ex)
             {
@@ -108,6 +125,13 @@ namespace ZPL2PDF
                     _fileSystemWatcher.Dispose();
                     _fileSystemWatcher = null;
                 }
+                
+                if (_pollingTimer != null)
+                {
+                    _pollingTimer.Dispose();
+                    _pollingTimer = null;
+                }
+                
                 Console.WriteLine("Monitoring stopped");
             }
             catch (Exception ex)
@@ -122,16 +146,10 @@ namespace ZPL2PDF
         /// </summary>
         private async void OnFileCreated(object sender, FileSystemEventArgs e)
         {
+            Console.WriteLine($"FileSystemWatcher detected file: {Path.GetFileName(e.FullPath)}");
             await HandleFileEvent(e.FullPath, "created");
         }
 
-        /// <summary>
-        /// Event fired when a file is modified
-        /// </summary>
-        private async void OnFileChanged(object sender, FileSystemEventArgs e)
-        {
-            await HandleFileEvent(e.FullPath, "modified");
-        }
 
         /// <summary>
         /// Event fired when an error occurs
@@ -149,9 +167,30 @@ namespace ZPL2PDF
         {
             try
             {
+                Console.WriteLine($"HandleFileEvent called: {Path.GetFileName(filePath)} (type: {eventType})");
+                
                 // Check if it's a valid file
                 if (!IsValidFile(filePath))
+                {
+                    Console.WriteLine($"File ignored (invalid extension): {Path.GetFileName(filePath)}");
                     return;
+                }
+
+                // For existing files (when daemon starts), don't check processed files list
+                // For new files (created events), check to avoid duplicates
+                if (eventType != "existing")
+                {
+                    lock (_lockObject)
+                    {
+                        if (_processedFiles.Contains(filePath) || _processingFiles.Contains(filePath))
+                        {
+                            Console.WriteLine($"File already processed or being processed, ignoring: {Path.GetFileName(filePath)}");
+                            return;
+                        }
+                        // Mark as being processed
+                        _processingFiles.Add(filePath);
+                    }
+                }
 
                 // Wait a bit to ensure the file was completely written
                 await Task.Delay(500);
@@ -170,9 +209,21 @@ namespace ZPL2PDF
 
                 // Process file
                 await ProcessFileAsync(filePath);
+                
+                // Mark file as processed only after successful processing
+                lock (_lockObject)
+                {
+                    _processingFiles.Remove(filePath);
+                    _processedFiles.Add(filePath);
+                }
             }
             catch (Exception ex)
             {
+                // Remove from processing files in case of error
+                lock (_lockObject)
+                {
+                    _processingFiles.Remove(filePath);
+                }
                 OnError(this, new ErrorEventArgs(ex));
             }
         }
@@ -202,29 +253,37 @@ namespace ZPL2PDF
                     return;
                 }
 
-                // Determine dimensions
+                // Determine dimensions using priority logic
                 LabelDimensions dimensions;
+                
+                // Priority 1: Try to extract dimensions from ZPL first
+                var zplDimensions = _dimensionExtractor.ExtractDimensions(content);
+                if (zplDimensions.Count == 0)
+                {
+                    Console.WriteLine($"No ZPL labels found in: {fileName}");
+                    return;
+                }
+
+                // Use priority logic: ZPL dimensions > Fixed dimensions > Default dimensions
+                var firstLabelDimensions = zplDimensions[0];
                 if (_useFixedDimensions)
                 {
-                    // Use fixed dimensions
-                    dimensions = _fixedDimensions;
-                    Console.WriteLine($"Using fixed dimensions: {dimensions.WidthMm:F1}mm x {dimensions.HeightMm:F1}mm");
+                    // Apply priority logic with fixed dimensions as fallback
+                    dimensions = _dimensionExtractor.ApplyPriorityLogic(
+                        _fixedDimensions.WidthMm, 
+                        _fixedDimensions.HeightMm, 
+                        "mm", 
+                        firstLabelDimensions,
+                        _fixedDimensions.Dpi
+                    );
                 }
                 else
                 {
-                    // Extract dimensions from ZPL
-                    var zplDimensions = _dimensionExtractor.ExtractDimensions(content);
-                    if (zplDimensions.Count == 0)
-                    {
-                        Console.WriteLine($"No ZPL labels found in: {fileName}");
-                        return;
-                    }
-
-                    // Use dimensions from first label (or apply priority logic)
-                    var firstLabelDimensions = zplDimensions[0];
-                    dimensions = _dimensionExtractor.ApplyPriorityLogic(null, null, "mm", firstLabelDimensions);
-                    Console.WriteLine($"Extracted dimensions: {dimensions.WidthMm:F1}mm x {dimensions.HeightMm:F1}mm [{dimensions.Source}]");
+                    // Apply priority logic with default dimensions as fallback
+                    dimensions = _dimensionExtractor.ApplyPriorityLogic(null, null, "mm", firstLabelDimensions, DefaultSettings.DEFAULT_DPI);
                 }
+                
+                Console.WriteLine($"Final dimensions: {dimensions.WidthMm:F1}mm x {dimensions.HeightMm:F1}mm [{dimensions.Source}]");
 
                 // Add to processing queue
                 var processingItem = new ProcessingItem
@@ -271,6 +330,76 @@ namespace ZPL2PDF
             catch (IOException)
             {
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Processes existing files in the monitored folder
+        /// </summary>
+        private async void ProcessExistingFiles()
+        {
+            try
+            {
+                var existingFiles = Directory.GetFiles(_listenFolder, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(file => IsValidFile(file))
+                    .ToList();
+
+                if (existingFiles.Count > 0)
+                {
+                    Console.WriteLine($"Found {existingFiles.Count} existing file(s) to process:");
+                    foreach (var file in existingFiles)
+                    {
+                        Console.WriteLine($"  - {Path.GetFileName(file)}");
+                        await HandleFileEvent(file, "existing");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing existing files: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Polls for new files as backup for FileSystemWatcher
+        /// </summary>
+        private async void PollForNewFiles(object? state)
+        {
+            try
+            {
+                var currentFiles = Directory.GetFiles(_listenFolder, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(file => IsValidFile(file))
+                    .ToList();
+
+                foreach (var file in currentFiles)
+                {
+                    lock (_lockObject)
+                    {
+                        // Skip if already processed or being processed
+                        if (_processedFiles.Contains(file) || _processingFiles.Contains(file))
+                            continue;
+                    }
+
+                    Console.WriteLine($"Polling detected file: {Path.GetFileName(file)}");
+                    await HandleFileEvent(file, "polling");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error polling for files: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Clears the list of processed files (useful for testing or restarting)
+        /// </summary>
+        public void ClearProcessedFiles()
+        {
+            lock (_lockObject)
+            {
+                _processedFiles.Clear();
+                _processingFiles.Clear();
+                Console.WriteLine("Processed files list cleared");
             }
         }
 

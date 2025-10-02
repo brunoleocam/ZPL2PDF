@@ -173,24 +173,21 @@ namespace ZPL2PDF
                     return false;
                 }
 
-                // Extract dimensions from each label individually
-                var extractedDimensionsList = _dimensionExtractor.ExtractDimensions(item.Content);
-                
-                // Process each label with its own dimensions
+                // Use dimensions from ProcessingItem (already calculated by FolderMonitor)
                 var allImageData = new List<byte[]>();
+                
+                // Debug: Log the dimensions from ProcessingItem
+                Console.WriteLine($"DEBUG - ProcessingItem dimensions: {item.Dimensions.WidthMm:F1}mm x {item.Dimensions.HeightMm:F1}mm [{item.Dimensions.Source}]");
                 
                 for (int i = 0; i < labels.Count; i++)
                 {
                     var label = labels[i];
-                    var labelDimensions = i < extractedDimensionsList.Count ? extractedDimensionsList[i] : extractedDimensionsList[0];
                     
-                    // Apply priority logic for this label
-                    var finalDimensions = _dimensionExtractor.ApplyPriorityLogic(
-                        null, 
-                        null, 
-                        "mm", 
-                        labelDimensions
-                    );
+                    // Use the dimensions already calculated by FolderMonitor
+                    var finalDimensions = item.Dimensions;
+                    
+                    // Debug: Log what we're using
+                    Console.WriteLine($"DEBUG - Using dimensions for label {i + 1}: {finalDimensions.WidthMm:F1}mm x {finalDimensions.HeightMm:F1}mm [{finalDimensions.Source}]");
                     
                     // Create specific renderer for this label
                     var labelRenderer = new LabelRenderer(finalDimensions);
@@ -211,12 +208,27 @@ namespace ZPL2PDF
                 var outputFolder = _customOutputFolder ?? Path.GetDirectoryName(item.FilePath)!;
                 var outputPath = Path.Combine(outputFolder, outputFileName);
                 
+                Console.WriteLine($"Output folder: {outputFolder}");
+                Console.WriteLine($"Output path: {outputPath}");
+                
                 // Ensure destination folder exists
                 Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
                 
+                Console.WriteLine($"Calling PdfGenerator.GeneratePdf with {allImageData.Count} images...");
                 PdfGenerator.GeneratePdf(allImageData, outputPath);
                 
-                Console.WriteLine($"PDF generated: {outputFileName}");
+                // Verify PDF was created
+                if (File.Exists(outputPath))
+                {
+                    var fileInfo = new FileInfo(outputPath);
+                    Console.WriteLine($"PDF generated successfully: {outputFileName} ({fileInfo.Length} bytes)");
+                }
+                else
+                {
+                    Console.WriteLine($"ERROR: PDF file was not created at {outputPath}");
+                    return false;
+                }
+                
                 return true;
             }
             catch (Exception ex)
@@ -233,15 +245,25 @@ namespace ZPL2PDF
         {
             try
             {
+                Console.WriteLine($"Attempting to delete original file: {item.FilePath}");
                 if (File.Exists(item.FilePath))
                 {
+                    // Wait a bit to ensure file is not locked
+                    await Task.Delay(100);
+                    
                     File.Delete(item.FilePath);
                     Console.WriteLine($"Original file deleted: {item.FileName}");
+                }
+                else
+                {
+                    Console.WriteLine($"Original file not found: {item.FilePath}");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting original file {item.FileName}: {ex.Message}");
+                Console.WriteLine($"Exception type: {ex.GetType().Name}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
 
