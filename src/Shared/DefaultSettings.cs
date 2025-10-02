@@ -1,4 +1,5 @@
 using System;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -7,26 +8,22 @@ namespace ZPL2PDF
     /// </summary>
     public static class DefaultSettings
     {
-        // Default dimensions
-        public const double DEFAULT_WIDTH_MM = 100.0;  // 4 inches = 101.6mm ≈ 100mm
-        public const double DEFAULT_HEIGHT_MM = 150.0; // 6 inches = 152.4mm ≈ 150mm
-        public const double DEFAULT_WIDTH_IN = 4.0;    // 4 inches
-        public const double DEFAULT_HEIGHT_IN = 6.0;   // 6 inches
-        public const double DEFAULT_WIDTH_CM = 10.0;   // 10 cm
-        public const double DEFAULT_HEIGHT_CM = 15.0;  // 15 cm
+        // Use constants from ApplicationConstants
+        public const double DEFAULT_WIDTH_MM = ApplicationConstants.DEFAULT_WIDTH_MM;
+        public const double DEFAULT_HEIGHT_MM = ApplicationConstants.DEFAULT_HEIGHT_MM;
+        public const double DEFAULT_WIDTH_IN = ApplicationConstants.DEFAULT_WIDTH_IN;
+        public const double DEFAULT_HEIGHT_IN = ApplicationConstants.DEFAULT_HEIGHT_IN;
+        public const double DEFAULT_WIDTH_CM = ApplicationConstants.DEFAULT_WIDTH_CM;
+        public const double DEFAULT_HEIGHT_CM = ApplicationConstants.DEFAULT_HEIGHT_CM;
 
-        // Default unit
-        public const string DEFAULT_UNIT = "mm";
+        public const string DEFAULT_UNIT = ApplicationConstants.DEFAULT_UNIT;
+        public const int DEFAULT_DPI = ApplicationConstants.DEFAULT_DPI;
 
-        // Default DPI
-        public const int DEFAULT_DPI = 203; // Default DPI for Zebra printers
-
-        // Conversion factors
-        public const double POINTS_TO_MM_FACTOR = 25.4; // Conversion factor from points to mm
-        public const double MM_TO_INCH_FACTOR = 0.0393701; // 1mm = 0.0393701 inches
-        public const double MM_TO_CM_FACTOR = 0.1; // 1mm = 0.1 cm
-        public const double INCH_TO_MM_FACTOR = 25.4; // 1 inch = 25.4 mm
-        public const double CM_TO_MM_FACTOR = 10.0; // 1 cm = 10 mm
+        public const double POINTS_TO_MM_FACTOR = ApplicationConstants.POINTS_TO_MM_FACTOR;
+        public const double MM_TO_INCH_FACTOR = ApplicationConstants.MM_TO_INCH_FACTOR;
+        public const double MM_TO_CM_FACTOR = ApplicationConstants.MM_TO_CM_FACTOR;
+        public const double INCH_TO_MM_FACTOR = ApplicationConstants.INCH_TO_MM_FACTOR;
+        public const double CM_TO_MM_FACTOR = ApplicationConstants.CM_TO_MM_FACTOR;
 
         /// <summary>
         /// Gets default width in the specified unit

@@ -1,0 +1,6 @@
+Expected PDF content for multiple labels:
+- Dimensions: 7.5in x 15in @ 203 DPI
+- Content: Label 1, Label 2
+- Format: PDF
+- Pages: 2
+- Labels per page: 1

@@ -1,0 +1,5 @@
+Expected PDF content for simple label:
+- Dimensions: 7.5in x 15in @ 203 DPI
+- Content: Test Label
+- Format: PDF
+- Pages: 1
