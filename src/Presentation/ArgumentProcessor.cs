@@ -107,12 +107,12 @@ namespace ZPL2PDF
         {
             if (args.Length == 0)
             {
-                // Sem argumentos = modo daemon start (comportamento padrão)
+                // No arguments = daemon start mode (default behavior)
                 Mode = OperationMode.Daemon;
                 DaemonCommand = "start";
                 ListenFolderPath = _argumentParser.GetDefaultListenFolder();
                 
-                // Aplicar dimensões padrão quando não há argumentos
+                // Apply default dimensions when no arguments are provided
                 ApplyDefaultDimensions();
                 return;
             }
@@ -127,7 +127,7 @@ namespace ZPL2PDF
             Mode = _modeDetector.DetectMode(args);
             DaemonCommand = _modeDetector.ExtractDaemonCommand(args);
 
-            // Se é modo help, mostra ajuda e sai
+            // If it's help mode, show help and exit
             if (Mode == OperationMode.Help)
             {
                 _helpDisplay.ShowHelp();
@@ -192,7 +192,7 @@ namespace ZPL2PDF
             int startIndex = 0;
             if (DaemonCommand == "start" || DaemonCommand == "run")
             {
-                // Só usa startIndex = 1 se há pelo menos 1 argumento para pular
+                // Only use startIndex = 1 if there's at least 1 argument to skip
                 startIndex = args.Length > 0 ? 1 : 0;
             }
             var daemonArgs = _argumentParser.ParseDaemonMode(args, startIndex);
