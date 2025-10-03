@@ -31,6 +31,11 @@ namespace ZPL2PDF
         public event EventHandler<FileErrorEventArgs>? FileError;
 
         /// <summary>
+        /// Event fired when a file processing is completed (success or error)
+        /// </summary>
+        public event EventHandler<FileCompletedEventArgs>? FileCompleted;
+
+        /// <summary>
         /// ProcessingQueue constructor
         /// </summary>
         /// <param name="dimensionExtractor">ZPL dimension extractor</param>
@@ -145,6 +150,9 @@ namespace ZPL2PDF
                     FileError?.Invoke(this, new FileErrorEventArgs(item, "Conversion failed"));
                     Console.WriteLine($"Failed to process file: {item.FileName}");
                 }
+                
+                // Always fire the completed event
+                FileCompleted?.Invoke(this, new FileCompletedEventArgs(item, success));
             }
             catch (Exception ex)
             {
@@ -177,7 +185,7 @@ namespace ZPL2PDF
                 var allImageData = new List<byte[]>();
                 
                 // Debug: Log the dimensions from ProcessingItem
-                Console.WriteLine($"DEBUG - ProcessingItem dimensions: {item.Dimensions.WidthMm:F1}mm x {item.Dimensions.HeightMm:F1}mm [{item.Dimensions.Source}]");
+                //Console.WriteLine($"DEBUG - ProcessingItem dimensions: {item.Dimensions.WidthMm:F1}mm x {item.Dimensions.HeightMm:F1}mm [{item.Dimensions.Source}]");
                 
                 for (int i = 0; i < labels.Count; i++)
                 {
@@ -187,7 +195,7 @@ namespace ZPL2PDF
                     var finalDimensions = item.Dimensions;
                     
                     // Debug: Log what we're using
-                    Console.WriteLine($"DEBUG - Using dimensions for label {i + 1}: {finalDimensions.WidthMm:F1}mm x {finalDimensions.HeightMm:F1}mm [{finalDimensions.Source}]");
+                    //Console.WriteLine($"DEBUG - Using dimensions for label {i + 1}: {finalDimensions.WidthMm:F1}mm x {finalDimensions.HeightMm:F1}mm [{finalDimensions.Source}]");
                     
                     // Create specific renderer for this label
                     var labelRenderer = new LabelRenderer(finalDimensions);
@@ -371,6 +379,21 @@ namespace ZPL2PDF
         {
             Item = item;
             ErrorMessage = errorMessage;
+        }
+    }
+
+    /// <summary>
+    /// Arguments for the file completed event
+    /// </summary>
+    public class FileCompletedEventArgs : EventArgs
+    {
+        public ProcessingItem Item { get; }
+        public bool Success { get; }
+
+        public FileCompletedEventArgs(ProcessingItem item, bool success)
+        {
+            Item = item;
+            Success = success;
         }
     }
 

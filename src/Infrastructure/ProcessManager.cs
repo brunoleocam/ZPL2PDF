@@ -28,9 +28,9 @@ namespace ZPL2PDF
         {
             try
             {
-                Console.WriteLine($"DEBUG - Starting background process:");
-                Console.WriteLine($"  Executable: {_executablePath}");
-                Console.WriteLine($"  Arguments: {arguments}");
+                //Console.WriteLine($"DEBUG - Starting background process:");
+                //Console.WriteLine($"  Executable: {_executablePath}");
+                //Console.WriteLine($"  Arguments: {arguments}");
                 
                 var startInfo = new ProcessStartInfo
                 {
@@ -45,12 +45,12 @@ namespace ZPL2PDF
                 var process = Process.Start(startInfo);
                 if (process != null)
                 {
-                    Console.WriteLine($"DEBUG - Background process started with PID: {process.Id}");
+                    //Console.WriteLine($"DEBUG - Background process started with PID: {process.Id}");
                     return process.Id;
                 }
                 else
                 {
-                    Console.WriteLine("DEBUG - Failed to start process - Process.Start returned null");
+                    //Console.WriteLine("DEBUG - Failed to start process - Process.Start returned null");
                 }
             }
             catch (Exception ex)

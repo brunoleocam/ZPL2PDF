@@ -18,7 +18,6 @@ namespace ZPL2PDF
         private readonly LabelDimensions _fixedDimensions;
         private readonly bool _useFixedDimensions;
         private bool _isDisposed = false;
-        private readonly HashSet<string> _processedFiles = new HashSet<string>();
         private readonly HashSet<string> _processingFiles = new HashSet<string>();
         private readonly object _lockObject = new object();
         private Timer? _pollingTimer;
@@ -57,6 +56,9 @@ namespace ZPL2PDF
             _configManager = configManager;
             _fixedDimensions = fixedDimensions ?? new LabelDimensions();
             _useFixedDimensions = useFixedDimensions;
+            
+            // Subscribe to processing queue events
+            _processingQueue.FileCompleted += OnFileCompleted;
         }
 
         /// <summary>
@@ -81,6 +83,7 @@ namespace ZPL2PDF
 
                 // Configure events
                 _fileSystemWatcher.Created += OnFileCreated;
+                _fileSystemWatcher.Changed += OnFileCreated; // Also detect file modifications
                 _fileSystemWatcher.Error += OnError;
                 
                 Console.WriteLine($"FileSystemWatcher configured:");
@@ -161,6 +164,19 @@ namespace ZPL2PDF
         }
 
         /// <summary>
+        /// Event fired when a file processing is completed
+        /// </summary>
+        private void OnFileCompleted(object? sender, FileCompletedEventArgs e)
+        {
+            // Remove from processing files when processing is completed
+            lock (_lockObject)
+            {
+                _processingFiles.Remove(e.Item.FilePath);
+                Console.WriteLine($"File processing completed: {e.Item.FileName} (Success: {e.Success})");
+            }
+        }
+
+        /// <summary>
         /// Handles file events (created/modified)
         /// </summary>
         private async Task HandleFileEvent(string filePath, string eventType)
@@ -176,29 +192,51 @@ namespace ZPL2PDF
                     return;
                 }
 
-                // For existing files (when daemon starts), don't check processed files list
-                // For new files (created events), check to avoid duplicates
-                if (eventType != "existing")
+                lock (_lockObject)
                 {
-                    lock (_lockObject)
+                    // Check if currently being processed
+                    if (_processingFiles.Contains(filePath))
                     {
-                        if (_processedFiles.Contains(filePath) || _processingFiles.Contains(filePath))
-                        {
-                            Console.WriteLine($"File already processed or being processed, ignoring: {Path.GetFileName(filePath)}");
-                            return;
-                        }
-                        // Mark as being processed
-                        _processingFiles.Add(filePath);
+                        Console.WriteLine($"File currently being processed, ignoring: {Path.GetFileName(filePath)}");
+                        return;
                     }
+                    
+                    // Mark as being processed
+                    _processingFiles.Add(filePath);
                 }
 
                 // Wait a bit to ensure the file was completely written
                 await Task.Delay(500);
 
-                // Check if the file still exists and is not being used
-                if (!File.Exists(filePath) || IsFileLocked(filePath))
+                // Check if the file still exists
+                if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File in use, waiting: {Path.GetFileName(filePath)}");
+                    Console.WriteLine($"File not found: {Path.GetFileName(filePath)}");
+                    // Remove from processing files since file doesn't exist
+                    lock (_lockObject)
+                    {
+                        _processingFiles.Remove(filePath);
+                    }
+                    return;
+                }
+                
+                // Check if file is locked (with retry)
+                int retryCount = 0;
+                while (IsFileLocked(filePath) && retryCount < 3)
+                {
+                    Console.WriteLine($"File in use, waiting (attempt {retryCount + 1}/3): {Path.GetFileName(filePath)}");
+                    await Task.Delay(1000);
+                    retryCount++;
+                }
+                
+                if (IsFileLocked(filePath))
+                {
+                    Console.WriteLine($"File still in use after 3 attempts, skipping: {Path.GetFileName(filePath)}");
+                    // Remove from processing files since we're giving up
+                    lock (_lockObject)
+                    {
+                        _processingFiles.Remove(filePath);
+                    }
                     return;
                 }
 
@@ -209,13 +247,6 @@ namespace ZPL2PDF
 
                 // Process file
                 await ProcessFileAsync(filePath);
-                
-                // Mark file as processed only after successful processing
-                lock (_lockObject)
-                {
-                    _processingFiles.Remove(filePath);
-                    _processedFiles.Add(filePath);
-                }
             }
             catch (Exception ex)
             {
@@ -242,6 +273,11 @@ namespace ZPL2PDF
                 if (!IsValidFile(filePath))
                 {
                     Console.WriteLine($"File ignored (invalid extension): {fileName}");
+                    // Remove from processing files since we're not processing
+                    lock (_lockObject)
+                    {
+                        _processingFiles.Remove(filePath);
+                    }
                     return;
                 }
 
@@ -250,6 +286,11 @@ namespace ZPL2PDF
                 if (string.IsNullOrWhiteSpace(content))
                 {
                     Console.WriteLine($"Empty file ignored: {fileName}");
+                    // Remove from processing files since we're not processing
+                    lock (_lockObject)
+                    {
+                        _processingFiles.Remove(filePath);
+                    }
                     return;
                 }
 
@@ -258,14 +299,28 @@ namespace ZPL2PDF
                 
                 // Priority 1: Try to extract dimensions from ZPL first
                 var zplDimensions = _dimensionExtractor.ExtractDimensions(content);
-                if (zplDimensions.Count == 0)
+                
+                // Use priority logic: ZPL dimensions > Fixed dimensions > Default dimensions
+                LabelDimensions firstLabelDimensions;
+                if (zplDimensions.Count > 0)
                 {
-                    Console.WriteLine($"No ZPL labels found in: {fileName}");
-                    return;
+                    firstLabelDimensions = zplDimensions[0];
+                }
+                else
+                {
+                    // No ZPL labels found, create empty dimensions for fallback
+                    firstLabelDimensions = new LabelDimensions
+                    {
+                        Width = 0,
+                        Height = 0,
+                        WidthMm = 0,
+                        HeightMm = 0,
+                        Dpi = DefaultSettings.DEFAULT_DPI,
+                        HasDimensions = false
+                    };
+                    Console.WriteLine($"No ZPL labels found in: {fileName}, using fallback dimensions");
                 }
 
-                // Use priority logic: ZPL dimensions > Fixed dimensions > Default dimensions
-                var firstLabelDimensions = zplDimensions[0];
                 if (_useFixedDimensions)
                 {
                     // Apply priority logic with fixed dimensions as fallback
@@ -298,10 +353,19 @@ namespace ZPL2PDF
 
                 await _processingQueue.AddFileAsync(processingItem);
                 Console.WriteLine($"File added to queue: {fileName}");
+                
+                // NOTE: We do NOT remove from _processingFiles here because the actual processing
+                // happens asynchronously in the ProcessingQueue. The file will be removed from
+                // _processingFiles when it's actually processed (successfully or with error).
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing file {Path.GetFileName(filePath)}: {ex.Message}");
+                // Remove from processing files in case of error
+                lock (_lockObject)
+                {
+                    _processingFiles.Remove(filePath);
+                }
                 OnError(this, new ErrorEventArgs(ex));
             }
         }
@@ -375,11 +439,13 @@ namespace ZPL2PDF
                 {
                     lock (_lockObject)
                     {
-                        // Skip if already processed or being processed
-                        if (_processedFiles.Contains(file) || _processingFiles.Contains(file))
+                        // Skip if currently being processed
+                        if (_processingFiles.Contains(file))
+                        {
                             continue;
+                        }
                     }
-
+                    
                     Console.WriteLine($"Polling detected file: {Path.GetFileName(file)}");
                     await HandleFileEvent(file, "polling");
                 }
@@ -391,15 +457,14 @@ namespace ZPL2PDF
         }
 
         /// <summary>
-        /// Clears the list of processed files (useful for testing or restarting)
+        /// Clears the list of processing files (useful for testing or restarting)
         /// </summary>
-        public void ClearProcessedFiles()
+        public void ClearProcessingFiles()
         {
             lock (_lockObject)
             {
-                _processedFiles.Clear();
                 _processingFiles.Clear();
-                Console.WriteLine("Processed files list cleared");
+                Console.WriteLine("Processing files list cleared");
             }
         }
 
@@ -410,6 +475,12 @@ namespace ZPL2PDF
         {
             if (!_isDisposed)
             {
+                // Unsubscribe from processing queue events
+                if (_processingQueue != null)
+                {
+                    _processingQueue.FileCompleted -= OnFileCompleted;
+                }
+                
                 StopWatching();
                 _isDisposed = true;
             }

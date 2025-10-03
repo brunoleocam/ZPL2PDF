@@ -71,7 +71,7 @@ namespace ZPL2PDF
                 if (useFixedDimensions)
                 {
                     // Debug: Log input parameters
-                    Console.WriteLine($"DEBUG - Input parameters: Width={argumentProcessor.Width}, Height={argumentProcessor.Height}, Unit={argumentProcessor.Unit}, Dpi={argumentProcessor.Dpi}");
+                    //Console.WriteLine($"DEBUG - Input parameters: Width={argumentProcessor.Width}, Height={argumentProcessor.Height}, Unit={argumentProcessor.Unit}, Dpi={argumentProcessor.Dpi}");
                     
                     // Convert dimensions to millimeters for internal calculations
                     var unitConverter = new UnitConversionService();
@@ -82,14 +82,14 @@ namespace ZPL2PDF
                     );
                     
                     // Debug: Log conversion results
-                    Console.WriteLine($"DEBUG - Converted to mm: WidthMm={widthMm:F1}, HeightMm={heightMm:F1}");
+                    //Console.WriteLine($"DEBUG - Converted to mm: WidthMm={widthMm:F1}, HeightMm={heightMm:F1}");
                     
                     // Convert mm to points for ZPL processing
                     var widthPoints = unitConverter.ConvertMmToPoints(widthMm, argumentProcessor.Dpi);
                     var heightPoints = unitConverter.ConvertMmToPoints(heightMm, argumentProcessor.Dpi);
                     
                     // Debug: Log points conversion
-                    Console.WriteLine($"DEBUG - Converted to points: Width={widthPoints}, Height={heightPoints}");
+                    //Console.WriteLine($"DEBUG - Converted to points: Width={widthPoints}, Height={heightPoints}");
                     
                     fixedDimensions = new LabelDimensions
                     {
@@ -103,7 +103,7 @@ namespace ZPL2PDF
                     };
                     
                     // Debug: Log the created dimensions
-                    Console.WriteLine($"DEBUG - Created fixedDimensions: {fixedDimensions.WidthMm:F1}mm x {fixedDimensions.HeightMm:F1}mm [{fixedDimensions.Source}]");
+                    //Console.WriteLine($"DEBUG - Created fixedDimensions: {fixedDimensions.WidthMm:F1}mm x {fixedDimensions.HeightMm:F1}mm [{fixedDimensions.Source}]");
                 }
 
                 // Create folder monitor

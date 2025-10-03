@@ -111,8 +111,8 @@ namespace ZPL2PDF
             bool hasHeight = height > 0;
             bool hasUnit = !string.IsNullOrWhiteSpace(unit) && IsValidUnit(unit) && unit != "mm"; // "mm" is default
 
-            // Check if any dimension is specified
-            if (hasWidth || hasHeight || hasUnit)
+            // Check if any dimension is specified - only consider it specified if width OR height is > 0
+            if (hasWidth || hasHeight)
             {
                 // If any is specified, all must be specified
                 if (!hasWidth)
@@ -156,7 +156,7 @@ namespace ZPL2PDF
                 return false;
 
             return unit.Equals("in", StringComparison.OrdinalIgnoreCase) ||
-                   unit.Equals("cm", StringComparison.OrdinalIgnoreCase) ||
+                unit.Equals("cm", StringComparison.OrdinalIgnoreCase) ||
                    unit.Equals("mm", StringComparison.OrdinalIgnoreCase);
         }
 
