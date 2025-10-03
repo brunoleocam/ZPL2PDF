@@ -129,6 +129,9 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             var invalidFolder = Path.Combine(_testDirectory, "nonexistent", "subfolder");
             var daemonManager = new DaemonManager(invalidFolder, "100", "200", "mm", "203");
 
+            // Ensure no daemon is running
+            daemonManager.Stop();
+
             // Act
             var result = daemonManager.Start();
 
@@ -271,6 +274,9 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             Directory.CreateDirectory(veryLongPath);
             var daemonManager = new DaemonManager(veryLongPath, "100", "200", "mm", "203");
 
+            // Ensure no daemon is running
+            daemonManager.Stop();
+
             // Act
             var result = daemonManager.Start();
 
@@ -302,6 +308,17 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
 
         public void Dispose()
         {
+            // Stop any running daemon before cleanup
+            try
+            {
+                var daemonManager = new DaemonManager(_testDirectory, "100", "200", "mm", "203");
+                daemonManager.Stop();
+            }
+            catch
+            {
+                // Ignore errors during cleanup
+            }
+
             if (Directory.Exists(_testDirectory))
             {
                 Directory.Delete(_testDirectory, true);

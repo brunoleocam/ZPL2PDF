@@ -536,11 +536,11 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.Services
             var explicitUnit = "mm";
             var zplDimensions = new LabelDimensions
             {
-                Width = 400,
-                Height = 200,
-                WidthMm = 50.0,
-                HeightMm = 25.0,
-                HasDimensions = true
+                Width = 0,
+                Height = 0,
+                WidthMm = 0.0,
+                HeightMm = 0.0,
+                HasDimensions = false  // ZPL dimensions are invalid, so explicit parameters should be used
             };
 
             // Act

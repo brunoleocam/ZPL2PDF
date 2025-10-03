@@ -17,7 +17,7 @@ namespace ZPL2PDF
         {
             if (args.Length == 0)
             {
-                // Sem argumentos = modo daemon start (comportamento padrão)
+                // No arguments = daemon start mode (default behavior)
                 return OperationMode.Daemon;
             }
 

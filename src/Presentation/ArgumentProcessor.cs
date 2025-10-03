@@ -107,10 +107,13 @@ namespace ZPL2PDF
         {
             if (args.Length == 0)
             {
-                // Sem argumentos = modo daemon start (comportamento padrão)
+                // No arguments = daemon start mode (default behavior)
                 Mode = OperationMode.Daemon;
                 DaemonCommand = "start";
                 ListenFolderPath = _argumentParser.GetDefaultListenFolder();
+                
+                // Apply default dimensions when no arguments are provided
+                ApplyDefaultDimensions();
                 return;
             }
             
@@ -124,7 +127,7 @@ namespace ZPL2PDF
             Mode = _modeDetector.DetectMode(args);
             DaemonCommand = _modeDetector.ExtractDaemonCommand(args);
 
-            // Se é modo help, mostra ajuda e sai
+            // If it's help mode, show help and exit
             if (Mode == OperationMode.Help)
             {
                 _helpDisplay.ShowHelp();
@@ -186,31 +189,45 @@ namespace ZPL2PDF
             }
 
             // For start, run, or default daemon mode
-            int startIndex = DaemonCommand == "start" || DaemonCommand == "run" ? 1 : 0;
+            int startIndex = 0;
+            if (DaemonCommand == "start" || DaemonCommand == "run")
+            {
+                // Only use startIndex = 1 if there's at least 1 argument to skip
+                startIndex = args.Length > 0 ? 1 : 0;
+            }
             var daemonArgs = _argumentParser.ParseDaemonMode(args, startIndex);
 
-            // Set properties
-            ListenFolderPath = string.IsNullOrWhiteSpace(daemonArgs.ListenFolderPath) 
-                ? _argumentParser.GetDefaultListenFolder() 
-                : daemonArgs.ListenFolderPath;
+        // Set properties
+        ListenFolderPath = string.IsNullOrWhiteSpace(daemonArgs.ListenFolderPath) 
+            ? _argumentParser.GetDefaultListenFolder() 
+            : daemonArgs.ListenFolderPath;
+        
+        // Use default dimensions if not specified (Width or Height = 0)
+        if (daemonArgs.Width <= 0 || daemonArgs.Height <= 0)
+        {
+            // Use default dimensions based on unit
+            var defaultDimensions = GetDefaultDimensions(daemonArgs.Unit);
+            Width = daemonArgs.Width > 0 ? daemonArgs.Width : defaultDimensions.Width;
+            Height = daemonArgs.Height > 0 ? daemonArgs.Height : defaultDimensions.Height;
+        }
+        else
+        {
+            Width = daemonArgs.Width;
+            Height = daemonArgs.Height;
+        }
             
-            // Use default dimensions if not specified (Width or Height = 0)
-            if (daemonArgs.Width <= 0 || daemonArgs.Height <= 0)
-            {
-                // Use default dimensions based on unit
-                var defaultDimensions = GetDefaultDimensions(daemonArgs.Unit);
-                Width = daemonArgs.Width > 0 ? daemonArgs.Width : defaultDimensions.Width;
-                Height = daemonArgs.Height > 0 ? daemonArgs.Height : defaultDimensions.Height;
-            }
-            else
-            {
-                Width = daemonArgs.Width;
-                Height = daemonArgs.Height;
-            }
-            
-            Unit = daemonArgs.Unit;
-            Dpi = daemonArgs.Dpi;
+        Unit = daemonArgs.Unit;
+        Dpi = daemonArgs.Dpi;
 
+        // Only validate dimensions if they were explicitly provided (not auto-applied)
+        // Check if dimensions are different from defaults (indicating explicit user input)
+        var defaultDims = GetDefaultDimensions(daemonArgs.Unit);
+        bool dimensionsWereExplicitlyProvided = (daemonArgs.Width > 0 && daemonArgs.Height > 0) && 
+                                               (Math.Abs(daemonArgs.Width - defaultDims.Width) > 0.001 || 
+                                                Math.Abs(daemonArgs.Height - defaultDims.Height) > 0.001);
+        
+        if (dimensionsWereExplicitlyProvided)
+        {
             // Validate arguments
             var validation = _validator.ValidateDaemonMode(ListenFolderPath, Width, Height, Unit, Dpi);
             if (!validation.IsValid)
@@ -218,6 +235,7 @@ namespace ZPL2PDF
                 Console.WriteLine($"Error: {validation.ErrorMessage}");
                 Environment.Exit(1);
             }
+        }
         }
 
         /// <summary>
@@ -236,6 +254,18 @@ namespace ZPL2PDF
         {
             // Daemon status logic will be handled by DaemonManager
             Console.WriteLine("Checking daemon status...");
+        }
+
+        /// <summary>
+        /// Applies default dimensions when no arguments are provided
+        /// </summary>
+        private void ApplyDefaultDimensions()
+        {
+            var defaultDimensions = GetDefaultDimensions("mm");
+            Width = defaultDimensions.Width;
+            Height = defaultDimensions.Height;
+            Unit = "mm";
+            Dpi = 203;
         }
 
         /// <summary>
