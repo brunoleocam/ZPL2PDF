@@ -1,0 +1,6 @@
+Expected PDF content for label with dimensions:
+- Dimensions: 400pts x 200pts @ 203 DPI (extracted from ZPL)
+- Content: Test Label with Dimensions
+- Format: PDF
+- Pages: 1
+- Source: ZPL extraction

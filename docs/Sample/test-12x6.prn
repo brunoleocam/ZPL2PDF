@@ -1,0 +1,31 @@
+^FX Example 2 - Shipping Label 12cm x 6cm
+^XA
+^PW959 
+^LL480 
+
+^FX Top section with name and address (Left Side).
+^CF0,35
+^FO30,30^GB50,50,50^FS
+^FO120,30^FDIntershipping, Inc.^FS
+^CF0,20
+^FO120,80^FD1000 Shipping Lane^FS
+^FO120,110^FDShelbyville TN^FS
+^FO30,150^GB420,2,2^FS
+
+^FX Second section with recipient address (Center).
+^CFA,25
+^FO500,30^FDJohn Doe^FS
+^FO500,65^FD100 Main Street^FS
+^FO500,100^FDSpringfield TN^FS
+^FO490,150^GB420,2,2^FS
+
+^FX Third section with bar code (Bottom).
+^BY3,2,100 
+^FO60,200^BC^FD1234567890^FS
+
+^FX Simple Text at the bottom (Right Side).
+^CF0,30
+^FO700,200^FDCtr. X34B-1^FS
+^FO700,240^FDREF1 F00B47^FS
+
+^XZ

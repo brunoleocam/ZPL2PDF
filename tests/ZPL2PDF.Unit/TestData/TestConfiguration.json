@@ -1,0 +1,26 @@
+{
+  "testSettings": {
+    "defaultDimensions": {
+      "width": 7.5,
+      "height": 15,
+      "unit": "in",
+      "dpi": 203
+    },
+    "testFiles": {
+      "validTxt": "valid.txt",
+      "validPrn": "valid.prn",
+      "invalidDoc": "invalid.doc",
+      "emptyTxt": "empty.txt"
+    },
+    "expectedResults": {
+      "simpleLabel": "simple_label_expected.txt",
+      "labelWithDimensions": "label_with_dimensions_expected.txt",
+      "multipleLabels": "multiple_labels_expected.txt"
+    },
+    "timeouts": {
+      "fileProcessing": 5000,
+      "daemonStart": 2000,
+      "daemonStop": 1000
+    }
+  }
+}

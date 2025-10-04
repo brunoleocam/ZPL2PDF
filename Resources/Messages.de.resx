@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="APPLICATION_NAME" xml:space="preserve">
+    <value>ZPL2PDF</value>
+  </data>
+  <data name="APPLICATION_DESCRIPTION" xml:space="preserve">
+    <value>ZPL zu PDF Konverter</value>
+  </data>
+  <data name="HELP_TITLE" xml:space="preserve">
+    <value>ZPL2PDF - ZPL zu PDF Konverter</value>
+  </data>
+  <data name="HELP_DEFAULT_BEHAVIOR" xml:space="preserve">
+    <value>STANDARDVERHALTEN:</value>
+  </data>
+  <data name="HELP_DEFAULT_USAGE" xml:space="preserve">
+    <value>Verwendung: ZPL2PDF.exe [Optionen]</value>
+  </data>
+  <data name="HELP_DEFAULT_DESCRIPTION" xml:space="preserve">
+    <value>Ausführen ohne Argumente startet den Daemon-Modus (wie der 'start' Befehl)</value>
+  </data>
+  <data name="HELP_CONVERSION_MODE" xml:space="preserve">
+    <value>KONVERTIERUNGSMODUS:</value>
+  </data>
+  <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
+    <value>Verwendung: ZPL2PDF.exe -i &lt;Eingabedateipfad&gt; -o &lt;Ausgabeordner&gt; [-n &lt;Ausgabedateiname&gt;] | -z &lt;ZPL-Inhalt&gt;</value>
+  </data>
+  <data name="HELP_DAEMON_MODE" xml:space="preserve">
+    <value>DAEMON-MODUS:</value>
+  </data>
+  <data name="HELP_DAEMON_USAGE" xml:space="preserve">
+    <value>Verwendung: ZPL2PDF.exe start [Optionen] | stop | status | run [Optionen]</value>
+  </data>
+  <data name="DAEMON_STARTED_SUCCESS" xml:space="preserve">
+    <value>Daemon erfolgreich gestartet! PID: {0}</value>
+  </data>
+  <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Daemon erfolgreich gestoppt!</value>
+  </data>
+  <data name="DAEMON_ALREADY_RUNNING" xml:space="preserve">
+    <value>Daemon läuft bereits!</value>
+  </data>
+  <data name="DAEMON_NOT_RUNNING" xml:space="preserve">
+    <value>Daemon läuft nicht!</value>
+  </data>
+  <data name="DAEMON_STATUS_RUNNING" xml:space="preserve">
+    <value>Daemon läuft! PID: {0}</value>
+  </data>
+  <data name="FILE_PROCESSED_SUCCESS" xml:space="preserve">
+    <value>Datei erfolgreich verarbeitet: {0}</value>
+  </data>
+  <data name="FILE_PROCESSING_ERROR" xml:space="preserve">
+    <value>Fehler beim Verarbeiten von {0}: {1}</value>
+  </data>
+  <data name="CONVERSION_SUCCESS" xml:space="preserve">
+    <value>Konvertierung erfolgreich abgeschlossen!</value>
+  </data>
+  <data name="CONVERSION_ERROR" xml:space="preserve">
+    <value>Konvertierung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="INVALID_ARGUMENTS" xml:space="preserve">
+    <value>Ungültige Argumente. Verwenden Sie --help für Nutzungsinformationen.</value>
+  </data>
+  <data name="FILE_NOT_FOUND" xml:space="preserve">
+    <value>Datei nicht gefunden: {0}</value>
+  </data>
+  <data name="FOLDER_CREATED" xml:space="preserve">
+    <value>Ordner erstellt: {0}</value>
+  </data>
+  <data name="STARTING_DAEMON" xml:space="preserve">
+    <value>Daemon wird im Hintergrund gestartet...</value>
+  </data>
+  <data name="MONITORING_FOLDER" xml:space="preserve">
+    <value>Überwachter Ordner: {0}</value>
+  </data>
+  <data name="DIMENSIONS_INFO" xml:space="preserve">
+    <value>Abmessungen: {0} x {1} {2}</value>
+  </data>
+  <data name="PRINT_DENSITY_INFO" xml:space="preserve">
+    <value>Druckdichte: {0:F1} dpmm ({1} dpi)</value>
+  </data>
+  <data name="PRESS_CTRL_C_TO_STOP" xml:space="preserve">
+    <value>Drücken Sie Strg+C zum Beenden...</value>
+  </data>
+</root>
