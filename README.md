@@ -319,5 +319,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Discussions**: [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
 
 ---
-
-**Made with ❤️ for the ZPL community**
