@@ -1,29 +1,38 @@
-# Contributing to ZPL2PDF
+# 🤝 Contributing to ZPL2PDF
 
 Thank you for your interest in contributing to ZPL2PDF! This document provides guidelines and information for contributors.
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 9.0 SDK or later
-- Git
-- Visual Studio 2022 or VS Code (recommended)
-- Docker (for cross-platform testing)
+- ✅ .NET 9.0 SDK or later
+- ✅ Git
+- ✅ Visual Studio 2022, VS Code, or Rider (recommended)
+- ✅ Docker (for cross-platform testing)
+- ✅ Inno Setup (for Windows installer, optional)
 
 ### Development Setup
 ```bash
-# Clone the repository
-git clone https://github.com/brunoleocam/ZPL2PDF.git
+# 1. Fork and clone the repository
+git clone https://github.com/YOUR_USERNAME/ZPL2PDF.git
 cd ZPL2PDF
 
-# Restore dependencies
+# 2. Restore dependencies
 dotnet restore
 
-# Build the solution
+# 3. Build the solution
 dotnet build
 
-# Run tests
+# 4. Run tests
 dotnet test
+
+# 5. Build for your platform
+dotnet publish -c Release -r win-x64 --self-contained true
+
+# 6. Test locally
+.\bin\Release\net9.0\win-x64\publish\ZPL2PDF.exe -help
 ```
 
 ## 🏗️ Project Structure
@@ -205,17 +214,34 @@ Add any other context or screenshots about the feature request.
 
 ### Version Numbering
 We follow [Semantic Versioning](https://semver.org/):
-- **MAJOR**: Breaking changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes (backward compatible)
+- **MAJOR** (3.0.0): Breaking changes
+- **MINOR** (2.1.0): New features (backward compatible)
+- **PATCH** (2.0.1): Bug fixes (backward compatible)
 
 ### Release Checklist
-- [ ] All tests pass
+- [ ] All tests pass (`dotnet test`)
 - [ ] Documentation updated
-- [ ] Version numbers updated
-- [ ] Changelog updated
+- [ ] Version numbers updated in:
+  - [ ] `ZPL2PDF.csproj`
+  - [ ] `installer/ZPL2PDF-Setup.iss`
+  - [ ] `CHANGELOG.md`
+- [ ] Changelog updated with changes
 - [ ] Cross-platform builds tested
-- [ ] Release notes prepared
+- [ ] Create Git tag (`git tag -a v2.1.0 -m "Release v2.1.0"`)
+- [ ] Push tag (`git push origin v2.1.0`)
+- [ ] Create GitHub Release (automatic CI/CD takes over)
+
+### Automated Release Process
+
+When you create a GitHub Release, our CI/CD automatically:
+1. ✅ Runs all tests on all platforms
+2. ✅ Builds for 8 platforms (Windows, Linux, macOS)
+3. ✅ Builds and publishes Docker images
+4. ✅ Builds Windows installer (Inno Setup)
+5. ✅ Uploads all artifacts to GitHub Release
+6. ✅ Creates WinGet package update PR
+
+See [CI/CD Workflow](docs/development/CI_CD_WORKFLOW.md) for details.
 
 ## 🌍 Cross-Platform Development
 
@@ -248,16 +274,31 @@ docker run --rm -v ${PWD}:/app -w /app mcr.microsoft.com/dotnet/sdk:9.0-alpine d
 ## 📚 Documentation
 
 ### Code Documentation
-- Use XML documentation for public APIs
-- Include examples for complex methods
-- Document parameters and return values
-- Add remarks for important notes
+- ✅ Use XML documentation for public APIs (`///`)
+- ✅ Include examples for complex methods
+- ✅ Document all parameters and return values
+- ✅ Add remarks for important notes
 
 ### User Documentation
-- Update README.md for user-facing changes
-- Add examples for new features
-- Update command-line help text
-- Document configuration options
+
+Documentation is organized in `docs/`:
+
+- **User Guides** (`docs/guides/`): For end-users
+- **Development** (`docs/development/`): For contributors
+- **Translations** (`docs/i18n/`): Multi-language READMEs
+
+**When to update:**
+- ✅ Update README.md for user-facing changes
+- ✅ Add examples for new features
+- ✅ Update command-line help text (src/Presentation/HelpDisplay.cs)
+- ✅ Document configuration options in zpl2pdf.json.example
+- ✅ Update localization resources (Resources/Messages.*.resx)
+
+### Documentation Standards
+- ✅ Use clear, concise language
+- ✅ Include code examples
+- ✅ Add screenshots for visual features
+- ✅ Keep multi-language docs in sync
 
 ## 🤝 Community Guidelines
 

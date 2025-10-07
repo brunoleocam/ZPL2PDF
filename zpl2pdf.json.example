@@ -1,4 +1,10 @@
 {
+  // Language Configuration (Optional)
+  // Supported languages: en-US, pt-BR, es-ES, fr-FR, de-DE, it-IT, ja-JP, zh-CN
+  // Priority: 1) --language parameter, 2) ZPL2PDF_LANGUAGE env var, 3) This config, 4) System detection
+  "language": "en-US",
+  
+  // Daemon Configuration
   "defaultWatchFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
   "labelWidth": 7.5,
   "labelHeight": 15,
@@ -7,7 +13,6 @@
   "logLevel": "Info",
   "retryDelay": 2000,
   "maxRetries": 3,
-  "language": "en-US",
   "includeSubdirectories": false,
   "autoStartDaemon": false,
   "deleteOriginalFiles": true,

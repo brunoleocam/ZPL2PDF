@@ -1,55 +1,157 @@
+# =============================================================================
+# ZPL2PDF - Docker Compose Configuration
+# =============================================================================
+# Usage:
+#   Production:  docker-compose up -d
+#   Development: docker-compose --profile dev up
+#   Testing:     docker-compose --profile test up
+# =============================================================================
+
 version: '3.8'
 
 services:
+  # ---------------------------------------------------------------------------
+  # Production Service - Daemon Mode
+  # ---------------------------------------------------------------------------
   zpl2pdf:
     build: .
+    image: zpl2pdf:2.0.0
     container_name: zpl2pdf-daemon
+    
     volumes:
+      # Mount local folders for file monitoring
       - ./watch:/app/watch
       - ./output:/app/output
       - ./config:/app/config
+    
     environment:
-      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-      - ZPL2PDF_LOG_LEVEL=Info
-    command: start -l /app/watch -o /app/output
+      # Localization settings
+      - ZPL2PDF_LANGUAGE=en-US  # Change to: pt-BR, es-ES, fr-FR, de-DE, it-IT, ja-JP, zh-CN
+      
+      # System settings
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - LC_ALL=en_US.UTF-8
+      - LANG=en_US.UTF-8
+    
+    # Run daemon mode with custom folder
+    command: run -l /app/watch
+    
+    # Auto-restart on failure
     restart: unless-stopped
+    
+    # Health monitoring
     healthcheck:
-      test: ["CMD", "dotnet", "ZPL2PDF.dll", "status"]
+      test: ["/app/ZPL2PDF", "status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
+    
+    # Security (run as non-root)
+    user: zpl2pdf
+    
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
 
-  # Development service
-  zpl2pdf-dev:
+  # ---------------------------------------------------------------------------
+  # Portuguese Service Example
+  # ---------------------------------------------------------------------------
+  zpl2pdf-pt:
     build: .
-    container_name: zpl2pdf-dev
+    image: zpl2pdf:2.0.0
+    container_name: zpl2pdf-daemon-pt
+    
     volumes:
-      - ./src:/app/src
-      - ./tests:/app/tests
-      - ./watch:/app/watch
-      - ./output:/app/output
+      - ./watch-pt:/app/watch
+      - ./output-pt:/app/output
+    
     environment:
-      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-      - ZPL2PDF_LOG_LEVEL=Debug
-    command: start -l /app/watch -o /app/output
+      - ZPL2PDF_LANGUAGE=pt-BR  # Portuguese
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+    
+    command: run -l /app/watch
+    restart: unless-stopped
+    
     profiles:
-      - dev
+      - multilang
 
-  # Test service
-  zpl2pdf-test:
+  # ---------------------------------------------------------------------------
+  # Spanish Service Example
+  # ---------------------------------------------------------------------------
+  zpl2pdf-es:
     build: .
-    container_name: zpl2pdf-test
+    image: zpl2pdf:2.0.0
+    container_name: zpl2pdf-daemon-es
+    
     volumes:
-      - ./tests:/app/tests
-      - ./test-data:/app/test-data
+      - ./watch-es:/app/watch
+      - ./output-es:/app/output
+    
     environment:
-      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-      - ZPL2PDF_LOG_LEVEL=Debug
-    command: test
+      - ZPL2PDF_LANGUAGE=es-ES  # Spanish
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+    
+    command: run -l /app/watch
+    restart: unless-stopped
+    
+    profiles:
+      - multilang
+
+  # ---------------------------------------------------------------------------
+  # Conversion Mode Service (Single File)
+  # ---------------------------------------------------------------------------
+  zpl2pdf-convert:
+    build: .
+    image: zpl2pdf:2.0.0
+    container_name: zpl2pdf-convert
+    
+    volumes:
+      - ./input:/app/input:ro     # Read-only input
+      - ./output:/app/output       # Output folder
+    
+    environment:
+      - ZPL2PDF_LANGUAGE=en-US
+    
+    # Example: convert single file
+    # Override this command when running
+    command: -i /app/input/label.txt -o /app/output -n output.pdf -w 10 -h 5 -u cm
+    
+    profiles:
+      - convert
+
+  # ---------------------------------------------------------------------------
+  # Testing Service
+  # ---------------------------------------------------------------------------
+  zpl2pdf-test:
+    build:
+      context: .
+      target: build  # Use build stage for testing
+    container_name: zpl2pdf-test
+    
+    volumes:
+      - ./tests:/src/tests
+      - ./docs/Sample:/app/test-data
+    
+    environment:
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+    
+    working_dir: /src
+    command: dotnet test --logger "console;verbosity=detailed"
+    
     profiles:
       - test
 
+# =============================================================================
+# Volumes
+# =============================================================================
 volumes:
   watch:
     driver: local
@@ -57,3 +159,11 @@ volumes:
     driver: local
   config:
     driver: local
+
+# =============================================================================
+# Networks (optional, for multi-container setups)
+# =============================================================================
+networks:
+  default:
+    name: zpl2pdf-network
+    driver: bridge

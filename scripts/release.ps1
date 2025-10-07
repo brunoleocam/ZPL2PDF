@@ -95,7 +95,7 @@ Write-Success "Prerequisites check passed"
 Write-Step "Updating version in project files..."
 
 # Update ZPL2PDF.csproj
-$csprojPath = "src/ZPL2PDF.csproj"
+$csprojPath = "ZPL2PDF.csproj"
 if (Test-Path $csprojPath) {
     $csprojContent = Get-Content $csprojPath -Raw
     $csprojContent = $csprojContent -replace '<Version>.*</Version>', "<Version>$Version</Version>"
@@ -144,23 +144,8 @@ Write-Step "Updating CHANGELOG.md..."
 $changelogPath = "CHANGELOG.md"
 if (Test-Path $changelogPath) {
     $changelogContent = Get-Content $changelogPath -Raw
-    $newEntry = @"
-
-## [Unreleased] - $(Get-Date -Format "yyyy-MM-dd")
-
-### Added
-- Release automation script
-- Cross-platform package generation
-- Automated testing pipeline
-
-### Changed
-- Updated documentation
-- Improved build process
-
-### Fixed
-- Various bug fixes and improvements
-"@
     
+    # Update version in changelog
     $changelogContent = $changelogContent -replace '## \[Unreleased\]', "## [$Version]"
     $changelogContent = $changelogContent -replace '## \[Unreleased\] - \d{4}-\d{2}-\d{2}', "## [$Version] - $(Get-Date -Format 'yyyy-MM-dd')"
     Set-Content $changelogPath $changelogContent
@@ -196,50 +181,24 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Success "Build and tests completed successfully"
 
-# Create release builds
+# Create release builds using build-all-platforms script
 Write-Step "Creating release builds..."
 
-$runtimes = @(
-    "win-x64",
-    "win-x86",
-    "linux-x64",
-    "linux-arm64",
-    "linux-arm",
-    "osx-x64",
-    "osx-arm64"
-)
+$buildDir = "build/publish"
+$buildScript = "scripts\build-all-platforms.ps1"
 
-$buildDir = "build/release"
-if (Test-Path $buildDir) {
-    Remove-Item $buildDir -Recurse -Force
-}
-New-Item -ItemType Directory -Path $buildDir -Force | Out-Null
-
-foreach ($runtime in $runtimes) {
-    Write-ColorOutput "Building for $runtime..." $Yellow
-    
-    $outputDir = "$buildDir/$runtime"
-    dotnet publish src/ZPL2PDF.csproj --configuration Release --runtime $runtime --self-contained true --output $outputDir
+if (Test-Path $buildScript) {
+    & $buildScript -OutputDir $buildDir
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "Failed to build for $runtime"
+        Write-Error "Build script failed"
         exit 1
     }
     
-    # Create archive
-    $archiveName = "ZPL2PDF-$runtime"
-    if ($runtime -like "win-*") {
-        Compress-Archive -Path "$outputDir/*" -DestinationPath "$buildDir/$archiveName.zip" -Force
-    } else {
-        # Use tar for Unix-like systems (requires WSL or Git Bash on Windows)
-        if (Get-Command tar -ErrorAction SilentlyContinue) {
-            tar -czf "$buildDir/$archiveName.tar.gz" -C $outputDir .
-        } else {
-            Write-Warning "tar not available, skipping archive creation for $runtime"
-        }
-    }
-    
-    Write-Success "Built $runtime"
+    Write-Success "All platforms built successfully"
+} else {
+    Write-Error "Build script not found: $buildScript"
+    exit 1
 }
 
 # Build Windows installer
@@ -251,35 +210,21 @@ if (Test-Path $installerScript) {
         Write-Success "Windows installer built successfully"
         
         # Copy installer to release directory
-        $installerFiles = Get-ChildItem "install\output" -Filter "*.exe" | Sort-Object LastWriteTime -Descending
+        $installerFiles = Get-ChildItem "install\output" -Filter "*.exe" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending
         if ($installerFiles.Count -gt 0) {
             $installerFile = $installerFiles[0]
             Copy-Item $installerFile.FullName $buildDir
-            Write-ColorOutput "Installer copied: $($installerFile.Name)" $InfoColor
+            Write-ColorOutput "Installer copied: $($installerFile.Name)" $Yellow
         }
     } else {
-        Write-Warning "Windows installer build failed"
+        Write-Warning "Windows installer build failed (Inno Setup may not be installed)"
     }
 } else {
     Write-Warning "Installer build script not found: $installerScript"
 }
 
-# Create checksums
-Write-Step "Creating checksums..."
-$checksumFile = "$buildDir/checksums.txt"
-New-Item -ItemType File -Path $checksumFile -Force | Out-Null
-
-Get-ChildItem $buildDir -Filter "*.zip" | ForEach-Object {
-    $hash = Get-FileHash $_.FullName -Algorithm SHA256
-    Add-Content $checksumFile "$($hash.Hash)  $($_.Name)"
-}
-
-Get-ChildItem $buildDir -Filter "*.tar.gz" | ForEach-Object {
-    $hash = Get-FileHash $_.FullName -Algorithm SHA256
-    Add-Content $checksumFile "$($hash.Hash)  $($_.Name)"
-}
-
-Write-Success "Checksums created"
+# Checksums are already created by build-all-platforms script
+Write-Success "Checksums available at: $buildDir/SHA256SUMS.txt"
 
 # Create Git tag
 if ($DryRun -eq $false) {
@@ -309,59 +254,11 @@ if ($DryRun -eq $false) {
 # Create GitHub release
 if ($DryRun -eq $false) {
     Write-Step "Creating GitHub release..."
-    
-    $releaseNotes = @"
-## What's New in v$Version
-
-### 🚀 New Features
-- Release automation and cross-platform builds
-- Enhanced documentation and examples
-- Improved error handling and logging
-
-### 🔧 Improvements
-- Updated dependencies to latest versions
-- Optimized build process
-- Enhanced testing coverage
-
-### 🐛 Bug Fixes
-- Various bug fixes and improvements
-- Better cross-platform compatibility
-- Improved error messages
-
-## Downloads
-
-Download the appropriate package for your platform from the assets below.
-
-## Installation
-
-### Windows
-```bash
-winget install ZPL2PDF
-```
-
-### Linux
-```bash
-# Ubuntu/Debian
-sudo apt install zpl2pdf
-
-# CentOS/RHEL
-sudo yum install zpl2pdf
-```
-
-### Docker
-```bash
-docker pull zpl2pdf:latest
-```
-
-## Full Changelog
-
-See [CHANGELOG.md](https://github.com/brunoleocam/ZPL2PDF/blob/main/CHANGELOG.md) for the complete list of changes.
-"@
-    
-    # Note: This would require GitHub CLI or API calls
-    Write-Warning "GitHub release creation requires manual intervention or GitHub CLI"
-    Write-ColorOutput "Release notes prepared:" $Yellow
-    Write-ColorOutput $releaseNotes $Yellow
+    Write-Warning "GitHub release creation requires manual intervention or GitHub CLI (gh)"
+    Write-ColorOutput "To create release manually:" $Yellow
+    Write-ColorOutput "1. Go to: https://github.com/YOUR-USERNAME/ZPL2PDF/releases/new" $Yellow
+    Write-ColorOutput "2. Choose tag: v$Version" $Yellow
+    Write-ColorOutput "3. Upload files from: $buildDir" $Yellow
 }
 
 # Summary

@@ -139,4 +139,181 @@
   <data name="PRESS_CTRL_C_TO_STOP" xml:space="preserve">
     <value>Press Ctrl+C to stop...</value>
   </data>
+  <data name="HELP_PARAMETERS" xml:space="preserve">
+    <value>Parameters:</value>
+  </data>
+  <data name="HELP_COMMANDS" xml:space="preserve">
+    <value>Commands:</value>
+  </data>
+  <data name="HELP_DAEMON_OPTIONS" xml:space="preserve">
+    <value>Daemon Options:</value>
+  </data>
+  <data name="HELP_SHOW_HELP_MESSAGE" xml:space="preserve">
+    <value>Show this help message</value>
+  </data>
+  <data name="HELP_DAEMON_DIRECT_OPTIONS" xml:space="preserve">
+    <value>You can also pass daemon options directly: ZPL2PDF.exe -l "folder" -w 10 -h 5</value>
+  </data>
+  <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
+    <value>  -i &lt;input_file_path&gt;       Path to the input .txt or .prn file</value>
+  </data>
+  <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
+    <value>  -z &lt;zpl_content&gt;           ZPL content as a string</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
+    <value>  -o &lt;output_folder_path&gt;    Path to the folder where the PDF file will be saved</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
+    <value>  -n &lt;output_file_name&gt;      Name of the output PDF file (optional)</value>
+  </data>
+  <data name="HELP_PARAM_WIDTH" xml:space="preserve">
+    <value>  -w &lt;width&gt;                 Width of the label (accepts . or , as decimal separator)</value>
+  </data>
+  <data name="HELP_PARAM_HEIGHT" xml:space="preserve">
+    <value>  -h &lt;height&gt;                Height of the label (accepts . or , as decimal separator)</value>
+  </data>
+  <data name="HELP_PARAM_DENSITY" xml:space="preserve">
+    <value>  -d &lt;density&gt;               Print density in DPI (integer only, e.g., 203, 300)</value>
+  </data>
+  <data name="HELP_PARAM_UNIT" xml:space="preserve">
+    <value>  -u &lt;unit&gt;                  Unit of measurement for width and height ('in', 'cm', 'mm')</value>
+  </data>
+  <data name="HELP_CMD_START" xml:space="preserve">
+    <value>  start                      Start daemon mode in background</value>
+  </data>
+  <data name="HELP_CMD_STOP" xml:space="preserve">
+    <value>  stop                       Stop daemon mode</value>
+  </data>
+  <data name="HELP_CMD_STATUS" xml:space="preserve">
+    <value>  status                     Check daemon status</value>
+  </data>
+  <data name="HELP_CMD_RUN" xml:space="preserve">
+    <value>  run                        Run daemon mode in current process (for testing)</value>
+  </data>
+  <data name="HELP_OPT_LISTEN_FOLDER" xml:space="preserve">
+    <value>  -l &lt;listen_folder&gt;          Folder to monitor (default: Documents/ZPL2PDF Auto Converter)</value>
+  </data>
+  <data name="HELP_OPT_WIDTH_FIXED" xml:space="preserve">
+    <value>  -w &lt;width&gt;                 Fixed width for all conversions (accepts . or , as decimal separator)</value>
+  </data>
+  <data name="HELP_OPT_HEIGHT_FIXED" xml:space="preserve">
+    <value>  -h &lt;height&gt;                Fixed height for all conversions (accepts . or , as decimal separator)</value>
+  </data>
+  <data name="HELP_OPT_UNIT_DAEMON" xml:space="preserve">
+    <value>  -u &lt;unit&gt;                  Unit of measurement ('in', 'cm', 'mm')</value>
+  </data>
+  <data name="HELP_OPT_DENSITY_DAEMON" xml:space="preserve">
+    <value>  -d &lt;density&gt;               Print density in DPI (integer only, e.g., 203, 300)</value>
+  </data>
+  <data name="CHECKING_DAEMON_STATUS" xml:space="preserve">
+    <value>Checking daemon status...</value>
+  </data>
+  <data name="STOPPING_DAEMON" xml:space="preserve">
+    <value>Stopping daemon...</value>
+  </data>
+  <data name="DAEMON_STARTED_BUT_FAILED_PID" xml:space="preserve">
+    <value>Daemon started but failed to save PID file!</value>
+  </data>
+  <data name="FAILED_TO_START_DAEMON" xml:space="preserve">
+    <value>Failed to start daemon process!</value>
+  </data>
+  <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Daemon stopped successfully!</value>
+  </data>
+  <data name="ERROR_STOPPING_DAEMON" xml:space="preserve">
+    <value>Error stopping daemon process!</value>
+  </data>
+  <data name="INVALID_PID_IN_FILE" xml:space="preserve">
+    <value>Invalid PID in file!</value>
+  </data>
+  <data name="NO_IMAGES_GENERATED" xml:space="preserve">
+    <value>No images generated from ZPL content!</value>
+  </data>
+  <data name="STARTING_QUEUE_PROCESSING" xml:space="preserve">
+    <value>Starting queue processing...</value>
+  </data>
+  <data name="QUEUE_PROCESSING_STOPPED" xml:space="preserve">
+    <value>Queue processing stopped</value>
+  </data>
+  <data name="MONITORING_STOPPED" xml:space="preserve">
+    <value>Monitoring stopped</value>
+  </data>
+  <data name="PROCESSING_FILES_LIST_CLEARED" xml:space="preserve">
+    <value>Processing files list cleared</value>
+  </data>
+  <data name="MONITORING_FOLDER_NOT_CONFIGURED" xml:space="preserve">
+    <value>Monitoring folder not configured</value>
+  </data>
+  <data name="LABEL_WIDTH_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>Label width must be greater than zero</value>
+  </data>
+  <data name="LABEL_HEIGHT_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>Label height must be greater than zero</value>
+  </data>
+  <data name="DPI_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>DPI must be greater than zero</value>
+  </data>
+  <data name="INVALID_UNIT_CONFIG" xml:space="preserve">
+    <value>Invalid unit. Use: mm, cm, in, pt</value>
+  </data>
+  <data name="INVALID_LOG_LEVEL_CONFIG" xml:space="preserve">
+    <value>Invalid log level. Use: Debug, Info, Warning, Error</value>
+  </data>
+  <data name="CURRENT_ZPL2PDF_CONFIGURATION" xml:space="preserve">
+    <value>Current ZPL2PDF configuration:</value>
+  </data>
+  <data name="MONITORING_FOLDER_CONFIG" xml:space="preserve">
+    <value>   Monitoring folder: {0}</value>
+  </data>
+  <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
+    <value>  --language &lt;language&gt;           Interface language (e.g., pt-BR, en-US, es-ES)</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;language&gt;      Set language permanently (sets environment variable)</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               Reset to system default language</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                Show current language configuration</value>
+  </data>
+  <data name="INVALID_LANGUAGE_CODE" xml:space="preserve">
+    <value>Invalid language code: {0}</value>
+  </data>
+  <data name="SUPPORTED_LANGUAGES_LIST" xml:space="preserve">
+    <value>Supported languages:</value>
+  </data>
+  <data name="LANGUAGE_SET_SUCCESS" xml:space="preserve">
+    <value>Language set to: {0}</value>
+  </data>
+  <data name="LANGUAGE_RESET_SUCCESS" xml:space="preserve">
+    <value>Language configuration reset to system default</value>
+  </data>
+  <data name="RESTART_REQUIRED" xml:space="preserve">
+    <value>Please restart your terminal/command prompt for changes to take effect.</value>
+  </data>
+  <data name="ERROR_SETTING_LANGUAGE" xml:space="preserve">
+    <value>Error setting language: {0}</value>
+  </data>
+  <data name="ERROR_RESETTING_LANGUAGE" xml:space="preserve">
+    <value>Error resetting language: {0}</value>
+  </data>
+  <data name="CURRENT_LANGUAGE_CONFIG" xml:space="preserve">
+    <value>Current Language Configuration:</value>
+  </data>
+  <data name="ENV_VAR_LANGUAGE" xml:space="preserve">
+    <value>Environment Variable: {0}</value>
+  </data>
+  <data name="ENV_VAR_NOT_SET" xml:space="preserve">
+    <value>Environment Variable: Not set</value>
+  </data>
+  <data name="CURRENT_LANGUAGE" xml:space="preserve">
+    <value>Current Language: {0}</value>
+  </data>
+  <data name="SYSTEM_LANGUAGE" xml:space="preserve">
+    <value>System Language: {0}</value>
+  </data>
+  <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
+    <value>Priority: 1) --language param, 2) Environment variable, 3) Config file, 4) System detection</value>
+  </data>
 </root>

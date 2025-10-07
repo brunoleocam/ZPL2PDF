@@ -139,4 +139,130 @@
   <data name="PRESS_CTRL_C_TO_STOP" xml:space="preserve">
     <value>按Ctrl+C停止...</value>
   </data>
+  <data name="HELP_PARAMETERS" xml:space="preserve">
+    <value>参数:</value>
+  </data>
+  <data name="HELP_COMMANDS" xml:space="preserve">
+    <value>命令:</value>
+  </data>
+  <data name="HELP_DAEMON_OPTIONS" xml:space="preserve">
+    <value>守护进程选项:</value>
+  </data>
+  <data name="HELP_SHOW_HELP_MESSAGE" xml:space="preserve">
+    <value>显示此帮助消息</value>
+  </data>
+  <data name="HELP_DAEMON_DIRECT_OPTIONS" xml:space="preserve">
+    <value>您也可以直接传递守护进程选项: ZPL2PDF.exe -l "文件夹" -w 10 -h 5</value>
+  </data>
+  <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
+    <value>  -i &lt;输入文件路径&gt;       输入.txt或.prn文件的路径</value>
+  </data>
+  <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
+    <value>  -z &lt;zpl内容&gt;           ZPL内容作为字符串</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
+    <value>  -o &lt;输出文件夹路径&gt;   PDF文件将保存到的文件夹路径</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
+    <value>  -n &lt;输出文件名&gt;      输出PDF文件的名称（可选）</value>
+  </data>
+  <data name="HELP_PARAM_WIDTH" xml:space="preserve">
+    <value>  -w &lt;宽度&gt;                 标签的宽度（接受.或,作为小数点分隔符）</value>
+  </data>
+  <data name="HELP_PARAM_HEIGHT" xml:space="preserve">
+    <value>  -h &lt;高度&gt;                标签的高度（接受.或,作为小数点分隔符）</value>
+  </data>
+  <data name="HELP_PARAM_DENSITY" xml:space="preserve">
+    <value>  -d &lt;密度&gt;                 打印密度DPI（仅整数，例如：203、300）</value>
+  </data>
+  <data name="HELP_PARAM_UNIT" xml:space="preserve">
+    <value>  -u &lt;单位&gt;                  宽度和高度的测量单位（'in'、'cm'、'mm'）</value>
+  </data>
+  <data name="HELP_CMD_START" xml:space="preserve">
+    <value>  start                      在后台启动守护进程模式</value>
+  </data>
+  <data name="HELP_CMD_STOP" xml:space="preserve">
+    <value>  stop                       停止守护进程模式</value>
+  </data>
+  <data name="HELP_CMD_STATUS" xml:space="preserve">
+    <value>  status                     检查守护进程状态</value>
+  </data>
+  <data name="HELP_CMD_RUN" xml:space="preserve">
+    <value>  run                        在当前进程中运行守护进程模式（用于测试）</value>
+  </data>
+  <data name="HELP_OPT_LISTEN_FOLDER" xml:space="preserve">
+    <value>  -l &lt;监听文件夹&gt;          要监听的文件夹（默认：Documents/ZPL2PDF Auto Converter）</value>
+  </data>
+  <data name="HELP_OPT_WIDTH_FIXED" xml:space="preserve">
+    <value>  -w &lt;宽度&gt;                 所有转换的固定宽度（接受.或,作为小数点分隔符）</value>
+  </data>
+  <data name="HELP_OPT_HEIGHT_FIXED" xml:space="preserve">
+    <value>  -h &lt;高度&gt;                所有转换的固定高度（接受.或,作为小数点分隔符）</value>
+  </data>
+  <data name="HELP_OPT_UNIT_DAEMON" xml:space="preserve">
+    <value>  -u &lt;单位&gt;                  测量单位（'in'、'cm'、'mm'）</value>
+  </data>
+  <data name="HELP_OPT_DENSITY_DAEMON" xml:space="preserve">
+    <value>  -d &lt;密度&gt;                 打印密度DPI（仅整数，例如：203、300）</value>
+  </data>
+  <data name="CHECKING_DAEMON_STATUS" xml:space="preserve">
+    <value>检查守护进程状态...</value>
+  </data>
+  <data name="STOPPING_DAEMON" xml:space="preserve">
+    <value>停止守护进程...</value>
+  </data>
+  <data name="DAEMON_STARTED_BUT_FAILED_PID" xml:space="preserve">
+    <value>守护进程已启动但保存PID文件失败！</value>
+  </data>
+  <data name="FAILED_TO_START_DAEMON" xml:space="preserve">
+    <value>启动守护进程失败！</value>
+  </data>
+  <data name="ERROR_STOPPING_DAEMON" xml:space="preserve">
+    <value>停止守护进程时出错！</value>
+  </data>
+  <data name="INVALID_PID_IN_FILE" xml:space="preserve">
+    <value>文件中的PID无效！</value>
+  </data>
+  <data name="NO_IMAGES_GENERATED" xml:space="preserve">
+    <value>从ZPL内容未生成图像！</value>
+  </data>
+  <data name="STARTING_QUEUE_PROCESSING" xml:space="preserve">
+    <value>开始队列处理...</value>
+  </data>
+  <data name="QUEUE_PROCESSING_STOPPED" xml:space="preserve">
+    <value>队列处理已停止</value>
+  </data>
+  <data name="MONITORING_STOPPED" xml:space="preserve">
+    <value>监听已停止</value>
+  </data>
+  <data name="PROCESSING_FILES_LIST_CLEARED" xml:space="preserve">
+    <value>已清除处理文件列表</value>
+  </data>
+  <data name="MONITORING_FOLDER_NOT_CONFIGURED" xml:space="preserve">
+    <value>监听文件夹未配置</value>
+  </data>
+  <data name="LABEL_WIDTH_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>标签宽度必须大于零</value>
+  </data>
+  <data name="LABEL_HEIGHT_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>标签高度必须大于零</value>
+  </data>
+  <data name="DPI_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>DPI必须大于零</value>
+  </data>
+  <data name="INVALID_UNIT_CONFIG" xml:space="preserve">
+    <value>无效单位。使用：mm、cm、in、pt</value>
+  </data>
+  <data name="INVALID_LOG_LEVEL_CONFIG" xml:space="preserve">
+    <value>无效日志级别。使用：Debug、Info、Warning、Error</value>
+  </data>
+  <data name="CURRENT_ZPL2PDF_CONFIGURATION" xml:space="preserve">
+    <value>当前ZPL2PDF配置：</value>
+  </data>
+  <data name="MONITORING_FOLDER_CONFIG" xml:space="preserve">
+    <value>   监听文件夹：{0}</value>
+  </data>
+  <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
+    <value>  --language &lt;语言&gt;           界面语言（例如：pt-BR、en-US、es-ES）</value>
+  </data>
 </root>

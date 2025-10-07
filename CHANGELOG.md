@@ -1,51 +1,113 @@
-# Changelog
+# 📋 Changelog
 
 All notable changes to ZPL2PDF will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2024-01-01
+---
 
-### Added
-- **Daemon Mode**: Automatic folder monitoring and batch conversion
-- **Clean Architecture**: Complete refactoring with SOLID principles
-- **Cross-Platform Support**: Native support for Windows, Linux, and macOS
-- **Smart Dimension Handling**: Automatic ZPL dimension extraction (`^PW`, `^LL`)
-- **High Performance**: Async processing with retry mechanisms
-- **Enterprise Features**: PID management, configuration files, and logging
-- **Docker Support**: Containerization for easy deployment
-- **Comprehensive Testing**: Unit and integration tests with 90%+ coverage
-- **Multiple Package Formats**: Windows (winget), Linux (.deb/.rpm), Docker
-- **Intelligent Priority Logic**: ZPL extraction > Explicit parameters > Defaults
-- **Configuration Management**: JSON-based configuration with environment variables
-- **File Lock Handling**: Retry mechanisms for files in use
-- **Multiple Unit Support**: mm, cm, inches, points
-- **ZPL Command Support**: Full support for `^XA`, `^XZ`, `^PW`, `^LL` commands
-- **Error Handling**: Comprehensive error handling and logging
-- **Documentation**: Complete documentation in English and Portuguese
+## [2.0.0] - 2025-01-07
 
-### Changed
-- **Architecture**: Migrated from monolithic to Clean Architecture
-- **Performance**: Improved conversion speed by 300%
-- **Memory Usage**: Reduced memory footprint by 50%
-- **Error Handling**: Enhanced error messages and recovery
-- **Code Quality**: Improved code maintainability and testability
-- **Build Process**: Automated cross-platform builds
-- **Documentation**: Complete rewrite of documentation
+### 🎉 Major Release - Complete Rewrite
 
-### Fixed
-- **File Locking Issues**: Resolved problems with files in use
-- **Memory Leaks**: Fixed memory leaks in long-running processes
-- **Cross-Platform Compatibility**: Fixed platform-specific issues
-- **Dimension Calculation**: Improved accuracy of dimension conversions
-- **Error Recovery**: Better error handling and recovery mechanisms
+This is a **major release** with complete architecture refactoring and numerous new features.
 
-### Security
-- **Dependency Updates**: Updated all dependencies to latest versions
-- **Security Scanning**: Added automated security scanning
-- **Non-Root Docker**: Docker containers run as non-root user
-- **Input Validation**: Enhanced input validation and sanitization
+### ✨ Added
+
+#### Multi-Language Support
+- **8 Languages**: English, Portuguese, Spanish, French, German, Italian, Japanese, Chinese
+- **Automatic Detection**: Detects system language automatically
+- **Permanent Configuration**: `--set-language` command for persistent settings
+- **Environment Variable**: `ZPL2PDF_LANGUAGE` support
+- **Configuration File**: Language setting in `zpl2pdf.json`
+- **Localization System**: Complete `.resx` resource files with `LocalizationManager`
+
+#### Daemon Mode (Auto-Conversion)
+- **Automatic Folder Monitoring**: Watches folder and converts files automatically
+- **Background Process**: Daemon runs in background with PID management
+- **Daemon Commands**: `start`, `stop`, `status`, `run`
+- **Custom Watch Folders**: Configure any folder to monitor
+- **Fixed Dimensions**: Optional fixed dimensions for all files
+- **Dynamic Extraction**: Extract dimensions from each ZPL file automatically
+
+#### Cross-Platform Support
+- **Windows**: x64, x86, ARM64
+- **Linux**: x64, ARM64, ARM (Ubuntu, Debian, CentOS, Alpine)
+- **macOS**: Intel (x64), Apple Silicon (ARM64)
+- **Self-Contained**: No .NET installation required
+- **Optimized Builds**: Platform-specific optimizations
+
+#### Docker Support
+- **Alpine Linux Base**: Ultra-lightweight (470MB)
+- **Multi-Architecture**: linux/amd64, linux/arm64
+- **Docker Compose**: Ready-to-use configurations
+- **Health Checks**: Built-in container health monitoring
+- **GitHub Container Registry**: `ghcr.io/brunoleocam/zpl2pdf`
+- **Docker Hub**: `brunoleocam/zpl2pdf`
+
+#### Professional Windows Installer
+- **Inno Setup**: Professional installer with multi-language UI
+- **Language Selection**: Choose app language during installation
+- **File Association**: `.zpl` files open with ZPL2PDF
+- **PATH Integration**: Optional system PATH addition
+- **Smart Shortcuts**: Start/Stop daemon from Start Menu
+- **Clean Uninstallation**: Preserves user data optionally
+
+#### Build & Distribution Automation
+- **Build Scripts**: `build-all-platforms.ps1` and `.sh`
+- **8 Platform Builds**: Single command builds all platforms
+- **Automated Checksums**: SHA256 for all builds
+- **Release Automation**: `release.ps1` and `.sh` scripts
+- **GitHub Actions**: Automated Docker publishing on releases
+
+#### Architecture & Code Quality
+- **Clean Architecture**: Separation of concerns (Application, Domain, Infrastructure, Presentation)
+- **SOLID Principles**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
+- **Value Objects**: Immutable domain objects (`ConversionOptions`, `LabelDimensions`, `DaemonConfiguration`)
+- **Service Layer**: Centralized business logic (`ConversionService`, `FileValidationService`, `UnitConversionService`)
+- **Dependency Injection**: Interfaces for all services
+- **90%+ Test Coverage**: Comprehensive unit and integration tests
+
+#### Documentation
+- **Complete Restructure**: Organized docs into user guides, development guides, and translations
+- **Multi-Language Docs**: README available in 8 languages
+- **Docker Documentation**: Comprehensive Docker usage and publishing guides
+- **Build Documentation**: Detailed build scripts documentation
+- **CI/CD Documentation**: Complete automation workflow documentation
+
+### 🔄 Changed
+- **Architecture**: Migrated from monolithic to Clean Architecture (4-layer separation)
+- **Performance**: Improved conversion speed by 300% with async processing
+- **Memory Usage**: Reduced memory footprint by 50% with optimized rendering
+- **Error Handling**: Enhanced error messages with localization support
+- **Code Quality**: Improved maintainability and testability (90%+ coverage)
+- **Build Process**: Automated cross-platform builds with single command
+- **Docker Image**: Optimized from 674MB to 470MB (Alpine Linux)
+- **Installation Path**: Changed from AppData to Program Files (Windows)
+- **Installer Size**: Reduced to 35.44 MB with LZMA2 compression
+
+### 🐛 Fixed
+- **File Locking Issues**: Implemented robust retry mechanisms for files in use
+- **Memory Leaks**: Fixed memory leaks in long-running daemon processes
+- **Cross-Platform Compatibility**: Resolved platform-specific path issues
+- **Dimension Calculation**: Improved accuracy of ZPL dimension extraction
+- **Error Recovery**: Better error handling with graceful degradation
+- **Encoding Issues**: Fixed multi-language character encoding
+- **Docker Permissions**: Fixed file permission issues in containers
+
+### 🔐 Security
+- **Dependency Updates**: Updated all dependencies to latest secure versions
+- **Non-Root Docker**: Containers run as non-root user `zpl2pdf`
+- **Input Validation**: Enhanced validation to prevent malicious ZPL code
+- **Environment Variables**: Secure handling of sensitive configuration
+- **File Permissions**: Proper permissions for daemon-created folders
+
+### 🗑️ Removed
+- **Legacy Code**: Removed old monolithic architecture
+- **Hardcoded Strings**: Replaced with localization resources
+- **Duplicate Code**: Eliminated 200+ lines of code duplication
+- **Temporary Files**: Removed dependency on temporary file creation
 
 ## [1.0.0] - 2023-12-01
 

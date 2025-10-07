@@ -120,10 +120,10 @@ print_success "Prerequisites check passed"
 print_step "Updating version in project files..."
 
 # Update ZPL2PDF.csproj
-if [[ -f "src/ZPL2PDF.csproj" ]]; then
-    sed -i.bak "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/" src/ZPL2PDF.csproj
-    rm src/ZPL2PDF.csproj.bak
-    print_success "Updated src/ZPL2PDF.csproj"
+if [[ -f "ZPL2PDF.csproj" ]]; then
+    sed -i.bak "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/" ZPL2PDF.csproj
+    rm ZPL2PDF.csproj.bak
+    print_success "Updated ZPL2PDF.csproj"
 fi
 
 # Update ApplicationConstants.cs
@@ -193,55 +193,28 @@ fi
 
 print_success "Build and tests completed successfully"
 
-# Create release builds
+# Create release builds using build-all-platforms script
 print_step "Creating release builds..."
 
-RUNTIMES=("win-x64" "win-x86" "linux-x64" "linux-arm64" "linux-arm" "osx-x64" "osx-arm64")
-BUILD_DIR="build/release"
+BUILD_DIR="build/publish"
+BUILD_SCRIPT="scripts/build-all-platforms.sh"
 
-if [[ -d "$BUILD_DIR" ]]; then
-    rm -rf "$BUILD_DIR"
-fi
-mkdir -p "$BUILD_DIR"
-
-for runtime in "${RUNTIMES[@]}"; do
-    print_color "$YELLOW" "Building for $runtime..."
-    
-    OUTPUT_DIR="$BUILD_DIR/$runtime"
-    dotnet publish src/ZPL2PDF.csproj --configuration Release --runtime "$runtime" --self-contained true --output "$OUTPUT_DIR"
+if [[ -f "$BUILD_SCRIPT" ]]; then
+    bash "$BUILD_SCRIPT" --output "$BUILD_DIR"
     
     if [[ $? -ne 0 ]]; then
-        print_error "Failed to build for $runtime"
+        print_error "Build script failed"
         exit 1
     fi
     
-    # Create archive
-    ARCHIVE_NAME="ZPL2PDF-$runtime"
-    if [[ $runtime == win-* ]]; then
-        cd "$OUTPUT_DIR"
-        zip -r "../../$ARCHIVE_NAME.zip" . > /dev/null
-        cd - > /dev/null
-    else
-        tar -czf "$BUILD_DIR/$ARCHIVE_NAME.tar.gz" -C "$OUTPUT_DIR" .
-    fi
-    
-    print_success "Built $runtime"
-done
+    print_success "All platforms built successfully"
+else
+    print_error "Build script not found: $BUILD_SCRIPT"
+    exit 1
+fi
 
-# Create checksums
-print_step "Creating checksums..."
-CHECKSUM_FILE="$BUILD_DIR/checksums.txt"
-touch "$CHECKSUM_FILE"
-
-for file in "$BUILD_DIR"/*.zip "$BUILD_DIR"/*.tar.gz; do
-    if [[ -f "$file" ]]; then
-        filename=$(basename "$file")
-        hash=$(sha256sum "$file" | cut -d' ' -f1)
-        echo "$hash  $filename" >> "$CHECKSUM_FILE"
-    fi
-done
-
-print_success "Checksums created"
+# Checksums are already created by build-all-platforms script
+print_success "Checksums available at: $BUILD_DIR/SHA256SUMS.txt"
 
 # Create Git tag
 if [[ "$DRY_RUN" == false ]]; then
@@ -271,57 +244,11 @@ fi
 # Create GitHub release
 if [[ "$DRY_RUN" == false ]]; then
     print_step "Creating GitHub release..."
-    
-    RELEASE_NOTES="## What's New in v$VERSION
-
-### 🚀 New Features
-- Release automation and cross-platform builds
-- Enhanced documentation and examples
-- Improved error handling and logging
-
-### 🔧 Improvements
-- Updated dependencies to latest versions
-- Optimized build process
-- Enhanced testing coverage
-
-### 🐛 Bug Fixes
-- Various bug fixes and improvements
-- Better cross-platform compatibility
-- Improved error messages
-
-## Downloads
-
-Download the appropriate package for your platform from the assets below.
-
-## Installation
-
-### Windows
-\`\`\`bash
-winget install ZPL2PDF
-\`\`\`
-
-### Linux
-\`\`\`bash
-# Ubuntu/Debian
-sudo apt install zpl2pdf
-
-# CentOS/RHEL
-sudo yum install zpl2pdf
-\`\`\`
-
-### Docker
-\`\`\`bash
-docker pull zpl2pdf:latest
-\`\`\`
-
-## Full Changelog
-
-See [CHANGELOG.md](https://github.com/brunoleocam/ZPL2PDF/blob/main/CHANGELOG.md) for the complete list of changes."
-    
-    # Note: This would require GitHub CLI or API calls
-    print_warning "GitHub release creation requires manual intervention or GitHub CLI"
-    print_color "$YELLOW" "Release notes prepared:"
-    echo "$RELEASE_NOTES"
+    print_warning "GitHub release creation requires manual intervention or GitHub CLI (gh)"
+    print_color "$YELLOW" "To create release manually:"
+    print_color "$YELLOW" "1. Go to: https://github.com/YOUR-USERNAME/ZPL2PDF/releases/new"
+    print_color "$YELLOW" "2. Choose tag: v$VERSION"
+    print_color "$YELLOW" "3. Upload files from: $BUILD_DIR"
 fi
 
 # Summary

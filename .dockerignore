@@ -1,0 +1,98 @@
+# =============================================================================
+# Docker Ignore File
+# =============================================================================
+# Excludes unnecessary files from Docker build context for faster builds
+# =============================================================================
+
+# Build outputs
+**/bin/
+**/obj/
+**/build/
+**/publish/
+*.exe
+*.dll
+*.pdb
+
+# IDE and Editor files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (not needed in container)
+docs/
+*.md
+!README.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+
+# Test files
+tests/
+test-data/
+*.Test/
+*.Tests/
+
+# Package manager
+packages/
+node_modules/
+
+# Docker files (don't copy Docker files into Docker)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Scripts (not needed in runtime)
+scripts/
+*.sh
+*.ps1
+
+# CI/CD
+.github/
+.circleci/
+.travis.yml
+azure-pipelines.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.cache
+
+# Watch/Output folders (will be mounted as volumes)
+watch/
+output/
+config/
+
+# Build artifacts
+*.zip
+*.tar.gz
+*.deb
+*.rpm
+
+# Installation files
+*.iss
+*.msi
+winget-manifest.yaml
+debian/
+rpm/
+
+# Sample files
+**/Sample/
+**/samples/
+**/examples/
