@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="APPLICATION_NAME" xml:space="preserve">
+    <value>ZPL2PDF</value>
+  </data>
+  <data name="APPLICATION_DESCRIPTION" xml:space="preserve">
+    <value>Conversor ZPL para PDF</value>
+  </data>
+  <data name="HELP_TITLE" xml:space="preserve">
+    <value>ZPL2PDF - Conversor ZPL para PDF</value>
+  </data>
+  <data name="HELP_DEFAULT_BEHAVIOR" xml:space="preserve">
+    <value>COMPORTAMENTO PADRÃO:</value>
+  </data>
+  <data name="HELP_DEFAULT_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe [opções]</value>
+  </data>
+  <data name="HELP_DEFAULT_DESCRIPTION" xml:space="preserve">
+    <value>Executar sem argumentos inicia o modo daemon (mesmo que comando 'start')</value>
+  </data>
+  <data name="HELP_CONVERSION_MODE" xml:space="preserve">
+    <value>MODO CONVERSÃO:</value>
+  </data>
+  <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe -i &lt;caminho_arquivo_entrada&gt; -o &lt;pasta_saida&gt; [-n &lt;nome_arquivo_saida&gt;] | -z &lt;conteudo_zpl&gt;</value>
+  </data>
+  <data name="HELP_DAEMON_MODE" xml:space="preserve">
+    <value>MODO DAEMON:</value>
+  </data>
+  <data name="HELP_DAEMON_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe start [opções] | stop | status | run [opções]</value>
+  </data>
+  <data name="DAEMON_STARTED_SUCCESS" xml:space="preserve">
+    <value>Daemon iniciado com sucesso! PID: {0}</value>
+  </data>
+  <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Daemon parado com sucesso!</value>
+  </data>
+  <data name="DAEMON_ALREADY_RUNNING" xml:space="preserve">
+    <value>Daemon já está em execução!</value>
+  </data>
+  <data name="DAEMON_NOT_RUNNING" xml:space="preserve">
+    <value>Daemon não está em execução!</value>
+  </data>
+  <data name="DAEMON_STATUS_RUNNING" xml:space="preserve">
+    <value>Daemon está em execução! PID: {0}</value>
+  </data>
+  <data name="FILE_PROCESSED_SUCCESS" xml:space="preserve">
+    <value>Arquivo processado com sucesso: {0}</value>
+  </data>
+  <data name="FILE_PROCESSING_ERROR" xml:space="preserve">
+    <value>Erro ao processar {0}: {1}</value>
+  </data>
+  <data name="CONVERSION_SUCCESS" xml:space="preserve">
+    <value>Conversão concluída com sucesso!</value>
+  </data>
+  <data name="CONVERSION_ERROR" xml:space="preserve">
+    <value>Falha na conversão: {0}</value>
+  </data>
+  <data name="INVALID_ARGUMENTS" xml:space="preserve">
+    <value>Argumentos inválidos. Use --help para informações de uso.</value>
+  </data>
+  <data name="FILE_NOT_FOUND" xml:space="preserve">
+    <value>Arquivo não encontrado: {0}</value>
+  </data>
+  <data name="FOLDER_CREATED" xml:space="preserve">
+    <value>Pasta criada: {0}</value>
+  </data>
+  <data name="STARTING_DAEMON" xml:space="preserve">
+    <value>Iniciando daemon em segundo plano...</value>
+  </data>
+  <data name="MONITORING_FOLDER" xml:space="preserve">
+    <value>Pasta monitorada: {0}</value>
+  </data>
+  <data name="DIMENSIONS_INFO" xml:space="preserve">
+    <value>Dimensões: {0} x {1} {2}</value>
+  </data>
+  <data name="PRINT_DENSITY_INFO" xml:space="preserve">
+    <value>Densidade de Impressão: {0:F1} dpmm ({1} dpi)</value>
+  </data>
+  <data name="PRESS_CTRL_C_TO_STOP" xml:space="preserve">
+    <value>Pressione Ctrl+C para parar...</value>
+  </data>
+  <data name="HELP_PARAMETERS" xml:space="preserve">
+    <value>Parâmetros:</value>
+  </data>
+  <data name="HELP_COMMANDS" xml:space="preserve">
+    <value>Comandos:</value>
+  </data>
+  <data name="HELP_DAEMON_OPTIONS" xml:space="preserve">
+    <value>Opções do Daemon:</value>
+  </data>
+  <data name="HELP_SHOW_HELP_MESSAGE" xml:space="preserve">
+    <value>Mostrar esta mensagem de ajuda</value>
+  </data>
+  <data name="HELP_DAEMON_DIRECT_OPTIONS" xml:space="preserve">
+    <value>Você também pode passar opções do daemon diretamente: ZPL2PDF.exe -l "pasta" -w 10 -h 5</value>
+  </data>
+  <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
+    <value>  -i &lt;caminho_arquivo_entrada&gt;       Caminho para o arquivo .txt ou .prn de entrada</value>
+  </data>
+  <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
+    <value>  -z &lt;conteudo_zpl&gt;           Conteúdo ZPL como string</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
+    <value>  -o &lt;pasta_saida&gt;    Caminho para a pasta onde o arquivo PDF será salvo</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
+    <value>  -n &lt;nome_arquivo_saida&gt;      Nome do arquivo PDF de saída (opcional)</value>
+  </data>
+  <data name="HELP_PARAM_WIDTH" xml:space="preserve">
+    <value>  -w &lt;largura&gt;                 Largura da etiqueta (aceita . ou , como separador decimal)</value>
+  </data>
+  <data name="HELP_PARAM_HEIGHT" xml:space="preserve">
+    <value>  -h &lt;altura&gt;                Altura da etiqueta (aceita . ou , como separador decimal)</value>
+  </data>
+  <data name="HELP_PARAM_DENSITY" xml:space="preserve">
+    <value>  -d &lt;densidade&gt;               Densidade de impressão em DPI (apenas inteiro, ex: 203, 300)</value>
+  </data>
+  <data name="HELP_PARAM_UNIT" xml:space="preserve">
+    <value>  -u &lt;unidade&gt;                  Unidade de medida para largura e altura ('in', 'cm', 'mm')</value>
+  </data>
+  <data name="HELP_CMD_START" xml:space="preserve">
+    <value>  start                      Iniciar modo daemon em segundo plano</value>
+  </data>
+  <data name="HELP_CMD_STOP" xml:space="preserve">
+    <value>  stop                       Parar modo daemon</value>
+  </data>
+  <data name="HELP_CMD_STATUS" xml:space="preserve">
+    <value>  status                     Verificar status do daemon</value>
+  </data>
+  <data name="HELP_CMD_RUN" xml:space="preserve">
+    <value>  run                        Executar modo daemon no processo atual (para testes)</value>
+  </data>
+  <data name="HELP_OPT_LISTEN_FOLDER" xml:space="preserve">
+    <value>  -l &lt;pasta_monitoramento&gt;          Pasta para monitorar (padrão: Documents/ZPL2PDF Auto Converter)</value>
+  </data>
+  <data name="HELP_OPT_WIDTH_FIXED" xml:space="preserve">
+    <value>  -w &lt;largura&gt;                 Largura fixa para todas as conversões (aceita . ou , como separador decimal)</value>
+  </data>
+  <data name="HELP_OPT_HEIGHT_FIXED" xml:space="preserve">
+    <value>  -h &lt;altura&gt;                Altura fixa para todas as conversões (aceita . ou , como separador decimal)</value>
+  </data>
+  <data name="HELP_OPT_UNIT_DAEMON" xml:space="preserve">
+    <value>  -u &lt;unidade&gt;                  Unidade de medida ('in', 'cm', 'mm')</value>
+  </data>
+  <data name="HELP_OPT_DENSITY_DAEMON" xml:space="preserve">
+    <value>  -d &lt;densidade&gt;               Densidade de impressão em DPI (apenas inteiro, ex: 203, 300)</value>
+  </data>
+  <data name="CHECKING_DAEMON_STATUS" xml:space="preserve">
+    <value>Verificando status do daemon...</value>
+  </data>
+  <data name="STOPPING_DAEMON" xml:space="preserve">
+    <value>Parando daemon...</value>
+  </data>
+  <data name="DAEMON_STARTED_BUT_FAILED_PID" xml:space="preserve">
+    <value>Daemon iniciado mas falhou ao salvar arquivo PID!</value>
+  </data>
+  <data name="FAILED_TO_START_DAEMON" xml:space="preserve">
+    <value>Falha ao iniciar processo do daemon!</value>
+  </data>
+  <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Daemon parado com sucesso!</value>
+  </data>
+  <data name="ERROR_STOPPING_DAEMON" xml:space="preserve">
+    <value>Erro ao parar processo do daemon!</value>
+  </data>
+  <data name="INVALID_PID_IN_FILE" xml:space="preserve">
+    <value>PID inválido no arquivo!</value>
+  </data>
+  <data name="NO_IMAGES_GENERATED" xml:space="preserve">
+    <value>Nenhuma imagem gerada a partir do conteúdo ZPL!</value>
+  </data>
+  <data name="STARTING_QUEUE_PROCESSING" xml:space="preserve">
+    <value>Iniciando processamento da fila...</value>
+  </data>
+  <data name="QUEUE_PROCESSING_STOPPED" xml:space="preserve">
+    <value>Processamento da fila parado</value>
+  </data>
+  <data name="MONITORING_STOPPED" xml:space="preserve">
+    <value>Monitoramento parado</value>
+  </data>
+  <data name="PROCESSING_FILES_LIST_CLEARED" xml:space="preserve">
+    <value>Lista de arquivos processados limpa</value>
+  </data>
+  <data name="MONITORING_FOLDER_NOT_CONFIGURED" xml:space="preserve">
+    <value>Pasta de monitoramento não configurada</value>
+  </data>
+  <data name="LABEL_WIDTH_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>Largura da etiqueta deve ser maior que zero</value>
+  </data>
+  <data name="LABEL_HEIGHT_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>Altura da etiqueta deve ser maior que zero</value>
+  </data>
+  <data name="DPI_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>DPI deve ser maior que zero</value>
+  </data>
+  <data name="INVALID_UNIT_CONFIG" xml:space="preserve">
+    <value>Unidade inválida. Use: mm, cm, in, pt</value>
+  </data>
+  <data name="INVALID_LOG_LEVEL_CONFIG" xml:space="preserve">
+    <value>Nível de log inválido. Use: Debug, Info, Warning, Error</value>
+  </data>
+  <data name="CURRENT_ZPL2PDF_CONFIGURATION" xml:space="preserve">
+    <value>Configuração atual do ZPL2PDF:</value>
+  </data>
+  <data name="MONITORING_FOLDER_CONFIG" xml:space="preserve">
+    <value>   Pasta de monitoramento: {0}</value>
+  </data>
+  <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
+    <value>  --language &lt;idioma&gt;           Idioma da interface (ex: pt-BR, en-US, es-ES)</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;idioma&gt;       Definir idioma permanentemente (configura variável de ambiente)</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               Resetar para idioma padrão do sistema</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                Mostrar configuração de idioma atual</value>
+  </data>
+  <data name="INVALID_LANGUAGE_CODE" xml:space="preserve">
+    <value>Código de idioma inválido: {0}</value>
+  </data>
+  <data name="SUPPORTED_LANGUAGES_LIST" xml:space="preserve">
+    <value>Idiomas suportados:</value>
+  </data>
+  <data name="LANGUAGE_SET_SUCCESS" xml:space="preserve">
+    <value>Idioma configurado para: {0}</value>
+  </data>
+  <data name="LANGUAGE_RESET_SUCCESS" xml:space="preserve">
+    <value>Configuração de idioma resetada para padrão do sistema</value>
+  </data>
+  <data name="RESTART_REQUIRED" xml:space="preserve">
+    <value>Por favor, reinicie seu terminal/prompt de comando para que as alterações tenham efeito.</value>
+  </data>
+  <data name="ERROR_SETTING_LANGUAGE" xml:space="preserve">
+    <value>Erro ao configurar idioma: {0}</value>
+  </data>
+  <data name="ERROR_RESETTING_LANGUAGE" xml:space="preserve">
+    <value>Erro ao resetar idioma: {0}</value>
+  </data>
+  <data name="CURRENT_LANGUAGE_CONFIG" xml:space="preserve">
+    <value>Configuração de Idioma Atual:</value>
+  </data>
+  <data name="ENV_VAR_LANGUAGE" xml:space="preserve">
+    <value>Variável de Ambiente: {0}</value>
+  </data>
+  <data name="ENV_VAR_NOT_SET" xml:space="preserve">
+    <value>Variável de Ambiente: Não definida</value>
+  </data>
+  <data name="CURRENT_LANGUAGE" xml:space="preserve">
+    <value>Idioma Atual: {0}</value>
+  </data>
+  <data name="SYSTEM_LANGUAGE" xml:space="preserve">
+    <value>Idioma do Sistema: {0}</value>
+  </data>
+  <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
+    <value>Prioridade: 1) Parâmetro --language, 2) Variável de ambiente, 3) Arquivo config, 4) Detecção do sistema</value>
+  </data>
+</root>

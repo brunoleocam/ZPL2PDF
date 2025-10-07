@@ -64,6 +64,11 @@ namespace ZPL2PDF.Domain.ValueObjects
         public string FileFilter { get; set; } = "*.txt;*.prn";
 
         /// <summary>
+        /// Gets or sets the language/culture code (e.g., "pt-BR", "en-US", "es-ES")
+        /// </summary>
+        public string? Language { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of DaemonConfiguration
         /// </summary>
         public DaemonConfiguration()
@@ -168,7 +173,8 @@ namespace ZPL2PDF.Domain.ValueObjects
                 MaxRetries = MaxRetries,
                 LogLevel = LogLevel,
                 IncludeSubdirectories = IncludeSubdirectories,
-                FileFilter = FileFilter
+                FileFilter = FileFilter,
+                Language = Language
             };
         }
 

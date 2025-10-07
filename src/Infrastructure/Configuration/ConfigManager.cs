@@ -14,6 +14,11 @@ namespace ZPL2PDF
         private Zpl2PdfConfig _config = null!;
 
         /// <summary>
+        /// Gets the current configuration
+        /// </summary>
+        public Zpl2PdfConfig Config => _config;
+
+        /// <summary>
         /// ConfigManager constructor
         /// </summary>
         public ConfigManager()
@@ -301,6 +306,11 @@ namespace ZPL2PDF
         /// Start automatically with the system
         /// </summary>
         public bool AutoStart { get; set; } = false;
+
+        /// <summary>
+        /// Language/culture code (e.g., "pt-BR", "en-US", "es-ES")
+        /// </summary>
+        public string? Language { get; set; }
 
     }
 }

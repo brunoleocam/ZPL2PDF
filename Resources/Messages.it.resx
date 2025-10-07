@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="APPLICATION_NAME" xml:space="preserve">
+    <value>ZPL2PDF</value>
+  </data>
+  <data name="APPLICATION_DESCRIPTION" xml:space="preserve">
+    <value>Convertitore ZPL in PDF</value>
+  </data>
+  <data name="HELP_TITLE" xml:space="preserve">
+    <value>ZPL2PDF - Convertitore ZPL in PDF</value>
+  </data>
+  <data name="HELP_DEFAULT_BEHAVIOR" xml:space="preserve">
+    <value>COMPORTAMENTO PREDETERMINATO:</value>
+  </data>
+  <data name="HELP_DEFAULT_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe [opzioni]</value>
+  </data>
+  <data name="HELP_DEFAULT_DESCRIPTION" xml:space="preserve">
+    <value>Eseguire senza argomenti avvia la modalità daemon (come il comando 'start')</value>
+  </data>
+  <data name="HELP_CONVERSION_MODE" xml:space="preserve">
+    <value>MODALITÀ CONVERSIONE:</value>
+  </data>
+  <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe -i &lt;percorso_file_input&gt; -o &lt;cartella_output&gt; [-n &lt;nome_file_output&gt;] | -z &lt;contenuto_zpl&gt;</value>
+  </data>
+  <data name="HELP_DAEMON_MODE" xml:space="preserve">
+    <value>MODALITÀ DAEMON:</value>
+  </data>
+  <data name="HELP_DAEMON_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe start [opzioni] | stop | status | run [opzioni]</value>
+  </data>
+  <data name="DAEMON_STARTED_SUCCESS" xml:space="preserve">
+    <value>Daemon avviato con successo! PID: {0}</value>
+  </data>
+  <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Daemon fermato con successo!</value>
+  </data>
+  <data name="DAEMON_ALREADY_RUNNING" xml:space="preserve">
+    <value>Il daemon è già in esecuzione!</value>
+  </data>
+  <data name="DAEMON_NOT_RUNNING" xml:space="preserve">
+    <value>Il daemon non è in esecuzione!</value>
+  </data>
+  <data name="DAEMON_STATUS_RUNNING" xml:space="preserve">
+    <value>Il daemon è in esecuzione! PID: {0}</value>
+  </data>
+  <data name="FILE_PROCESSED_SUCCESS" xml:space="preserve">
+    <value>File elaborato con successo: {0}</value>
+  </data>
+  <data name="FILE_PROCESSING_ERROR" xml:space="preserve">
+    <value>Errore nell'elaborazione di {0}: {1}</value>
+  </data>
+  <data name="CONVERSION_SUCCESS" xml:space="preserve">
+    <value>Conversione completata con successo!</value>
+  </data>
+  <data name="CONVERSION_ERROR" xml:space="preserve">
+    <value>Conversione fallita: {0}</value>
+  </data>
+  <data name="INVALID_ARGUMENTS" xml:space="preserve">
+    <value>Argomenti non validi. Usa --help per informazioni sull'uso.</value>
+  </data>
+  <data name="FILE_NOT_FOUND" xml:space="preserve">
+    <value>File non trovato: {0}</value>
+  </data>
+  <data name="FOLDER_CREATED" xml:space="preserve">
+    <value>Cartella creata: {0}</value>
+  </data>
+  <data name="STARTING_DAEMON" xml:space="preserve">
+    <value>Avvio del daemon in background...</value>
+  </data>
+  <data name="MONITORING_FOLDER" xml:space="preserve">
+    <value>Cartella monitorata: {0}</value>
+  </data>
+  <data name="DIMENSIONS_INFO" xml:space="preserve">
+    <value>Dimensioni: {0} x {1} {2}</value>
+  </data>
+  <data name="PRINT_DENSITY_INFO" xml:space="preserve">
+    <value>Densità di stampa: {0:F1} dpmm ({1} dpi)</value>
+  </data>
+  <data name="PRESS_CTRL_C_TO_STOP" xml:space="preserve">
+    <value>Premere Ctrl+C per fermare...</value>
+  </data>
+  <data name="HELP_PARAMETERS" xml:space="preserve">
+    <value>Parametri:</value>
+  </data>
+  <data name="HELP_COMMANDS" xml:space="preserve">
+    <value>Comandi:</value>
+  </data>
+  <data name="HELP_DAEMON_OPTIONS" xml:space="preserve">
+    <value>Opzioni del Demone:</value>
+  </data>
+  <data name="HELP_SHOW_HELP_MESSAGE" xml:space="preserve">
+    <value>Mostra questo messaggio di aiuto</value>
+  </data>
+  <data name="HELP_DAEMON_DIRECT_OPTIONS" xml:space="preserve">
+    <value>Puoi anche passare le opzioni del demone direttamente: ZPL2PDF.exe -l "cartella" -w 10 -h 5</value>
+  </data>
+  <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
+    <value>  -i &lt;percorso_file_input&gt;       Percorso al file .txt o .prn di input</value>
+  </data>
+  <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
+    <value>  -z &lt;contenuto_zpl&gt;           Contenuto ZPL come stringa</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
+    <value>  -o &lt;cartella_output&gt;    Percorso alla cartella dove verrà salvato il file PDF</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
+    <value>  -n &lt;nome_file_output&gt;      Nome del file PDF di output (opzionale)</value>
+  </data>
+  <data name="HELP_PARAM_WIDTH" xml:space="preserve">
+    <value>  -w &lt;larghezza&gt;                 Larghezza dell'etichetta (accetta . o , come separatore decimale)</value>
+  </data>
+  <data name="HELP_PARAM_HEIGHT" xml:space="preserve">
+    <value>  -h &lt;altezza&gt;                Altezza dell'etichetta (accetta . o , come separatore decimale)</value>
+  </data>
+  <data name="HELP_PARAM_DENSITY" xml:space="preserve">
+    <value>  -d &lt;densità&gt;               Densità di stampa in DPI (solo intero, es: 203, 300)</value>
+  </data>
+  <data name="HELP_PARAM_UNIT" xml:space="preserve">
+    <value>  -u &lt;unità&gt;                  Unità di misura per larghezza e altezza ('in', 'cm', 'mm')</value>
+  </data>
+  <data name="HELP_CMD_START" xml:space="preserve">
+    <value>  start                      Avvia modalità demone in background</value>
+  </data>
+  <data name="HELP_CMD_STOP" xml:space="preserve">
+    <value>  stop                       Ferma modalità demone</value>
+  </data>
+  <data name="HELP_CMD_STATUS" xml:space="preserve">
+    <value>  status                     Verifica stato del demone</value>
+  </data>
+  <data name="HELP_CMD_RUN" xml:space="preserve">
+    <value>  run                        Esegui modalità demone nel processo corrente (per test)</value>
+  </data>
+  <data name="HELP_OPT_LISTEN_FOLDER" xml:space="preserve">
+    <value>  -l &lt;cartella_monitoraggio&gt;          Cartella da monitorare (predefinita: Documents/ZPL2PDF Auto Converter)</value>
+  </data>
+  <data name="HELP_OPT_WIDTH_FIXED" xml:space="preserve">
+    <value>  -w &lt;larghezza&gt;                 Larghezza fissa per tutte le conversioni (accetta . o , come separatore decimale)</value>
+  </data>
+  <data name="HELP_OPT_HEIGHT_FIXED" xml:space="preserve">
+    <value>  -h &lt;altezza&gt;                Altezza fissa per tutte le conversioni (accetta . o , come separatore decimale)</value>
+  </data>
+  <data name="HELP_OPT_UNIT_DAEMON" xml:space="preserve">
+    <value>  -u &lt;unità&gt;                  Unità di misura ('in', 'cm', 'mm')</value>
+  </data>
+  <data name="HELP_OPT_DENSITY_DAEMON" xml:space="preserve">
+    <value>  -d &lt;densità&gt;               Densità di stampa in DPI (solo intero, es: 203, 300)</value>
+  </data>
+  <data name="CHECKING_DAEMON_STATUS" xml:space="preserve">
+    <value>Verifica stato del demone...</value>
+  </data>
+  <data name="STOPPING_DAEMON" xml:space="preserve">
+    <value>Fermando demone...</value>
+  </data>
+  <data name="DAEMON_STARTED_BUT_FAILED_PID" xml:space="preserve">
+    <value>Demone avviato ma fallito nel salvare il file PID!</value>
+  </data>
+  <data name="FAILED_TO_START_DAEMON" xml:space="preserve">
+    <value>Errore nell'avviare il processo demone!</value>
+  </data>
+  <data name="ERROR_STOPPING_DAEMON" xml:space="preserve">
+    <value>Errore nel fermare il processo demone!</value>
+  </data>
+  <data name="INVALID_PID_IN_FILE" xml:space="preserve">
+    <value>PID non valido nel file!</value>
+  </data>
+  <data name="NO_IMAGES_GENERATED" xml:space="preserve">
+    <value>Nessuna immagine generata dal contenuto ZPL!</value>
+  </data>
+  <data name="STARTING_QUEUE_PROCESSING" xml:space="preserve">
+    <value>Avvio elaborazione coda...</value>
+  </data>
+  <data name="QUEUE_PROCESSING_STOPPED" xml:space="preserve">
+    <value>Elaborazione coda fermata</value>
+  </data>
+  <data name="MONITORING_STOPPED" xml:space="preserve">
+    <value>Monitoraggio fermato</value>
+  </data>
+  <data name="PROCESSING_FILES_LIST_CLEARED" xml:space="preserve">
+    <value>Lista file elaborati pulita</value>
+  </data>
+  <data name="MONITORING_FOLDER_NOT_CONFIGURED" xml:space="preserve">
+    <value>Cartella di monitoraggio non configurata</value>
+  </data>
+  <data name="LABEL_WIDTH_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>La larghezza dell'etichetta deve essere maggiore di zero</value>
+  </data>
+  <data name="LABEL_HEIGHT_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>L'altezza dell'etichetta deve essere maggiore di zero</value>
+  </data>
+  <data name="DPI_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>DPI deve essere maggiore di zero</value>
+  </data>
+  <data name="INVALID_UNIT_CONFIG" xml:space="preserve">
+    <value>Unità non valida. Usa: mm, cm, in, pt</value>
+  </data>
+  <data name="INVALID_LOG_LEVEL_CONFIG" xml:space="preserve">
+    <value>Livello di log non valido. Usa: Debug, Info, Warning, Error</value>
+  </data>
+  <data name="CURRENT_ZPL2PDF_CONFIGURATION" xml:space="preserve">
+    <value>Configurazione attuale di ZPL2PDF:</value>
+  </data>
+  <data name="MONITORING_FOLDER_CONFIG" xml:space="preserve">
+    <value>   Cartella di monitoraggio: {0}</value>
+  </data>
+  <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
+    <value>  --language &lt;lingua&gt;           Lingua dell'interfaccia (es: pt-BR, en-US, es-ES)</value>
+  </data>
+</root>

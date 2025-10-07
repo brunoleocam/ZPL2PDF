@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="APPLICATION_NAME" xml:space="preserve">
+    <value>ZPL2PDF</value>
+  </data>
+  <data name="APPLICATION_DESCRIPTION" xml:space="preserve">
+    <value>ZPLからPDFへのコンバーター</value>
+  </data>
+  <data name="HELP_TITLE" xml:space="preserve">
+    <value>ZPL2PDF - ZPLからPDFへのコンバーター</value>
+  </data>
+  <data name="HELP_DEFAULT_BEHAVIOR" xml:space="preserve">
+    <value>デフォルトの動作:</value>
+  </data>
+  <data name="HELP_DEFAULT_USAGE" xml:space="preserve">
+    <value>使用方法: ZPL2PDF.exe [オプション]</value>
+  </data>
+  <data name="HELP_DEFAULT_DESCRIPTION" xml:space="preserve">
+    <value>引数なしで実行するとデーモンモードが開始されます（'start'コマンドと同じ）</value>
+  </data>
+  <data name="HELP_CONVERSION_MODE" xml:space="preserve">
+    <value>変換モード:</value>
+  </data>
+  <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
+    <value>使用方法: ZPL2PDF.exe -i &lt;入力ファイルパス&gt; -o &lt;出力フォルダ&gt; [-n &lt;出力ファイル名&gt;] | -z &lt;ZPLコンテンツ&gt;</value>
+  </data>
+  <data name="HELP_DAEMON_MODE" xml:space="preserve">
+    <value>デーモンモード:</value>
+  </data>
+  <data name="HELP_DAEMON_USAGE" xml:space="preserve">
+    <value>使用方法: ZPL2PDF.exe start [オプション] | stop | status | run [オプション]</value>
+  </data>
+  <data name="DAEMON_STARTED_SUCCESS" xml:space="preserve">
+    <value>デーモンが正常に開始されました！PID: {0}</value>
+  </data>
+  <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
+    <value>デーモンが正常に停止されました！</value>
+  </data>
+  <data name="DAEMON_ALREADY_RUNNING" xml:space="preserve">
+    <value>デーモンは既に実行中です！</value>
+  </data>
+  <data name="DAEMON_NOT_RUNNING" xml:space="preserve">
+    <value>デーモンは実行されていません！</value>
+  </data>
+  <data name="DAEMON_STATUS_RUNNING" xml:space="preserve">
+    <value>デーモンは実行中です！PID: {0}</value>
+  </data>
+  <data name="FILE_PROCESSED_SUCCESS" xml:space="preserve">
+    <value>ファイルが正常に処理されました: {0}</value>
+  </data>
+  <data name="FILE_PROCESSING_ERROR" xml:space="preserve">
+    <value>{0}の処理中にエラーが発生しました: {1}</value>
+  </data>
+  <data name="CONVERSION_SUCCESS" xml:space="preserve">
+    <value>変換が正常に完了しました！</value>
+  </data>
+  <data name="CONVERSION_ERROR" xml:space="preserve">
+    <value>変換に失敗しました: {0}</value>
+  </data>
+  <data name="INVALID_ARGUMENTS" xml:space="preserve">
+    <value>無効な引数です。使用方法については--helpを使用してください。</value>
+  </data>
+  <data name="FILE_NOT_FOUND" xml:space="preserve">
+    <value>ファイルが見つかりません: {0}</value>
+  </data>
+  <data name="FOLDER_CREATED" xml:space="preserve">
+    <value>フォルダが作成されました: {0}</value>
+  </data>
+  <data name="STARTING_DAEMON" xml:space="preserve">
+    <value>バックグラウンドでデーモンを開始しています...</value>
+  </data>
+  <data name="MONITORING_FOLDER" xml:space="preserve">
+    <value>監視フォルダ: {0}</value>
+  </data>
+  <data name="DIMENSIONS_INFO" xml:space="preserve">
+    <value>寸法: {0} x {1} {2}</value>
+  </data>
+  <data name="PRINT_DENSITY_INFO" xml:space="preserve">
+    <value>印刷密度: {0:F1} dpmm ({1} dpi)</value>
+  </data>
+  <data name="PRESS_CTRL_C_TO_STOP" xml:space="preserve">
+    <value>停止するにはCtrl+Cを押してください...</value>
+  </data>
+  <data name="HELP_PARAMETERS" xml:space="preserve">
+    <value>パラメータ:</value>
+  </data>
+  <data name="HELP_COMMANDS" xml:space="preserve">
+    <value>コマンド:</value>
+  </data>
+  <data name="HELP_DAEMON_OPTIONS" xml:space="preserve">
+    <value>デーモンオプション:</value>
+  </data>
+  <data name="HELP_SHOW_HELP_MESSAGE" xml:space="preserve">
+    <value>このヘルプメッセージを表示</value>
+  </data>
+  <data name="HELP_DAEMON_DIRECT_OPTIONS" xml:space="preserve">
+    <value>デーモンオプションを直接渡すこともできます: ZPL2PDF.exe -l "フォルダ" -w 10 -h 5</value>
+  </data>
+  <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
+    <value>  -i &lt;入力ファイルパス&gt;       入力.txtまたは.prnファイルへのパス</value>
+  </data>
+  <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
+    <value>  -z &lt;zplコンテンツ&gt;          文字列としてのZPLコンテンツ</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
+    <value>  -o &lt;出力フォルダパス&gt;   PDFファイルが保存されるフォルダへのパス</value>
+  </data>
+  <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
+    <value>  -n &lt;出力ファイル名&gt;      出力PDFファイルの名前（オプション）</value>
+  </data>
+  <data name="HELP_PARAM_WIDTH" xml:space="preserve">
+    <value>  -w &lt;幅&gt;                 ラベルの幅（小数点区切り文字として.または,を受け入れ）</value>
+  </data>
+  <data name="HELP_PARAM_HEIGHT" xml:space="preserve">
+    <value>  -h &lt;高さ&gt;                ラベルの高さ（小数点区切り文字として.または,を受け入れ）</value>
+  </data>
+  <data name="HELP_PARAM_DENSITY" xml:space="preserve">
+    <value>  -d &lt;密度&gt;                印刷密度DPI（整数のみ、例：203、300）</value>
+  </data>
+  <data name="HELP_PARAM_UNIT" xml:space="preserve">
+    <value>  -u &lt;単位&gt;                  幅と高さの測定単位（'in'、'cm'、'mm'）</value>
+  </data>
+  <data name="HELP_CMD_START" xml:space="preserve">
+    <value>  start                      バックグラウンドでデーモンモードを開始</value>
+  </data>
+  <data name="HELP_CMD_STOP" xml:space="preserve">
+    <value>  stop                       デーモンモードを停止</value>
+  </data>
+  <data name="HELP_CMD_STATUS" xml:space="preserve">
+    <value>  status                     デーモンのステータスを確認</value>
+  </data>
+  <data name="HELP_CMD_RUN" xml:space="preserve">
+    <value>  run                        現在のプロセスでデーモンモードを実行（テスト用）</value>
+  </data>
+  <data name="HELP_OPT_LISTEN_FOLDER" xml:space="preserve">
+    <value>  -l &lt;監視フォルダ&gt;          監視するフォルダ（デフォルト：Documents/ZPL2PDF Auto Converter）</value>
+  </data>
+  <data name="HELP_OPT_WIDTH_FIXED" xml:space="preserve">
+    <value>  -w &lt;幅&gt;                 すべての変換に固定幅（小数点区切り文字として.または,を受け入れ）</value>
+  </data>
+  <data name="HELP_OPT_HEIGHT_FIXED" xml:space="preserve">
+    <value>  -h &lt;高さ&gt;                すべての変換に固定高さ（小数点区切り文字として.または,を受け入れ）</value>
+  </data>
+  <data name="HELP_OPT_UNIT_DAEMON" xml:space="preserve">
+    <value>  -u &lt;単位&gt;                  測定単位（'in'、'cm'、'mm'）</value>
+  </data>
+  <data name="HELP_OPT_DENSITY_DAEMON" xml:space="preserve">
+    <value>  -d &lt;密度&gt;                印刷密度DPI（整数のみ、例：203、300）</value>
+  </data>
+  <data name="CHECKING_DAEMON_STATUS" xml:space="preserve">
+    <value>デーモンのステータスを確認中...</value>
+  </data>
+  <data name="STOPPING_DAEMON" xml:space="preserve">
+    <value>デーモンを停止中...</value>
+  </data>
+  <data name="DAEMON_STARTED_BUT_FAILED_PID" xml:space="preserve">
+    <value>デーモンが開始されましたが、PIDファイルの保存に失敗しました！</value>
+  </data>
+  <data name="FAILED_TO_START_DAEMON" xml:space="preserve">
+    <value>デーモンプロセスの開始に失敗しました！</value>
+  </data>
+  <data name="ERROR_STOPPING_DAEMON" xml:space="preserve">
+    <value>デーモンプロセスの停止中にエラーが発生しました！</value>
+  </data>
+  <data name="INVALID_PID_IN_FILE" xml:space="preserve">
+    <value>ファイル内のPIDが無効です！</value>
+  </data>
+  <data name="NO_IMAGES_GENERATED" xml:space="preserve">
+    <value>ZPLコンテンツから画像が生成されませんでした！</value>
+  </data>
+  <data name="STARTING_QUEUE_PROCESSING" xml:space="preserve">
+    <value>キュー処理を開始中...</value>
+  </data>
+  <data name="QUEUE_PROCESSING_STOPPED" xml:space="preserve">
+    <value>キュー処理が停止されました</value>
+  </data>
+  <data name="MONITORING_STOPPED" xml:space="preserve">
+    <value>監視が停止されました</value>
+  </data>
+  <data name="PROCESSING_FILES_LIST_CLEARED" xml:space="preserve">
+    <value>処理済みファイルリストがクリアされました</value>
+  </data>
+  <data name="MONITORING_FOLDER_NOT_CONFIGURED" xml:space="preserve">
+    <value>監視フォルダが設定されていません</value>
+  </data>
+  <data name="LABEL_WIDTH_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>ラベルの幅はゼロより大きい必要があります</value>
+  </data>
+  <data name="LABEL_HEIGHT_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>ラベルの高さはゼロより大きい必要があります</value>
+  </data>
+  <data name="DPI_MUST_BE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>DPIはゼロより大きい必要があります</value>
+  </data>
+  <data name="INVALID_UNIT_CONFIG" xml:space="preserve">
+    <value>無効な単位。使用：mm、cm、in、pt</value>
+  </data>
+  <data name="INVALID_LOG_LEVEL_CONFIG" xml:space="preserve">
+    <value>無効なログレベル。使用：Debug、Info、Warning、Error</value>
+  </data>
+  <data name="CURRENT_ZPL2PDF_CONFIGURATION" xml:space="preserve">
+    <value>現在のZPL2PDF設定：</value>
+  </data>
+  <data name="MONITORING_FOLDER_CONFIG" xml:space="preserve">
+    <value>   監視フォルダ：{0}</value>
+  </data>
+  <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
+    <value>  --language &lt;言語&gt;           インターフェース言語（例：pt-BR、en-US、es-ES）</value>
+  </data>
+</root>

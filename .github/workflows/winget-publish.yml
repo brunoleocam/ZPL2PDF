@@ -1,0 +1,106 @@
+name: Publish to WinGet
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 2.0.0)'
+        required: true
+        type: string
+
+jobs:
+  winget-publish:
+    name: Publish to WinGet Community Repository
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Get Version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "release") {
+            $version = "${{ github.event.release.tag_name }}".TrimStart('v')
+          } else {
+            $version = "${{ github.event.inputs.version }}"
+          }
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "Version: $version"
+      
+      - name: Download Installer
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          $installerUrl = "https://github.com/brunoleocam/ZPL2PDF/releases/download/v$version/ZPL2PDF-Setup-$version.exe"
+          $installerPath = "installer\ZPL2PDF-Setup-$version.exe"
+          
+          Write-Host "Downloading installer from: $installerUrl"
+          
+          # Create installer directory if it doesn't exist
+          New-Item -ItemType Directory -Path "installer" -Force | Out-Null
+          
+          # Download installer
+          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
+          
+          if (Test-Path $installerPath) {
+            $size = [math]::Round((Get-Item $installerPath).Length / 1MB, 2)
+            Write-Host "Installer downloaded successfully ($size MB)"
+            echo "INSTALLER_PATH=$installerPath" >> $env:GITHUB_ENV
+          } else {
+            Write-Error "Failed to download installer"
+            exit 1
+          }
+      
+      - name: Setup GitHub CLI
+        run: |
+          gh --version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Run WinGet Submit Script
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          $installerPath = $env:INSTALLER_PATH
+          
+          Write-Host "Submitting to WinGet:"
+          Write-Host "  Version: $version"
+          Write-Host "  Installer: $installerPath"
+          
+          .\scripts\winget-submit.ps1 -Version $version -InstallerPath $installerPath
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload Manifests as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: winget-manifests-${{ steps.version.outputs.VERSION }}
+          path: manifests/
+          retention-days: 90
+      
+      - name: Summary
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          
+          Write-Host ""
+          Write-Host "============================================" -ForegroundColor Green
+          Write-Host "  WinGet Submission Successful!" -ForegroundColor Green
+          Write-Host "============================================" -ForegroundColor Green
+          Write-Host ""
+          Write-Host "Package: brunoleocam.ZPL2PDF" -ForegroundColor Cyan
+          Write-Host "Version: $version" -ForegroundColor Cyan
+          Write-Host ""
+          Write-Host "Next Steps:" -ForegroundColor Yellow
+          Write-Host "  1. Check the PR at: https://github.com/microsoft/winget-pkgs/pulls" -ForegroundColor White
+          Write-Host "  2. Wait for automated validation" -ForegroundColor White
+          Write-Host "  3. Respond to any feedback from maintainers" -ForegroundColor White
+          Write-Host "  4. Once merged, users can install via:" -ForegroundColor White
+          Write-Host "     winget install brunoleocam.ZPL2PDF" -ForegroundColor Cyan
+          Write-Host ""

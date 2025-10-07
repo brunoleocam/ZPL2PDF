@@ -1,0 +1,25 @@
+Source: zpl2pdf
+Section: utils
+Priority: optional
+Maintainer: Bruno Leonardo Campos <brunoleocam@gmail.com>
+Build-Depends: debhelper (>= 11), dotnet-sdk-9.0
+Standards-Version: 4.1.3
+Homepage: https://github.com/brunoleocam/ZPL2PDF
+Vcs-Git: https://github.com/brunoleocam/ZPL2PDF.git
+Vcs-Browser: https://github.com/brunoleocam/ZPL2PDF
+
+Package: zpl2pdf
+Architecture: amd64 arm64 armhf
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgdiplus, libc6-dev
+Description: ZPL to PDF Converter
+ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents.
+ .
+ Features:
+  - Dual operation modes: Conversion and Daemon
+  - Intelligent dimension handling with automatic ZPL extraction
+  - Cross-platform support (Windows, Linux, macOS)
+  - Clean Architecture with SOLID principles
+  - High performance with async processing
+  - Enterprise-ready with PID management and logging
+ .
+ The tool supports both individual file conversion and automatic folder monitoring for batch processing. It can extract dimensions directly from ZPL commands (^PW, ^LL) and supports multiple units of measurement.

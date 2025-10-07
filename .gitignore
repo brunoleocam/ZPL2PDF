@@ -1,9 +1,7 @@
 # Build output
 bin/
 obj/
-
-# Inno Setup output
-Install/
+build/publish/
 
 # User-specific files
 *.user
@@ -24,6 +22,16 @@ Install/
 *.pdb
 *.cache
 *.log
+
+# Installers (generated files)
+installer/*.exe
+installer/*.sha256
+
+# WinGet temporary files
+winget-pkgs-*/
+*.msi
+*.zip
+*.tar.gz
 
 # EditorConfig gerado
 *.editorconfig

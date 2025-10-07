@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using ZPL2PDF.Shared.Constants;
+using ZPL2PDF.Shared.Localization;
 
 namespace ZPL2PDF
 {
@@ -244,7 +245,7 @@ namespace ZPL2PDF
         private void ProcessDaemonStop()
         {
             // Daemon stop logic will be handled by DaemonManager
-            Console.WriteLine("Stopping daemon...");
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.STOPPING_DAEMON));
         }
 
         /// <summary>
@@ -253,7 +254,7 @@ namespace ZPL2PDF
         private void ProcessDaemonStatus()
         {
             // Daemon status logic will be handled by DaemonManager
-            Console.WriteLine("Checking daemon status...");
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.CHECKING_DAEMON_STATUS));
         }
 
         /// <summary>

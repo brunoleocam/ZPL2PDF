@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using ZPL2PDF.Shared.Constants;
+using ZPL2PDF.Shared.Localization;
 
 namespace ZPL2PDF
 {
@@ -48,7 +49,7 @@ namespace ZPL2PDF
                 // Check if already running
                 if (IsRunning())
                 {
-                    Console.WriteLine("Daemon is already running!");
+                    Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DAEMON_ALREADY_RUNNING));
                     var currentPid = _pidManager.GetPidFromFile();
                     Console.WriteLine($"   PID: {currentPid}");
                     
@@ -56,19 +57,19 @@ namespace ZPL2PDF
                     var daemonInfo = GetDaemonInfoFromFile();
                     if (daemonInfo != null)
                     {
-                        Console.WriteLine($"   Monitored folder: {daemonInfo.ListenFolder}");
-                        Console.WriteLine($"   Dimensions: {daemonInfo.LabelWidth} x {daemonInfo.LabelHeight} {daemonInfo.Unit}");
+                        Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.MONITORING_FOLDER, daemonInfo.ListenFolder)}");
+                        Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.DIMENSIONS_INFO, daemonInfo.LabelWidth, daemonInfo.LabelHeight, daemonInfo.Unit)}");
                         var dpi1 = int.TryParse(daemonInfo.PrintDensity, out int parsedDpi1) ? parsedDpi1 : ApplicationConstants.DEFAULT_DPI;
-                        Console.WriteLine($"   Print Density: {ApplicationConstants.ConvertDpiToDpmm(dpi1):F1} dpmm ({dpi1} dpi)");
+                        Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.PRINT_DENSITY_INFO, ApplicationConstants.ConvertDpiToDpmm(dpi1), dpi1)}");
                         Console.WriteLine($"   Started at: {daemonInfo.StartTime}");
                     }
                     else
                     {
                         // Fallback to old configuration
-                        Console.WriteLine($"   Monitored folder: {_listenFolder}");
-                        Console.WriteLine($"   Dimensions: {_labelWidth} x {_labelHeight} {_unit}");
+                        Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.MONITORING_FOLDER, _listenFolder)}");
+                        Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.DIMENSIONS_INFO, _labelWidth, _labelHeight, _unit)}");
                         var dpi2 = int.TryParse(_printDensity, out int parsedDpi2) ? parsedDpi2 : ApplicationConstants.DEFAULT_DPI;
-                        Console.WriteLine($"   Print Density: {ApplicationConstants.ConvertDpiToDpmm(dpi2):F1} dpmm ({dpi2} dpi)");
+                        Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.PRINT_DENSITY_INFO, ApplicationConstants.ConvertDpiToDpmm(dpi2), dpi2)}");
                     }
                     return false;
                 }
@@ -77,14 +78,14 @@ namespace ZPL2PDF
                 if (!Directory.Exists(_listenFolder))
                 {
                     Directory.CreateDirectory(_listenFolder);
-                    Console.WriteLine($"Folder created: {_listenFolder}");
+                    Console.WriteLine(LocalizationManager.GetString(ResourceKeys.FOLDER_CREATED, _listenFolder));
                 }
 
-                Console.WriteLine("Starting daemon in background...");
-                Console.WriteLine($"   Monitored folder: {_listenFolder}");
-                Console.WriteLine($"   Dimensions: {_labelWidth} x {_labelHeight} {_unit}");
+                Console.WriteLine(LocalizationManager.GetString(ResourceKeys.STARTING_DAEMON));
+                Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.MONITORING_FOLDER, _listenFolder)}");
+                Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.DIMENSIONS_INFO, _labelWidth, _labelHeight, _unit)}");
                 var dpi3 = int.TryParse(_printDensity, out int parsedDpi3) ? parsedDpi3 : ApplicationConstants.DEFAULT_DPI;
-                Console.WriteLine($"   Print Density: {ApplicationConstants.ConvertDpiToDpmm(dpi3):F1} dpmm ({dpi3} dpi)");
+                Console.WriteLine($"   {LocalizationManager.GetString(ResourceKeys.PRINT_DENSITY_INFO, ApplicationConstants.ConvertDpiToDpmm(dpi3), dpi3)}");
 
                 // Create background process
                 var arguments = BuildDaemonArguments();
@@ -97,18 +98,18 @@ namespace ZPL2PDF
                     {
                         // Save daemon info to file
                         SaveDaemonInfoToFile(pid);
-                        Console.WriteLine($"Daemon started successfully! PID: {pid}");
+                        Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DAEMON_STARTED_SUCCESS, pid));
                         return true;
                     }
                     else
                     {
-                        Console.WriteLine("Daemon started but failed to save PID file!");
+                        Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DAEMON_STARTED_BUT_FAILED_PID));
                         return false;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Failed to start daemon process!");
+                    Console.WriteLine(LocalizationManager.GetString(ResourceKeys.FAILED_TO_START_DAEMON));
                     return false;
                 }
             }
@@ -129,7 +130,7 @@ namespace ZPL2PDF
             {
                 if (!IsRunning())
                 {
-                    Console.WriteLine("Daemon is not running!");
+                    Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DAEMON_NOT_RUNNING));
                     return false;
                 }
 
@@ -140,18 +141,18 @@ namespace ZPL2PDF
                     {
                         // Remove PID file
                         _pidManager.RemovePidFile();
-                        Console.WriteLine("Daemon stopped successfully!");
+                        Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DAEMON_STOPPED_SUCCESS));
                         return true;
                     }
                     else
                     {
-                        Console.WriteLine("Error stopping daemon process!");
+                        Console.WriteLine(LocalizationManager.GetString(ResourceKeys.ERROR_STOPPING_DAEMON));
                         return false;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid PID in file!");
+                    Console.WriteLine(LocalizationManager.GetString(ResourceKeys.INVALID_PID_IN_FILE));
                     return false;
                 }
             }
@@ -172,7 +173,7 @@ namespace ZPL2PDF
             {
                 if (!IsRunning())
                 {
-                    Console.WriteLine("Daemon is not running!");
+                    Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DAEMON_NOT_RUNNING));
                     return false;
                 }
 

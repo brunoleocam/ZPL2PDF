@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ZPL2PDF.Application.Services;
 using ZPL2PDF.Infrastructure;
 using ZPL2PDF.Shared.Constants;
+using ZPL2PDF.Shared.Localization;
 
 namespace ZPL2PDF
 {
@@ -49,11 +50,11 @@ namespace ZPL2PDF
         /// <param name="argumentProcessor">The argument processor with daemon configuration</param>
         private async Task RunDaemonMode(ArgumentProcessor argumentProcessor)
         {
-            Console.WriteLine("Starting daemon in current process...");
-            Console.WriteLine($"Monitoring folder: {argumentProcessor.ListenFolderPath}");
-            Console.WriteLine($"Dimensions: {argumentProcessor.Width} x {argumentProcessor.Height} {argumentProcessor.Unit}");
-            Console.WriteLine($"Print Density: {ApplicationConstants.ConvertDpiToDpmm(argumentProcessor.Dpi):F1} dpmm ({argumentProcessor.Dpi} dpi)");
-            Console.WriteLine("Press Ctrl+C to stop...");
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.STARTING_DAEMON));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.MONITORING_FOLDER, argumentProcessor.ListenFolderPath));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.DIMENSIONS_INFO, argumentProcessor.Width, argumentProcessor.Height, argumentProcessor.Unit));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.PRINT_DENSITY_INFO, ApplicationConstants.ConvertDpiToDpmm(argumentProcessor.Dpi), argumentProcessor.Dpi));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.PRESS_CTRL_C_TO_STOP));
 
             try
             {
