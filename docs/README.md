@@ -10,11 +10,14 @@ Welcome to the ZPL2PDF documentation! This index helps you find the right docume
 
 - 🇺🇸 [English](../README.md) - Main README (root folder)
 - 🇧🇷 [Português (Brasil)](i18n/README.pt-BR.md)
-- 🇪🇸 [Español](i18n/README.es-ES.md) *(Coming soon)*
-- 🇫🇷 [Français](i18n/README.fr-FR.md) *(Coming soon)*
-- 🇩🇪 [Deutsch](i18n/README.de-DE.md) *(Coming soon)*
+- 🇪🇸 [Español](i18n/README.es-ES.md)
+- 🇫🇷 [Français](i18n/README.fr-FR.md)
+- 🇩🇪 [Deutsch](i18n/README.de-DE.md)
+- 🇮🇹 [Italiano](i18n/README.it-IT.md)
+- 🇯🇵 [日本語](i18n/README.ja-JP.md)
+- 🇨🇳 [中文 (简体)](i18n/README.zh-CN.md)
 
-**Want to contribute a translation?** See [CONTRIBUTING.md](../CONTRIBUTING.md)
+**Want to contribute improvements?** See [CONTRIBUTING.md](../CONTRIBUTING.md)
 
 ---
 
