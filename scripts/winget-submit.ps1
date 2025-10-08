@@ -155,16 +155,29 @@ if (-not $SkipValidation) {
     
     # Check if winget is available
     if (Get-Command winget -ErrorAction SilentlyContinue) {
-        Write-Host "Running: winget validate $manifestDir" -ForegroundColor Gray
-        winget validate $manifestDir
-        
-        if ($LASTEXITCODE -eq 0) {
-            Write-Success "Manifest validation passed"
+        # Get only YAML files
+        $yamlFiles = Get-ChildItem -Path $manifestDir -Filter "*.yaml"
+        if ($yamlFiles.Count -eq 0) {
+            Write-Warning "No YAML manifest files found in $manifestDir"
         } else {
-            Write-Error "Manifest validation failed"
-            Write-Warning "Fix validation errors before submitting"
-            if (-not $DryRun) {
-                exit 1
+            Write-Host "Running: winget validate (on $($yamlFiles.Count) YAML files)" -ForegroundColor Gray
+            # Validate each YAML file
+            $validationFailed = $false
+            foreach ($yamlFile in $yamlFiles) {
+                winget validate $yamlFile.FullName
+                if ($LASTEXITCODE -ne 0) {
+                    $validationFailed = $true
+                }
+            }
+            
+            if (-not $validationFailed) {
+                Write-Success "Manifest validation passed"
+            } else {
+                Write-Error "Manifest validation failed"
+                Write-Warning "Fix validation errors before submitting"
+                if (-not $DryRun) {
+                    exit 1
+                }
             }
         }
     } else {
