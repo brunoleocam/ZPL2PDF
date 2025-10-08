@@ -324,3 +324,15 @@ Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](
 - **Discussões**: [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
 
 ---
+
+## 👥 **Contribuidores**
+
+Obrigado a todos os contribuidores que ajudaram a melhorar o ZPL2PDF!
+
+<a href="https://github.com/brunoleocam/ZPL2PDF/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF" />
+</a>
+
+---
+
+**ZPL2PDF** - Converta etiquetas ZPL para PDF de forma fácil e eficiente.

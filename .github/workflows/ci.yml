@@ -130,12 +130,13 @@ jobs:
       with:
         context: .
         push: false
+        load: true
         tags: zpl2pdf:latest
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64
 
     - name: Test Docker image
       run: |
-        docker run --rm zpl2pdf:latest --help
+        docker run --rm zpl2pdf:latest /app/ZPL2PDF --help
 
   # Code quality checks
   code-quality:
@@ -168,6 +169,9 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
     - name: Checkout code
@@ -185,6 +189,9 @@ jobs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-results.sarif'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
 
   # Release
   release:

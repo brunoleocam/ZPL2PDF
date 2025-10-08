@@ -68,7 +68,7 @@ Write-ColorOutput "Checking if project is built..." $InfoColor
 $PublishPath = "bin\$Configuration\net9.0\win-x64\publish"
 if (-not (Test-Path $PublishPath)) {
     Write-ColorOutput "Project not built! Building now..." $WarningColor
-    dotnet publish src/ZPL2PDF.csproj --configuration $Configuration --runtime win-x64 --self-contained true --output $PublishPath
+    dotnet publish ZPL2PDF.csproj --configuration $Configuration --runtime win-x64 --self-contained true --output $PublishPath
     if ($LASTEXITCODE -ne 0) {
         Write-ColorOutput "Build failed!" $ErrorColor
         exit 1

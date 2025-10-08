@@ -1,416 +1,309 @@
 # 🔀 Git Workflow Guide - ZPL2PDF
 
-## 🎯 **Objetivo**
+## 🎯 **Overview**
 
-Este guia explica como trabalhar com Git no projeto ZPL2PDF, incluindo:
-- Alterar usuário Git local
-- Estratégia de branches
-- Fluxo de desenvolvimento → release
+This guide explains the Git workflow and branching strategy used in the ZPL2PDF project for contributors and maintainers.
 
 ---
 
-## 👤 **1. ALTERAR USUÁRIO GIT (devdemobile → brunoleocam)**
+## 🌳 **Branching Strategy**
 
-### **Verificar Configuração Atual**
+### **Branch Structure**
 
-```bash
-git config --global user.name
-git config --global user.email
-git config --global user.signingkey  # Se usar GPG
-```
+| Branch | Purpose | Status |
+|--------|---------|--------|
+| `main` | **Production** - Stable code, releases | Protected |
+| `dev` | **Development** - Feature integration | Active |
+| `feature/*` | Specific features | Temporary |
+| `hotfix/*` | Urgent fixes | Temporary |
 
-### **Alterar para brunoleocam**
-
-```bash
-# Alterar nome
-git config --global user.name "brunoleocam"
-
-# Alterar email
-git config --global user.email "brunoleocam@users.noreply.github.com"
-
-# OU usar seu email real
-git config --global user.email "seuemail@gmail.com"
-
-# Verificar
-git config --global --list
-```
-
-### **Apenas para Este Repositório (Opcional)**
-
-Se quiser usar `brunoleocam` apenas neste projeto:
-
-```bash
-cd C:\Dev\ZPL2PDF
-
-# Local (só para este repo)
-git config user.name "brunoleocam"
-git config user.email "brunoleocam@users.noreply.github.com"
-
-# Verificar
-git config --local --list
-```
-
----
-
-## 🌳 **2. ESTRATÉGIA DE BRANCHES**
-
-### **Branches Atuais no Projeto**
-
-Segundo sua estrutura:
-
-| Branch | Propósito | Status |
-|--------|-----------|--------|
-| `main` | **Produção** - Código estável, releases | Protegida |
-| `dev` | **Desenvolvimento** - Integração de features | Ativa |
-| `feature` | Features específicas | Temporária |
-| `hotfix` | Correções urgentes | Temporária |
-
-### **Fluxo Recomendado (Git Flow Simplificado)**
+### **Recommended Flow (Simplified Git Flow)**
 
 ```
-main (produção)
+main (production)
   ↑
-  └── dev (desenvolvimento)
+  └── dev (development)
        ↑
-       ├── feature/nova-funcionalidade
-       ├── feature/outra-feature
-       └── hotfix/correcao-urgente
+       ├── feature/new-feature
+       ├── feature/another-feature
+       └── hotfix/urgent-fix
 ```
 
 ---
 
-## 🚀 **3. FLUXO DE TRABALHO ATUAL**
+## 🚀 **Development Workflow**
 
-### **Situação Atual**
-
-Você fez várias alterações locais que não estão no GitHub:
-- ✅ WinGet manifests e scripts
-- ✅ Documentação atualizada
-- ✅ Correções de usuário (devdemobile → brunoleocam)
-- ✅ GitHub Actions
-- ✅ Multi-idioma completo
-
-### **Opção 1: RECOMENDADA - Via Branch `dev`**
-
-**Por quê?**
-- ✅ Mais seguro - `main` fica protegida
-- ✅ Permite revisão antes do merge
-- ✅ Segue Git Flow padrão
-- ✅ Pode testar CI/CD na branch `dev` primeiro
-
-**Passo a passo:**
+### **1. Setting Up Git Configuration**
 
 ```bash
-# 1. Verificar status atual
-git status
+# Configure global user (for all repositories)
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
 
-# 2. Verificar branch atual
-git branch
+# Or configure for this repository only
+cd ZPL2PDF
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
 
-# 3. Mudar para branch dev
+# Verify configuration
+git config --list
+```
+
+### **2. Starting New Work**
+
+```bash
+# Ensure you're on dev branch
 git checkout dev
+git pull origin dev
 
-# 4. Atualizar dev com main (se necessário)
-git merge main
+# Create feature branch
+git checkout -b feature/your-feature-name
 
-# 5. Adicionar todas as mudanças
+# Make your changes...
+# Test your changes...
+# Commit your work
 git add .
+git commit -m "feat: add your feature description"
+```
 
-# 6. Commit com mensagem descritiva
-git commit -m "feat: add WinGet automation, update docs, fix username to brunoleocam
+### **3. Submitting Changes**
 
-- Add WinGet manifests (4 YAML files)
-- Add winget-submit.ps1 automation script
-- Add GitHub Action for WinGet publishing
-- Update all documentation (WINGET_GUIDE, CI_CD_WORKFLOW, etc.)
-- Fix all devdemobile references to brunoleocam
-- Update README with v2.0.0 features
-- Update CHANGELOG with detailed v2.0.0 changes
-- Add multi-language support documentation"
+```bash
+# Push feature branch
+git push origin feature/your-feature-name
 
-# 7. Push para dev
+# Create Pull Request on GitHub:
+# https://github.com/brunoleocam/ZPL2PDF/compare/dev...feature/your-feature-name
+```
+
+---
+
+## 📋 **Commit Message Guidelines**
+
+### **Format**
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### **Types**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks
+
+### **Examples**
+```bash
+git commit -m "feat: add multi-language support for Portuguese"
+git commit -m "fix: resolve dimension extraction issue"
+git commit -m "docs: update README with installation instructions"
+git commit -m "refactor: extract common validation logic"
+```
+
+---
+
+## 🔄 **Release Process**
+
+### **1. Preparing Release**
+
+```bash
+# Update version in files:
+# - ZPL2PDF.csproj
+# - CHANGELOG.md
+# - README.md (if needed)
+
+# Commit version bump
+git add .
+git commit -m "chore: bump version to 2.1.0"
 git push origin dev
-
-# 8. Criar Pull Request: dev → main no GitHub
-# Ir para: https://github.com/brunoleocam/ZPL2PDF/compare/main...dev
 ```
 
-### **Opção 2: Direto para `main` (Mais Arriscado)**
-
-**Use apenas se:**
-- ❌ Você tem certeza absoluta que tudo funciona
-- ❌ Não quer fazer revisão
-- ❌ Quer release imediata
+### **2. Creating Release**
 
 ```bash
-# 1. Verificar branch
-git branch
+# Merge dev to main (via PR)
+# Create Git tag
+git tag -a v2.1.0 -m "Release version 2.1.0"
+git push origin v2.1.0
 
-# 2. Se não estiver em main, mudar
-git checkout main
-
-# 3. Adicionar tudo
-git add .
-
-# 4. Commit
-git commit -m "feat: v2.0.0 - WinGet automation and documentation updates"
-
-# 5. Push
-git push origin main
+# Create GitHub Release
+# - Go to: https://github.com/brunoleocam/ZPL2PDF/releases/new
+# - Select tag: v2.1.0
+# - Write release notes
+# - Upload build artifacts
+# - Click "Publish release"
 ```
+
+### **3. Automated Actions**
+
+When you create a GitHub Release, these workflows run automatically:
+- ✅ Run all tests
+- ✅ Build all platforms (8 architectures)
+- ✅ Build Docker images
+- ✅ Publish to Docker Hub + GitHub Container Registry
+- ✅ Build Windows installer
+- ✅ Upload artifacts to GitHub Release
+- ✅ Create WinGet package PR
 
 ---
 
-## 📋 **4. CHECKLIST PRÉ-PUSH**
+## 🛡️ **Security and Best Practices**
 
-Antes de fazer push, verifique:
-
-### **Verificações Essenciais**
+### **Pre-commit Checklist**
 
 ```bash
-# 1. Status do repositório
+# 1. Check repository status
 git status
 
-# 2. Ver o que será commitado
-git diff --cached
-
-# 3. Verificar se não há arquivos sensíveis
-git ls-files | grep -E "(\.env|\.key|password|secret)"
-
-# 4. Ver commits locais não enviados
-git log origin/main..HEAD
-
-# 5. Verificar remote correto
-git remote -v
-```
-
-### **Checklist Manual**
-
-- [ ] ✅ Usuário Git alterado para `brunoleocam`
-- [ ] ✅ Sem arquivos `.env` ou senhas commitados
-- [ ] ✅ Build funcionando (`dotnet build`)
-- [ ] ✅ Testes passando (`dotnet test`)
-- [ ] ✅ Nenhum `TODO` ou `FIXME` crítico no código
-- [ ] ✅ README atualizado
-- [ ] ✅ CHANGELOG atualizado
-- [ ] ✅ Sem referências a `devdemobile`
-
----
-
-## 🔄 **5. APÓS O PUSH: CRIAR RELEASE**
-
-### **Opção A: Via GitHub Web (Recomendado)**
-
-1. **Ir para Releases**
-   - https://github.com/brunoleocam/ZPL2PDF/releases
-
-2. **Clicar em "Draft a new release"**
-
-3. **Preencher:**
-   - **Tag**: `v2.0.0`
-   - **Target**: `main` (após merge de dev)
-   - **Title**: `v2.0.0 - Multi-language, WinGet, Docker`
-   - **Description**: Copiar de `CHANGELOG.md`
-
-4. **Anexar Binários:**
-   - `ZPL2PDF-Setup-2.0.0.exe` (Windows installer)
-   - `ZPL2PDF-v2.0.0-win-x64.zip`
-   - `ZPL2PDF-v2.0.0-win-x86.zip`
-   - `ZPL2PDF-v2.0.0-linux-x64.tar.gz`
-   - `ZPL2PDF-v2.0.0-osx-x64.tar.gz`
-   - Etc... (todos os builds)
-
-5. **Publicar**
-   - ✅ Marca como "Latest release"
-   - ✅ Dispara GitHub Actions (Docker, WinGet)
-
-### **Opção B: Via Git CLI**
-
-```bash
-# 1. Criar tag local
-git tag -a v2.0.0 -m "Release v2.0.0 - Multi-language, WinGet, Docker"
-
-# 2. Push da tag
-git push origin v2.0.0
-
-# 3. Criar release no GitHub (via gh CLI)
-gh release create v2.0.0 \
-  --title "v2.0.0 - Multi-language, WinGet, Docker" \
-  --notes-file CHANGELOG.md \
-  build/publish/ZPL2PDF-Setup-2.0.0.exe \
-  build/publish/ZPL2PDF-v2.0.0-*.zip \
-  build/publish/ZPL2PDF-v2.0.0-*.tar.gz
-```
-
----
-
-## ⚙️ **6. O QUE ACONTECE APÓS A RELEASE**
-
-Quando você criar a release `v2.0.0`, automaticamente:
-
-### **GitHub Actions Dispara:**
-
-```
-Release v2.0.0 criada
-        ↓
-┌───────────────────────────────┐
-│ .github/workflows/           │
-│ docker-publish.yml           │ → Build + Push Docker
-│                              │   (ghcr.io + Docker Hub)
-└───────────────────────────────┘
-        ↓
-┌───────────────────────────────┐
-│ .github/workflows/           │
-│ winget-publish.yml           │ → Cria PR para
-│                              │   microsoft/winget-pkgs
-└───────────────────────────────┘
-        ↓
-    ✅ DONE!
-```
-
-**Resultado:**
-- ✅ Docker: `docker pull brunoleocam/zpl2pdf:2.0.0`
-- ✅ WinGet: PR criado (aguarda aprovação ~1-7 dias)
-- ✅ Usuários podem baixar release manualmente
-
----
-
-## 🔍 **7. VERIFICAR O QUE VAI SER COMMITADO**
-
-Antes de fazer push, veja exatamente o que mudou:
-
-```bash
-# Ver arquivos modificados
-git status
-
-# Ver diferenças detalhadas
+# 2. Review changes
 git diff
 
-# Ver apenas nomes de arquivos
-git diff --name-only
+# 3. Verify no sensitive files
+git ls-files | grep -E "(\.env|\.key|password|secret)"
 
-# Ver estatísticas
-git diff --stat
+# 4. Run tests locally
+dotnet test
 
-# Ver diferenças staged (já adicionadas)
-git diff --cached
+# 5. Build locally
+dotnet build
 ```
 
----
-
-## 🛡️ **8. PROTEÇÕES E SEGURANÇA**
-
-### **Evitar Commits Acidentais**
+### **Protecting Sensitive Information**
 
 ```bash
-# Ver o que SERIA commitado (dry-run)
-git commit --dry-run
+# Never commit these:
+.env
+*.key
+*.pem
+secrets.json
+config.json (with passwords)
 
-# Adicionar apenas arquivos específicos
-git add arquivo1.cs arquivo2.md
-
-# Adicionar por partes (interativo)
-git add -p
+# Add to .gitignore
+echo "*.env" >> .gitignore
+echo "*.key" >> .gitignore
+echo "secrets.json" >> .gitignore
 ```
 
-### **Desfazer Mudanças (Antes do Push)**
+### **Undoing Changes**
 
 ```bash
-# Desfazer último commit (mantém mudanças)
+# Undo last commit (keep changes)
 git reset --soft HEAD~1
 
-# Desfazer último commit (descarta mudanças)
+# Undo last commit (discard changes)
 git reset --hard HEAD~1
 
-# Desfazer mudanças em arquivo específico
-git checkout -- arquivo.cs
+# Undo changes in specific file
+git checkout -- filename.cs
 
-# Remover arquivo do stage
-git reset HEAD arquivo.cs
+# Remove file from staging
+git reset HEAD filename.cs
 ```
 
 ---
 
-## 📊 **9. ESTRATÉGIA RECOMENDADA PARA VOCÊ**
+## 🔍 **Reviewing Changes**
 
-### **Plano de Ação:**
+### **What to Review**
+
+- ✅ Code quality and style
+- ✅ Test coverage
+- ✅ Documentation updates
+- ✅ Breaking changes
+- ✅ Performance impact
+- ✅ Security implications
+
+### **Review Process**
+
+1. **Automated Checks**: CI/CD runs tests and builds
+2. **Code Review**: Human review of changes
+3. **Testing**: Manual testing if needed
+4. **Approval**: Merge after approval
+
+---
+
+## 📊 **Branch Protection Rules**
+
+The `main` branch is protected with:
+- ✅ Require pull request reviews
+- ✅ Require status checks to pass
+- ✅ Require branches to be up to date
+- ✅ Restrict pushes to main
+
+---
+
+## 🌍 **Contributing to Open Source**
+
+### **For External Contributors**
+
+1. **Fork the repository** on GitHub
+2. **Clone your fork** locally
+3. **Create feature branch** from `dev`
+4. **Make your changes** and test them
+5. **Commit with clear messages**
+6. **Push to your fork**
+7. **Create Pull Request** to `dev` branch
+
+### **Pull Request Guidelines**
+
+- ✅ Clear title and description
+- ✅ Reference related issues
+- ✅ Include screenshots if UI changes
+- ✅ Update documentation if needed
+- ✅ Ensure all tests pass
+
+---
+
+## 📚 **Useful Commands**
 
 ```bash
-# 1. PREPARAÇÃO
-git config --global user.name "brunoleocam"
-git config --global user.email "brunoleocam@users.noreply.github.com"
-
-# 2. VERIFICAR ESTADO
+# View repository status
 git status
+
+# View commit history
 git log --oneline -10
 
-# 3. CRIAR BRANCH DE TRABALHO (segurança extra)
-git checkout -b release/v2.0.0
+# View changes
+git diff
 
-# 4. ADICIONAR TUDO
-git add .
+# View staged changes
+git diff --cached
 
-# 5. COMMIT
-git commit -m "feat: v2.0.0 - WinGet automation, multi-language, Docker optimization
+# View branch structure
+git log --oneline --graph --all
 
-Major Changes:
-- Add WinGet package automation (manifests + scripts + GitHub Action)
-- Add comprehensive documentation (WINGET_GUIDE, CI_CD_WORKFLOW)
-- Fix all devdemobile → brunoleocam references
-- Update README with v2.0.0 features
-- Update CHANGELOG with detailed v2.0.0 changes
-- Add multi-language system documentation
-- Optimize Docker image (Alpine 470MB)
+# Stash changes temporarily
+git stash
+git stash pop
 
-Files Added:
-- manifests/*.yaml (WinGet manifests)
-- scripts/winget-submit.ps1 (automation script)
-- .github/workflows/winget-publish.yml (GitHub Action)
-- docs/development/WINGET_GUIDE.md
-- docs/development/GIT_WORKFLOW_GUIDE.md
+# Create and switch to new branch
+git checkout -b new-branch
 
-Files Updated:
-- README.md (modern design, v2.0.0 features)
-- CHANGELOG.md (detailed v2.0.0 changelog)
-- CONTRIBUTING.md (updated release process)
-- docs/development/CI_CD_WORKFLOW.md
-- scripts/README.md"
+# Switch branches
+git checkout branch-name
 
-# 6. PUSH BRANCH
-git push origin release/v2.0.0
+# Merge branch
+git merge branch-name
 
-# 7. CRIAR PR: release/v2.0.0 → main
-# Ir para: https://github.com/brunoleocam/ZPL2PDF/compare/main...release/v2.0.0
-
-# 8. APÓS MERGE: CRIAR RELEASE
-# https://github.com/brunoleocam/ZPL2PDF/releases/new
+# Rebase branch
+git rebase main
 ```
 
 ---
 
-## 🎯 **10. CHECKLIST FINAL**
+## 🆘 **Getting Help**
 
-Antes de criar a release v2.0.0:
-
-- [ ] ✅ Usuário Git alterado para `brunoleocam`
-- [ ] ✅ Código commitado e pushed
-- [ ] ✅ PR merged para `main` (se usou branch)
-- [ ] ✅ Build completo executado (`.\scripts\build-all-platforms.ps1`)
-- [ ] ✅ Installer compilado (`.\installer\build-installer.ps1`)
-- [ ] ✅ Todos os binários testados
-- [ ] ✅ Documentação revisada
-- [ ] ✅ CHANGELOG completo
-- [ ] ✅ Nenhuma referência a `devdemobile`
+- **Documentation**: [Git Documentation](https://git-scm.com/doc)
+- **GitHub Guides**: [GitHub Guides](https://guides.github.com/)
+- **Project Issues**: [GitHub Issues](https://github.com/brunoleocam/ZPL2PDF/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
 
 ---
 
-## 📚 **Referências Úteis**
-
-- [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [Semantic Versioning](https://semver.org/)
-- [GitHub Flow](https://guides.github.com/introduction/flow/)
-
----
-
-**Este workflow garante segurança, rastreabilidade e facilita colaboração futura!** 🚀
+**This workflow ensures code quality, collaboration, and smooth releases!** 🚀

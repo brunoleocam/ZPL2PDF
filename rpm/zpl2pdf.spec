@@ -29,7 +29,7 @@ The tool supports both individual file conversion and automatic folder monitorin
 %setup -q
 
 %build
-dotnet publish src/ZPL2PDF.csproj --configuration Release --runtime linux-x64 --self-contained true --output %{_builddir}/%{name}-%{version}
+dotnet publish ZPL2PDF.csproj --configuration Release --runtime linux-x64 --self-contained true --output %{_builddir}/%{name}-%{version}
 
 %install
 mkdir -p %{buildroot}%{_bindir}

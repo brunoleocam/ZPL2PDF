@@ -1,300 +1,177 @@
-# 🐳 ZPL2PDF com Docker - Resumo Executivo
+# 🐳 ZPL2PDF Docker Guide
 
-## 🎯 O QUE FOI CORRIGIDO
+## 🎯 **Overview**
 
-### ❌ Problemas Encontrados:
-1. Estrutura de pastas errada no Dockerfile
-2. Comando usando `.dll` em vez de executável
-3. Parâmetro `-o` inexistente no daemon mode
-4. Falta suporte multi-idioma
-5. Falta `.dockerignore`
-
-### ✅ Soluções Implementadas:
-1. ✅ Corrigida estrutura de build
-2. ✅ Usando executável self-contained
-3. ✅ Corrigido comando daemon
-4. ✅ Adicionado suporte a 8 idiomas
-5. ✅ Criado `.dockerignore` otimizado
+ZPL2PDF provides Docker support for easy deployment and cross-platform testing. The Docker image is optimized using Alpine Linux for minimal size and maximum efficiency.
 
 ---
 
-## 📦 ARQUIVOS DOCKER
+## 📦 **Docker Image Details**
 
-### 1️⃣ **Dockerfile** (CORRIGIDO)
+### **Base Image**
+- **Platform**: Alpine Linux 3.19
+- **Size**: ~470MB (optimized)
+- **Multi-architecture**: linux/amd64, linux/arm64
+- **Security**: Non-root user execution
 
-**Antes:**
-```dockerfile
-# ❌ ERRADO
-COPY src/ZPL2PDF.csproj ./src/  # Pasta errada
-CMD ["dotnet", "ZPL2PDF.dll", "start", "-l", "/app/watch", "-o", "/app/output"]  # -o não existe
-```
-
-**Depois:**
-```dockerfile
-# ✅ CORRETO
-COPY ZPL2PDF.csproj .                    # Pasta correta
-COPY src/ ./src/                         # Código fonte
-RUN dotnet publish --runtime linux-x64   # Build para Linux
-CMD ["/app/ZPL2PDF", "run", "-l", "/app/watch"]  # Comando correto
-```
-
-**Tamanho da imagem:** ~200MB (otimizado com multi-stage build)
+### **Features**
+- ✅ Multi-language support (8 languages)
+- ✅ Daemon mode for automatic file processing
+- ✅ Health checks and auto-restart
+- ✅ Volume mount points for input/output
+- ✅ Environment variable configuration
 
 ---
 
-### 2️⃣ **docker-compose.yml** (CORRIGIDO)
+## 🚀 **Quick Start**
 
-**Antes:**
-```yaml
-# ❌ ERRADO
-command: start -l /app/watch -o /app/output  # -o não existe
-```
-
-**Depois:**
-```yaml
-# ✅ CORRETO
-command: run -l /app/watch  # Comando correto
-
-environment:
-  - ZPL2PDF_LANGUAGE=pt-BR  # Suporte a idiomas!
-```
-
-**Agora inclui:**
-- ✅ Serviço de produção (daemon mode)
-- ✅ Exemplos de múltiplos idiomas
-- ✅ Modo conversão
-- ✅ Modo teste
-
----
-
-### 3️⃣ **.dockerignore** (NOVO)
-
-Otimiza o build excluindo arquivos desnecessários:
-```
-bin/
-obj/
-tests/
-docs/
-*.md
-```
-
-**Benefício:** Build 5x mais rápido! ⚡
-
----
-
-## 🚀 COMO USAR
-
-### Opção 1: Docker Compose (MAIS FÁCIL)
+### **Option 1: Docker Compose (Recommended)**
 
 ```bash
-# 1. Iniciar daemon
+# Start daemon mode
 docker-compose up -d
 
-# 2. Ver logs
+# View logs
 docker-compose logs -f
 
-# 3. Parar
+# Stop
 docker-compose down
 ```
 
-**Resultado:** 
-- ✅ Monitora pasta `./watch`
-- ✅ Salva PDFs em `./output`
-- ✅ Reinicia automaticamente
-
----
-
-### Opção 2: Docker Run (Comando direto)
+### **Option 2: Docker Run**
 
 ```bash
-# Criar pastas
+# Create directories
 mkdir watch output
 
-# Rodar daemon
+# Run daemon
 docker run -d \
   --name zpl2pdf \
   -v ./watch:/app/watch \
   -v ./output:/app/output \
   -e ZPL2PDF_LANGUAGE=pt-BR \
-  zpl2pdf:2.0.0
+  brunoleocam/zpl2pdf:latest
 ```
 
----
-
-### Opção 3: Conversão única
+### **Option 3: Single File Conversion**
 
 ```bash
 docker run --rm \
   -v ./input:/app/input:ro \
   -v ./output:/app/output \
-  zpl2pdf:2.0.0 \
-  /app/ZPL2PDF -i /app/input/label.txt -o /app/output -n resultado.pdf
+  brunoleocam/zpl2pdf:latest \
+  /app/ZPL2PDF -i /app/input/label.txt -o /app/output -n result.pdf
 ```
 
 ---
 
-## 🧪 TESTAR EM TODOS OS SISTEMAS
+## 🌍 **Multi-Language Support**
 
-### 🐧 Testar no Linux (SEM TER Linux!)
+Set language via environment variable:
 
 ```bash
-# 1. Build
+# Portuguese
+docker run -e ZPL2PDF_LANGUAGE=pt-BR brunoleocam/zpl2pdf:latest
+
+# Spanish
+docker run -e ZPL2PDF_LANGUAGE=es-ES brunoleocam/zpl2pdf:latest
+
+# French
+docker run -e ZPL2PDF_LANGUAGE=fr-FR brunoleocam/zpl2pdf:latest
+
+# German
+docker run -e ZPL2PDF_LANGUAGE=de-DE brunoleocam/zpl2pdf:latest
+
+# Italian
+docker run -e ZPL2PDF_LANGUAGE=it-IT brunoleocam/zpl2pdf:latest
+
+# Japanese
+docker run -e ZPL2PDF_LANGUAGE=ja-JP brunoleocam/zpl2pdf:latest
+
+# Chinese
+docker run -e ZPL2PDF_LANGUAGE=zh-CN brunoleocam/zpl2pdf:latest
+
+# English (default)
+docker run -e ZPL2PDF_LANGUAGE=en-US brunoleocam/zpl2pdf:latest
+```
+
+---
+
+## 🧪 **Testing on Different Platforms**
+
+### **Test on Linux (Without Having Linux)**
+
+```bash
+# Build image
 docker build -t zpl2pdf:test .
 
-# 2. Testar interativamente
+# Interactive shell
 docker run -it --rm zpl2pdf:test /bin/bash
 
-# Dentro do container:
+# Inside container:
 /app/ZPL2PDF -help
 /app/ZPL2PDF status
 ```
 
-**Você está rodando Linux DENTRO do Windows!** 🎉
-
----
-
-### 🌍 Testar Múltiplos Idiomas
+### **Test Multiple Languages**
 
 ```bash
-# Português
+# Test help in different languages
 docker run --rm -e ZPL2PDF_LANGUAGE=pt-BR zpl2pdf:test /app/ZPL2PDF -help
-
-# Espanhol
 docker run --rm -e ZPL2PDF_LANGUAGE=es-ES zpl2pdf:test /app/ZPL2PDF -help
-
-# Francês
 docker run --rm -e ZPL2PDF_LANGUAGE=fr-FR zpl2pdf:test /app/ZPL2PDF -help
 ```
 
 ---
 
-### 🏔️ Testar Alpine Linux (Ultra leve)
+## 🎯 **Use Cases**
 
+### **Developer Testing**
 ```bash
-# Build Alpine
-docker build -f Dockerfile.alpine -t zpl2pdf:alpine .
-
-# Comparar tamanhos
-docker images | grep zpl2pdf
-# zpl2pdf:ubuntu  ~200MB
-# zpl2pdf:alpine  ~150MB  ← 25% menor!
-```
-
----
-
-### 🔴 Testar CentOS/RHEL
-
-```bash
-# Build CentOS
-docker build -f Dockerfile.centos -t zpl2pdf:centos .
-
-# Testar
-docker run --rm zpl2pdf:centos /app/ZPL2PDF -help
-```
-
----
-
-## 🎯 CENÁRIOS DE USO
-
-### Cenário 1: Desenvolvedor
-
-**Objetivo:** Testar em Linux sem ter Linux
-
-```bash
-# Build e teste em 2 comandos
+# Quick build and test
 docker build -t zpl2pdf:dev .
 docker run -it --rm zpl2pdf:dev /app/ZPL2PDF -help
 ```
 
----
-
-### Cenário 2: Usuário Final
-
-**Objetivo:** Instalar e usar facilmente
-
+### **Production Deployment**
 ```bash
-# Baixar e rodar em 1 comando
-docker run -d \
-  -v C:\ZPL:/app/watch \
-  -v C:\PDF:/app/output \
-  ghcr.io/brunoleocam/zpl2pdf:latest
-```
-
----
-
-### Cenário 3: Servidor/Empresa
-
-**Objetivo:** Deploy em produção
-
-```bash
-# Deploy com docker-compose
+# Production with docker-compose
 docker-compose -f docker-compose.prod.yml up -d
 
-# Monitorar
+# Monitor resources
 docker stats zpl2pdf-daemon
 ```
 
----
-
-### Cenário 4: Múltiplas Instâncias
-
-**Objetivo:** Diferentes idiomas/configurações
-
+### **Multiple Instances**
 ```bash
-# Instância em Português
-docker run -d --name zpl2pdf-pt -e ZPL2PDF_LANGUAGE=pt-BR -v ./watch-pt:/app/watch zpl2pdf:2.0.0
+# Portuguese instance
+docker run -d --name zpl2pdf-pt -e ZPL2PDF_LANGUAGE=pt-BR -v ./watch-pt:/app/watch brunoleocam/zpl2pdf:latest
 
-# Instância em Espanhol
-docker run -d --name zpl2pdf-es -e ZPL2PDF_LANGUAGE=es-ES -v ./watch-es:/app/watch zpl2pdf:2.0.0
+# Spanish instance
+docker run -d --name zpl2pdf-es -e ZPL2PDF_LANGUAGE=es-ES -v ./watch-es:/app/watch brunoleocam/zpl2pdf:latest
 
-# Instância em Inglês
-docker run -d --name zpl2pdf-en -e ZPL2PDF_LANGUAGE=en-US -v ./watch-en:/app/watch zpl2pdf:2.0.0
+# English instance
+docker run -d --name zpl2pdf-en -e ZPL2PDF_LANGUAGE=en-US -v ./watch-en:/app/watch brunoleocam/zpl2pdf:latest
 ```
 
-**3 daemons rodando ao mesmo tempo!** 🚀
+---
+
+## 📊 **Image Comparison**
+
+| Version | Size | Base | Use Case |
+|---------|------|------|----------|
+| **Alpine** | 470MB | Alpine Linux | ✅ **Recommended** - Production |
+| **Ubuntu** | 579MB | Ubuntu | Alternative |
+| **Original** | 674MB | Debian | Legacy |
 
 ---
 
-## 📊 COMPARAÇÃO: Nativo vs Docker
+## 🔧 **Advanced Configuration**
 
-| Característica | Nativo | Docker |
-|---------------|--------|--------|
-| **Instalação** | Instalar .NET 9.0 manualmente | `docker run` |
-| **Dependências** | Instalar libgdiplus, etc. | Já incluído |
-| **Compatibilidade** | Só funciona no seu OS | Funciona em qualquer OS |
-| **Atualização** | Baixar .exe novo | `docker pull` |
-| **Múltiplas versões** | Difícil | Fácil (tags diferentes) |
-| **Teste em outros OS** | Precisa de outro PC | Docker simula |
-| **Deploy** | Scripts complexos | `docker-compose up` |
-| **Rollback** | Backup manual | Trocar tag da imagem |
-
-**Veredicto:** Docker é **3x mais fácil** para distribuição! ✅
-
----
-
-## 🌍 IDIOMAS SUPORTADOS
-
-| Idioma | Código | Exemplo |
-|--------|--------|---------|
-| Inglês | en-US | `ZPL2PDF - ZPL to PDF Converter` |
-| Português | pt-BR | `ZPL2PDF - Conversor ZPL para PDF` |
-| Espanhol | es-ES | `ZPL2PDF - Convertidor de ZPL a PDF` |
-| Francês | fr-FR | `ZPL2PDF - Convertisseur ZPL vers PDF` |
-| Alemão | de-DE | `ZPL2PDF - ZPL zu PDF Konverter` |
-| Italiano | it-IT | `ZPL2PDF - Convertitore da ZPL a PDF` |
-| Japonês | ja-JP | `ZPL2PDF - ZPLからPDFへのコンバーター` |
-| Chinês | zh-CN | `ZPL2PDF - ZPL转PDF转换器` |
-
-**Configurar:** `docker run -e ZPL2PDF_LANGUAGE=pt-BR ...`
-
----
-
-## 🔧 CONFIGURAÇÃO AVANÇADA
-
-### Arquivo de Configuração Persistente
+### **Persistent Configuration**
 
 ```bash
-# Criar zpl2pdf.json
+# Create configuration file
 cat > zpl2pdf.json <<EOF
 {
   "language": "pt-BR",
@@ -305,16 +182,14 @@ cat > zpl2pdf.json <<EOF
 }
 EOF
 
-# Montar config
+# Mount configuration
 docker run -d \
   -v ./zpl2pdf.json:/app/zpl2pdf.json \
   -v ./watch:/app/watch \
-  zpl2pdf:2.0.0
+  brunoleocam/zpl2pdf:latest
 ```
 
----
-
-### Health Check Automático
+### **Health Check**
 
 ```yaml
 healthcheck:
@@ -324,11 +199,7 @@ healthcheck:
   retries: 3
 ```
 
-**Benefício:** Docker reinicia automaticamente se falhar! ✅
-
----
-
-### Limites de Recursos
+### **Resource Limits**
 
 ```yaml
 deploy:
@@ -338,188 +209,76 @@ deploy:
       memory: 512M
 ```
 
-**Benefício:** Evita consumir todos os recursos do servidor! ✅
-
 ---
 
-## 🐛 TROUBLESHOOTING
+## 🐛 **Troubleshooting**
 
-### Problema: Container para imediatamente
-
+### **Container Stops Immediately**
 ```bash
-# Ver logs
+# Check logs
 docker logs zpl2pdf-daemon
 
-# Rodar interativo para debug
-docker run -it --rm zpl2pdf:2.0.0 /bin/bash
+# Interactive debug
+docker run -it --rm brunoleocam/zpl2pdf:latest /bin/bash
 ```
 
----
-
-### Problema: Arquivos não aparecem
-
+### **Files Not Appearing**
 ```bash
-# Verificar volumes
+# Check volumes
 docker exec zpl2pdf-daemon ls -la /app/watch
 
-# Verificar permissões
+# Check permissions
 docker exec zpl2pdf-daemon ls -la /app
 ```
 
----
-
-### Problema: Idioma errado
-
+### **Wrong Language**
 ```bash
-# Verificar variáveis de ambiente
+# Check environment variables
 docker exec zpl2pdf-daemon env | grep ZPL2PDF
 
-# Ver configuração de idioma
+# Check language configuration
 docker exec zpl2pdf-daemon /app/ZPL2PDF --show-language
 ```
 
 ---
 
-## ✅ CHECKLIST DE VALIDAÇÃO
+## 📚 **Documentation Links**
 
-Use isso para validar o Docker:
-
-### Build:
-- [ ] `docker build -t zpl2pdf:test .` funciona sem erros
-- [ ] Imagem tem ~200MB (não 1GB+)
-- [ ] Multi-stage build funcionando
-
-### Execução:
-- [ ] `docker run --rm zpl2pdf:test /app/ZPL2PDF -help` mostra ajuda
-- [ ] `docker run --rm zpl2pdf:test /app/ZPL2PDF status` funciona
-- [ ] Health check passa
-
-### Volumes:
-- [ ] Pasta `watch` é montada corretamente
-- [ ] Pasta `output` recebe os PDFs
-- [ ] Permissões estão corretas
-
-### Multi-idioma:
-- [ ] `ZPL2PDF_LANGUAGE=pt-BR` mostra mensagens em português
-- [ ] `ZPL2PDF_LANGUAGE=es-ES` mostra mensagens em espanhol
-- [ ] Fallback para inglês funciona
-
-### Daemon:
-- [ ] `docker-compose up -d` inicia daemon
-- [ ] Arquivos na pasta `watch` são convertidos
-- [ ] PDFs aparecem em `output`
-- [ ] Container reinicia automaticamente
+- **Main Repository**: [github.com/brunoleocam/ZPL2PDF](https://github.com/brunoleocam/ZPL2PDF)
+- **Docker Hub**: [hub.docker.com/r/brunoleocam/zpl2pdf](https://hub.docker.com/r/brunoleocam/zpl2pdf)
+- **GitHub Container Registry**: [ghcr.io/brunoleocam/zpl2pdf](https://ghcr.io/brunoleocam/zpl2pdf)
+- **Full Documentation**: [README.md](../../README.md)
 
 ---
 
-## 📚 DOCUMENTAÇÃO CRIADA
+## ✅ **Validation Checklist**
 
-1. ✅ **`Dockerfile`** - Corrigido e otimizado
-2. ✅ **`docker-compose.yml`** - Múltiplos exemplos
-3. ✅ **`.dockerignore`** - Otimização de build
-4. ✅ **`docs/DOCKER_GUIDE.md`** - Guia completo
-5. ✅ **`docs/DOCKER_TESTING.md`** - Testes cross-platform
-6. ✅ **`docs/DOCKER_SUMMARY.md`** - Este resumo
+### **Build Validation**
+- [ ] `docker build -t zpl2pdf:test .` succeeds
+- [ ] Image size ~470MB (not 1GB+)
+- [ ] Multi-stage build working
 
----
+### **Execution Validation**
+- [ ] `docker run --rm zpl2pdf:test /app/ZPL2PDF -help` shows help
+- [ ] `docker run --rm zpl2pdf:test /app/ZPL2PDF status` works
+- [ ] Health check passes
 
-## 🚀 PRÓXIMOS PASSOS
+### **Volume Validation**
+- [ ] `watch` folder is mounted correctly
+- [ ] `output` folder receives PDFs
+- [ ] Permissions are correct
 
-### 1. Testar Localmente
+### **Multi-language Validation**
+- [ ] `ZPL2PDF_LANGUAGE=pt-BR` shows Portuguese messages
+- [ ] `ZPL2PDF_LANGUAGE=es-ES` shows Spanish messages
+- [ ] Fallback to English works
 
-```bash
-# Build
-docker build -t zpl2pdf:test .
-
-# Teste rápido
-docker run --rm zpl2pdf:test /app/ZPL2PDF -help
-```
-
-### 2. Testar Daemon
-
-```bash
-# Iniciar
-docker-compose up -d
-
-# Copiar arquivo de teste
-cp docs/Sample/example.txt watch/
-
-# Ver logs
-docker-compose logs -f
-
-# Verificar output
-ls output/
-```
-
-### 3. Testar em Linux
-
-```bash
-# Rodar shell Linux
-docker run -it --rm zpl2pdf:test /bin/bash
-
-# Dentro do container, testar tudo
-```
-
-### 4. Publicar (Futuro)
-
-```bash
-# Tag para GitHub Container Registry
-docker tag zpl2pdf:2.0.0 ghcr.io/brunoleocam/zpl2pdf:2.0.0
-
-# Push
-docker push ghcr.io/brunoleocam/zpl2pdf:2.0.0
-```
+### **Daemon Validation**
+- [ ] `docker-compose up -d` starts daemon
+- [ ] Files in `watch` folder are converted
+- [ ] PDFs appear in `output` folder
+- [ ] Container restarts automatically
 
 ---
 
-## 🎉 CONCLUSÃO
-
-### ✅ O QUE VOCÊ TEM AGORA:
-
-1. ✅ **Dockerfile funcional** - Build otimizado
-2. ✅ **Docker Compose** - Fácil de usar
-3. ✅ **Suporte multi-idioma** - 8 línguas
-4. ✅ **Testes cross-platform** - Sem precisar de múltiplos PCs
-5. ✅ **Documentação completa** - 3 guias detalhados
-6. ✅ **Exemplos práticos** - Para todos os cenários
-
-### 🎯 VOCÊ PODE:
-
-- ✅ Testar ZPL2PDF em **Linux** SEM TER Linux
-- ✅ Testar em **Alpine**, **CentOS**, **Ubuntu**
-- ✅ Rodar **múltiplas instâncias** ao mesmo tempo
-- ✅ Distribuir facilmente com **Docker Hub**
-- ✅ Deploy em **servidores** com 1 comando
-- ✅ Suportar **8 idiomas** diferentes
-
-**Está tudo pronto para validação!** 🚀
-
----
-
-## ❓ PERGUNTAS FREQUENTES
-
-**P: Preciso de Linux para testar?**
-R: ❌ NÃO! Docker simula Linux no Windows.
-
-**P: Posso rodar múltiplas instâncias?**
-R: ✅ SIM! Basta usar nomes e portas diferentes.
-
-**P: Como atualizo?**
-R: `docker pull` nova versão e `docker-compose up -d`.
-
-**P: Funciona em Raspberry Pi?**
-R: ✅ SIM! Use build `linux-arm64`.
-
-**P: É mais pesado que nativo?**
-R: Imagem tem 200MB, mas isola dependências.
-
----
-
-**Quer testar agora?** Execute:
-
-```bash
-docker build -t zpl2pdf:test .
-docker run --rm zpl2pdf:test /app/ZPL2PDF -help
-```
-
-**Próxima validação:** Inno Setup, Winget, CI/CD! 🎯
+**ZPL2PDF Docker** - Deploy and test ZPL to PDF conversion anywhere! 🚀

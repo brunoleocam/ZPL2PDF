@@ -11,7 +11,7 @@ This guide explains how to publish ZPL2PDF to the **Windows Package Manager** (W
 [WinGet](https://github.com/microsoft/winget-pkgs) is Microsoft's official package manager for Windows 10/11.
 
 **Benefits:**
-- ✅ Users can install with: `winget install brunoleocam.ZPL2PDF`
+- ✅ Users can install with: `winget install YOUR_PACKAGE_ID`
 - ✅ Automatic updates via Windows Update integration
 - ✅ Part of Windows built-in tools
 - ✅ Centralized package management
@@ -23,51 +23,51 @@ This guide explains how to publish ZPL2PDF to the **Windows Package Manager** (W
 WinGet uses **3 YAML files** per package version:
 
 ```
-manifests/b/brunoleocam/ZPL2PDF/2.0.0/
-├── brunoleocam.ZPL2PDF.yaml                  # Version manifest
-├── brunoleocam.ZPL2PDF.installer.yaml        # Installer details
-└── brunoleocam.ZPL2PDF.locale.en-US.yaml     # English locale
-└── brunoleocam.ZPL2PDF.locale.pt-BR.yaml     # Portuguese locale (optional)
+manifests/b/YOUR_PUBLISHER/YOUR_PACKAGE/2.0.0/
+├── YOUR_PUBLISHER.YOUR_PACKAGE.yaml                  # Version manifest
+├── YOUR_PUBLISHER.YOUR_PACKAGE.installer.yaml        # Installer details
+└── YOUR_PUBLISHER.YOUR_PACKAGE.locale.en-US.yaml     # English locale
+└── YOUR_PUBLISHER.YOUR_PACKAGE.locale.pt-BR.yaml     # Portuguese locale (optional)
 ```
 
-### **1. Version Manifest** (`brunoleocam.ZPL2PDF.yaml`)
+### **1. Version Manifest** (`YOUR_PUBLISHER.YOUR_PACKAGE.yaml`)
 
 ```yaml
-PackageIdentifier: brunoleocam.ZPL2PDF
+PackageIdentifier: YOUR_PUBLISHER.YOUR_PACKAGE
 PackageVersion: 2.0.0
 DefaultLocale: en-US
 ManifestType: version
 ManifestVersion: 1.6.0
 ```
 
-### **2. Installer Manifest** (`brunoleocam.ZPL2PDF.installer.yaml`)
+### **2. Installer Manifest** (`YOUR_PUBLISHER.YOUR_PACKAGE.installer.yaml`)
 
 ```yaml
-PackageIdentifier: brunoleocam.ZPL2PDF
+PackageIdentifier: YOUR_PUBLISHER.YOUR_PACKAGE
 PackageVersion: 2.0.0
 InstallerType: inno
 Scope: machine
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-Setup-2.0.0.exe
+  InstallerUrl: https://github.com/YOUR_USERNAME/YOUR_REPO/releases/download/v2.0.0/YOUR_PACKAGE-Setup-2.0.0.exe
   InstallerSha256: <SHA256_HASH>
 ```
 
-### **3. Locale Manifest** (`brunoleocam.ZPL2PDF.locale.en-US.yaml`)
+### **3. Locale Manifest** (`YOUR_PUBLISHER.YOUR_PACKAGE.locale.en-US.yaml`)
 
 ```yaml
-PackageIdentifier: brunoleocam.ZPL2PDF
+PackageIdentifier: YOUR_PUBLISHER.YOUR_PACKAGE
 PackageVersion: 2.0.0
 PackageLocale: en-US
-Publisher: Bruno Campos
-PackageName: ZPL2PDF
-ShortDescription: Convert ZPL files to PDF
+Publisher: Your Name
+PackageName: YOUR_PACKAGE
+ShortDescription: Your package description
 Description: |
   Full package description...
 Tags:
-- zpl
-- pdf
-- converter
+- tag1
+- tag2
+- tag3
 ```
 
 ---
