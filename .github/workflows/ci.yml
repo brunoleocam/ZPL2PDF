@@ -50,7 +50,7 @@ jobs:
       run: dotnet test tests/ZPL2PDF.Integration/ --configuration Release --no-build --verbosity normal
 
     - name: Publish application
-      run: dotnet publish src/${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
+      run: dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -94,7 +94,7 @@ jobs:
       run: dotnet restore
 
     - name: Build for ${{ matrix.os }} (${{ matrix.runtime }})
-      run: dotnet publish src/${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
+      run: dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
 
     - name: Create archive
       shell: bash
@@ -159,7 +159,7 @@ jobs:
 
     - name: Check for TODO comments
       run: |
-        if grep -r "TODO\|FIXME\|HACK" src/ --exclude-dir=bin --exclude-dir=obj; then
+        if grep -r "TODO\|FIXME\|HACK" . --include="*.cs" --exclude-dir=bin --exclude-dir=obj; then
           echo "Found TODO/FIXME/HACK comments in source code"
           exit 1
         fi
@@ -245,7 +245,7 @@ jobs:
 
     - name: Build for winget
       run: |
-        dotnet publish src/${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime win-x64 --self-contained true --output ./winget-build
+        dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime win-x64 --self-contained true --output ./winget-build
 
     - name: Create winget manifest
       run: |
