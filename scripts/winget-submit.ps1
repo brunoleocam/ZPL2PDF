@@ -375,7 +375,8 @@ if ($LASTEXITCODE -eq 0) {
 } else {
     Write-Error "Failed to create Pull Request"
     Write-Warning "You may need to create it manually at:"
-    Write-Host "  https://github.com/$WinGetRepo/compare/master...$RepoOwner:$branchName" -ForegroundColor Yellow
+    $compareUrl = "https://github.com/$WinGetRepo/compare/master...${RepoOwner}:${branchName}"
+    Write-Host "  $compareUrl" -ForegroundColor Yellow
 }
 
 # ============================================================================
