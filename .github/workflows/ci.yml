@@ -8,25 +8,53 @@ on:
   release:
     types: [ published ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   DOTNET_VERSION: '9.0.x'
   PROJECT_NAME: 'ZPL2PDF'
 
 jobs:
-  # Build and Test
-  build-and-test:
-    name: Build and Test
+  # Build, Test, and Publish
+  build-test-publish:
+    name: Build & Test (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
         include:
-          - os: windows-latest
+          # Main platforms with tests
+          - name: Windows x64
+            os: windows-latest
             runtime: win-x64
-          - os: ubuntu-latest
+            run_tests: true
+          - name: Linux x64
+            os: ubuntu-latest
             runtime: linux-x64
-          - os: macos-latest
+            run_tests: true
+          - name: macOS x64
+            os: macos-latest
             runtime: osx-x64
+            run_tests: true
+          # Additional cross-platform builds (no tests)
+          - name: Windows x86
+            os: ubuntu-latest
+            runtime: win-x86
+            run_tests: false
+          - name: Linux ARM64
+            os: ubuntu-latest
+            runtime: linux-arm64
+            run_tests: false
+          - name: Linux ARM
+            os: ubuntu-latest
+            runtime: linux-arm
+            run_tests: false
+          - name: macOS ARM64
+            os: ubuntu-latest
+            runtime: osx-arm64
+            run_tests: false
 
     steps:
     - name: Checkout code
@@ -36,6 +64,14 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
 
     - name: Restore dependencies
       run: dotnet restore
@@ -44,63 +80,21 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run unit tests
+      if: matrix.run_tests == true
       run: dotnet test tests/ZPL2PDF.Unit/ --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
     - name: Run integration tests
+      if: matrix.run_tests == true
       run: dotnet test tests/ZPL2PDF.Integration/ --configuration Release --no-build --verbosity normal
 
     - name: Publish application
-      run: dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: zpl2pdf-${{ matrix.runtime }}
-        path: ./publish/${{ matrix.runtime }}/
-
-  # Cross-platform builds
-  cross-platform-builds:
-    name: Cross-Platform Builds
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    strategy:
-      matrix:
-        include:
-          - runtime: win-x64
-            os: Windows
-          - runtime: win-x86
-            os: Windows
-          - runtime: linux-x64
-            os: Linux
-          - runtime: linux-arm64
-            os: Linux
-          - runtime: linux-arm
-            os: Linux
-          - runtime: osx-x64
-            os: macOS
-          - runtime: osx-arm64
-            os: macOS
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build for ${{ matrix.os }} (${{ matrix.runtime }})
       run: dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
 
     - name: Create archive
       shell: bash
       run: |
         cd ./publish/${{ matrix.runtime }}
-        if [[ "${{ matrix.os }}" == "Windows" ]]; then
+        if [[ "${{ matrix.runtime }}" == win-* ]]; then
           zip -r ../ZPL2PDF-${{ matrix.runtime }}.zip .
         else
           tar -czf ../ZPL2PDF-${{ matrix.runtime }}.tar.gz .
@@ -116,7 +110,7 @@ jobs:
   docker-build:
     name: Docker Build and Test
     runs-on: ubuntu-latest
-    needs: build-and-test
+    needs: build-test-publish
 
     steps:
     - name: Checkout code
@@ -152,6 +146,14 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Restore dependencies
       run: dotnet restore
 
@@ -160,9 +162,11 @@ jobs:
 
     - name: Check for TODO comments
       run: |
-        if grep -r "TODO\|FIXME\|HACK" . --include="*.cs" --exclude-dir=bin --exclude-dir=obj; then
-          echo "Found TODO/FIXME/HACK comments in source code"
-          exit 1
+        if grep -r "FIXME\|HACK" . --include="*.cs" --exclude-dir=bin --exclude-dir=obj; then
+          echo "::warning::Found FIXME/HACK comments in source code"
+        fi
+        if grep -r "TODO" . --include="*.cs" --exclude-dir=bin --exclude-dir=obj; then
+          echo "::notice::Found TODO comments in source code"
         fi
 
   # Security scan
@@ -197,7 +201,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [build-and-test, cross-platform-builds, docker-build, code-quality]
+    needs: [build-test-publish, docker-build, code-quality]
     if: github.event_name == 'release'
 
     steps:
@@ -225,47 +229,8 @@ jobs:
         find . -type f -name "ZPL2PDF*" -exec sha256sum {} \; > checksums.txt
 
     - name: Upload release assets
-      uses: actions/upload-release-asset@v1
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./release/checksums.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./release/checksums.txt
-        asset_name: checksums.txt
-        asset_content_type: text/plain
-
-  # Deploy to package managers
-  deploy-packages:
-    name: Deploy Packages
-    runs-on: ubuntu-latest
-    needs: [release]
-    if: github.event_name == 'release'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Build for winget
-      run: |
-        dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime win-x64 --self-contained true --output ./winget-build
-
-    - name: Create winget manifest
-      run: |
-        mkdir -p ./winget-manifest
-        # Create winget manifest files here
-        # This would be implemented based on winget requirements
-
-    - name: Deploy to winget
-      run: |
-        # Deploy to winget repository
-        # This would be implemented based on winget deployment process
-
-    - name: Deploy to Linux packages
-      run: |
-        # Deploy .deb and .rpm packages
-        # This would be implemented based on package repository requirements

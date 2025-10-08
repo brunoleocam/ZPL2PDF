@@ -1,12 +1,17 @@
 # ZPL2PDF - ZPL to PDF Converter
 
+[![CI/CD Pipeline](https://github.com/brunoleocam/ZPL2PDF/workflows/CI/CD%20Pipeline/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/ci.yml)
+[![Docker](https://github.com/brunoleocam/ZPL2PDF/workflows/Publish%20to%20Docker/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/docker-publish.yml)
+[![WinGet](https://github.com/brunoleocam/ZPL2PDF/workflows/Publish%20to%20WinGet/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/winget-publish.yml)
+[![Linux Packages](https://github.com/brunoleocam/ZPL2PDF/workflows/Build%20Linux%20Packages/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/build-linux-packages.yml)
+
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Docker](https://img.shields.io/badge/docker-Alpine%20470MB-blue.svg)](https://hub.docker.com/r/brunoleocam/zpl2pdf)
-[![WinGet](https://img.shields.io/badge/winget-brunoleocam.ZPL2PDF-blue)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/b/brunoleocam/ZPL2PDF)
+[![Docker Hub](https://img.shields.io/badge/docker-Alpine%20470MB-blue.svg)](https://hub.docker.com/r/brunoleocam/zpl2pdf)
+[![WinGet Package](https://img.shields.io/badge/winget-brunoleocam.ZPL2PDF-blue)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/b/brunoleocam/ZPL2PDF)
 
 **[English](#)** | **[Português-BR](docs/i18n/README.pt-BR.md)** | **[Español](docs/i18n/README.es-ES.md)** | **[Français](docs/i18n/README.fr-FR.md)** | **[Deutsch](docs/i18n/README.de-DE.md)** | **[Italiano](docs/i18n/README.it-IT.md)** | **[日本語](docs/i18n/README.ja-JP.md)** | **[中文](docs/i18n/README.zh-CN.md)**
 
