@@ -155,31 +155,39 @@ if (-not $SkipValidation) {
     
     # Check if winget is available
     if (Get-Command winget -ErrorAction SilentlyContinue) {
-        # Get only YAML files
+        # Create temporary directory for validation
+        $tempValidationDir = Join-Path $env:TEMP "winget-validation-$Version"
+        if (Test-Path $tempValidationDir) {
+            Remove-Item -Path $tempValidationDir -Recurse -Force
+        }
+        New-Item -ItemType Directory -Path $tempValidationDir -Force | Out-Null
+        
+        # Copy only YAML files to temp directory
         $yamlFiles = Get-ChildItem -Path $manifestDir -Filter "*.yaml"
+        foreach ($yamlFile in $yamlFiles) {
+            Copy-Item -Path $yamlFile.FullName -Destination $tempValidationDir -Force
+        }
+        
         if ($yamlFiles.Count -eq 0) {
             Write-Warning "No YAML manifest files found in $manifestDir"
         } else {
-            Write-Host "Running: winget validate (on $($yamlFiles.Count) YAML files)" -ForegroundColor Gray
-            # Validate each YAML file
-            $validationFailed = $false
-            foreach ($yamlFile in $yamlFiles) {
-                winget validate $yamlFile.FullName
-                if ($LASTEXITCODE -ne 0) {
-                    $validationFailed = $true
-                }
-            }
+            Write-Host "Running: winget validate on $($yamlFiles.Count) YAML files" -ForegroundColor Gray
+            winget validate $tempValidationDir
             
-            if (-not $validationFailed) {
+            if ($LASTEXITCODE -eq 0) {
                 Write-Success "Manifest validation passed"
             } else {
                 Write-Error "Manifest validation failed"
                 Write-Warning "Fix validation errors before submitting"
                 if (-not $DryRun) {
+                    Remove-Item -Path $tempValidationDir -Recurse -Force -ErrorAction SilentlyContinue
                     exit 1
                 }
             }
         }
+        
+        # Cleanup temp validation directory
+        Remove-Item -Path $tempValidationDir -Recurse -Force -ErrorAction SilentlyContinue
     } else {
         Write-Warning "WinGet not found, skipping validation"
         Write-Warning "Install WinGet to validate manifests locally"
