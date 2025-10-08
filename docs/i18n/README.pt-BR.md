@@ -52,13 +52,45 @@ Uma ferramenta poderosa e multiplataforma que converte arquivos ZPL (Zebra Progr
 winget install ZPL2PDF
 ```
 
-### Linux (Em Breve)
-```bash
-# Ubuntu/Debian
-sudo apt install zpl2pdf
+### Linux
 
-# CentOS/RHEL
-sudo yum install zpl2pdf
+#### Ubuntu/Debian (pacote .deb)
+```bash
+# Baixar pacote .deb das releases
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
+
+# Instalar pacote
+sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+
+# Corrigir dependências se necessário
+sudo apt-get install -f
+
+# Verificar instalação
+zpl2pdf --help
+```
+
+#### Fedora/CentOS/RHEL (.tar.gz)
+```bash
+# Baixar tarball das releases
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+
+# Extrair para o sistema
+sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+
+# Tornar executável
+sudo chmod +x /usr/bin/ZPL2PDF
+
+# Criar link simbólico
+sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
+
+# Verificar instalação
+zpl2pdf --help
+```
+
+#### Docker (Todas as distribuições Linux)
+```bash
+docker pull brunoleocam/zpl2pdf:latest
+docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:latest
 ```
 
 ### Instalação Manual

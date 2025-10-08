@@ -1,4 +1,4 @@
-# 🏷️ ZPL2PDF - ZPLからPDFへのコンバーター
+# ZPL2PDF - ZPLからPDFへのコンバーター
 
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
@@ -43,15 +43,37 @@ winget install brunoleocam.ZPL2PDF
 
 ### **Linux**
 
+#### Ubuntu/Debian（.debパッケージ）
 ```bash
-# ダウンロード
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+# .debパッケージをダウンロード
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
 
-# 展開
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+# パッケージをインストール
+sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
 
-# 実行
-./ZPL2PDF -help
+# 必要に応じて依存関係を修正
+sudo apt-get install -f
+
+# インストールを確認
+zpl2pdf --help
+```
+
+#### Fedora/CentOS/RHEL（.tar.gz）
+```bash
+# tarballをダウンロード
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+
+# システムに展開
+sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+
+# 実行可能にする
+sudo chmod +x /usr/bin/ZPL2PDF
+
+# シンボリックリンクを作成
+sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
+
+# インストールを確認
+zpl2pdf --help
 ```
 
 ### **Docker**

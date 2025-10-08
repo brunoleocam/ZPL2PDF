@@ -5,12 +5,11 @@ Summary:        ZPL to PDF Converter
 
 License:        MIT
 URL:            https://github.com/brunoleocam/ZPL2PDF
-Source0:        https://github.com/brunoleocam/ZPL2PDF/archive/v%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 
-BuildArch:      noarch
-BuildRequires:  dotnet-sdk-9.0
+BuildArch:      x86_64
 Requires:       libgdiplus
-Requires:       glibc
+Requires:       glibc-devel
 
 %description
 A powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents.
@@ -29,22 +28,28 @@ The tool supports both individual file conversion and automatic folder monitorin
 %setup -q
 
 %build
-dotnet publish ZPL2PDF.csproj --configuration Release --runtime linux-x64 --self-contained true --output %{_builddir}/%{name}-%{version}
+# Binary is pre-built and included in tarball
 
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/%{name}
 mkdir -p %{buildroot}%{_mandir}/man1
 mkdir -p %{buildroot}%{_docdir}/%{name}
+mkdir -p %{buildroot}%{_datadir}/applications
 
-cp %{_builddir}/%{name}-%{version}/ZPL2PDF %{buildroot}%{_bindir}/
-cp -r %{_builddir}/%{name}-%{version}/* %{buildroot}%{_datadir}/%{name}/
+# Install binary
+install -m 0755 ZPL2PDF %{buildroot}%{_bindir}/ZPL2PDF
+
+# Install documentation
+install -m 0644 README.md %{buildroot}%{_docdir}/%{name}/
+install -m 0644 LICENSE %{buildroot}%{_docdir}/%{name}/
+install -m 0644 CHANGELOG.md %{buildroot}%{_docdir}/%{name}/
 
 # Create man page
-cat > %{buildroot}%{_mandir}/man1/zpl2pdf.1 << 'EOF'
+cat > %{buildroot}%{_mandir}/man1/zpl2pdf.1 << 'MANEOF'
 .TH ZPL2PDF 1 "2024" "ZPL2PDF 2.0.0" "User Commands"
 .SH NAME
-zpl2pdf - ZPL to PDF Converter
+zpl2pdf \- ZPL to PDF Converter
 .SH SYNOPSIS
 .B zpl2pdf
 [\fIOPTIONS\fR]
@@ -87,9 +92,6 @@ Stop daemon mode
 .TP
 \fBstatus\fR
 Check daemon status
-.TP
-\fB\-h\fR, \fB\-\-help\fR
-Show help message
 .SH EXAMPLES
 .TP
 Convert a single file:
@@ -100,26 +102,48 @@ Convert with custom dimensions:
 .TP
 Start daemon mode:
 .B zpl2pdf start -l /path/to/watch -w 7.5 -h 15 -u in
-.TP
-Check daemon status:
-.B zpl2pdf status
 .SH AUTHOR
-Bruno Leonardo Camargos
+Bruno Leonardo Campos <brunoleocam@gmail.com>
 .SH SEE ALSO
 https://github.com/brunoleocam/ZPL2PDF
-EOF
+MANEOF
+
+gzip %{buildroot}%{_mandir}/man1/zpl2pdf.1
+
+%post
+# Create default directories
+mkdir -p /var/zpl2pdf/{watch,output} || true
+
+echo ""
+echo "ZPL2PDF installed successfully!"
+echo ""
+echo "Quick start:"
+echo "  zpl2pdf --help"
+echo "  zpl2pdf -i label.txt -o output"
+echo "  zpl2pdf start -l /var/zpl2pdf/watch"
+echo ""
+
+%preun
+# Stop daemon if running
+if command -v zpl2pdf &> /dev/null; then
+    zpl2pdf stop 2>/dev/null || true
+fi
 
 %files
 %{_bindir}/ZPL2PDF
-%{_datadir}/%{name}/
-%{_mandir}/man1/zpl2pdf.1
-%{_docdir}/%{name}/
+%{_docdir}/%{name}/README.md
+%{_docdir}/%{name}/LICENSE
+%{_docdir}/%{name}/CHANGELOG.md
+%{_mandir}/man1/zpl2pdf.1.gz
 
 %changelog
-* Mon Jan 01 2024 Bruno Leonardo Camargos <brunoleocam@example.com> - 2.0.0-1
-- Initial release of ZPL2PDF 2.0.0
+* Wed Oct 08 2025 Bruno Leonardo Campos <brunoleocam@gmail.com> - 2.0.0-1
+- Release v2.0.0 with multi-language support
 - Added daemon mode for automatic folder monitoring
 - Implemented Clean Architecture with SOLID principles
 - Added cross-platform support for Windows, Linux, and macOS
 - Added intelligent dimension handling with ZPL extraction
 - Added enterprise features like PID management and logging
+- Multi-language interface (8 languages supported)
+- Docker deployment support
+- WinGet package for Windows

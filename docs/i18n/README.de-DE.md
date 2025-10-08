@@ -1,4 +1,4 @@
-# 🏷️ ZPL2PDF - ZPL zu PDF Konverter
+# ZPL2PDF - ZPL zu PDF Konverter
 
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
@@ -43,15 +43,37 @@ winget install brunoleocam.ZPL2PDF
 
 ### **Linux**
 
+#### Ubuntu/Debian (.deb-Paket)
 ```bash
-# Herunterladen
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+# .deb-Paket herunterladen
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
 
-# Extrahieren
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+# Paket installieren
+sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
 
-# Ausführen
-./ZPL2PDF -help
+# Abhängigkeiten bei Bedarf beheben
+sudo apt-get install -f
+
+# Installation überprüfen
+zpl2pdf --help
+```
+
+#### Fedora/CentOS/RHEL (.tar.gz)
+```bash
+# Tarball herunterladen
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+
+# Ins System extrahieren
+sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+
+# Ausführbar machen
+sudo chmod +x /usr/bin/ZPL2PDF
+
+# Symbolischen Link erstellen
+sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
+
+# Installation überprüfen
+zpl2pdf --help
 ```
 
 ### **Docker**

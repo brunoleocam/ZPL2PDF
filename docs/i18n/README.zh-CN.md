@@ -1,4 +1,4 @@
-# 🏷️ ZPL2PDF - ZPL转PDF转换器
+# ZPL2PDF - ZPL转PDF转换器
 
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
@@ -43,15 +43,37 @@ winget install brunoleocam.ZPL2PDF
 
 ### **Linux**
 
+#### Ubuntu/Debian（.deb包）
 ```bash
-# 下载
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+# 下载 .deb 包
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
 
-# 解压
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+# 安装包
+sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
 
-# 运行
-./ZPL2PDF -help
+# 如需修复依赖关系
+sudo apt-get install -f
+
+# 验证安装
+zpl2pdf --help
+```
+
+#### Fedora/CentOS/RHEL（.tar.gz）
+```bash
+# 下载压缩包
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+
+# 解压到系统
+sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+
+# 设置可执行权限
+sudo chmod +x /usr/bin/ZPL2PDF
+
+# 创建符号链接
+sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
+
+# 验证安装
+zpl2pdf --help
 ```
 
 ### **Docker**

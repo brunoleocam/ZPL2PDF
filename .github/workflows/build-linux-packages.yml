@@ -1,0 +1,199 @@
+name: Build Linux Packages
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (e.g., 2.0.0)'
+        required: true
+        default: '2.0.0'
+
+env:
+  DOTNET_VERSION: '9.0.x'
+
+jobs:
+  build-packages:
+    name: Build .deb and .rpm packages
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION="${VERSION#v}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev tar gzip
+      
+      - name: Build .deb package
+        run: |
+          echo "Building .deb package..."
+          
+          # Build application
+          dotnet publish -c Release -r linux-x64 --self-contained true -o ./publish
+          
+          # Create .deb structure
+          mkdir -p ./deb/DEBIAN
+          mkdir -p ./deb/usr/bin
+          mkdir -p ./deb/usr/share/doc/zpl2pdf
+          mkdir -p ./deb/usr/share/applications
+          
+          # Copy binary
+          cp ./publish/ZPL2PDF ./deb/usr/bin/
+          chmod +x ./deb/usr/bin/ZPL2PDF
+          
+          # Copy documentation
+          cp README.md LICENSE CHANGELOG.md ./deb/usr/share/doc/zpl2pdf/
+          
+          # Create control file
+          cat > ./deb/DEBIAN/control << EOF
+          Package: zpl2pdf
+          Version: ${{ steps.version.outputs.VERSION }}
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Bruno Leonardo Camargos <brunoleocam@gmail.com>
+          Description: Convert ZPL (Zebra Programming Language) files to PDF
+           ZPL2PDF is a command-line tool that converts ZPL label files to PDF format.
+           It supports both single-file conversion and daemon mode for automatic
+           folder monitoring. Features include multi-language support (8 languages),
+           automatic dimension detection, and cross-platform compatibility.
+          Homepage: https://github.com/brunoleocam/ZPL2PDF
+          EOF
+          
+          # Create postinst script
+          cat > ./deb/DEBIAN/postinst << 'EOF'
+          #!/bin/bash
+          set -e
+          
+          # Create symbolic link for lowercase command
+          if [ ! -L /usr/bin/zpl2pdf ]; then
+              ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
+          fi
+          
+          echo "ZPL2PDF installed successfully!"
+          echo "Run 'zpl2pdf --help' to get started."
+          
+          exit 0
+          EOF
+          chmod +x ./deb/DEBIAN/postinst
+          
+          # Create prerm script
+          cat > ./deb/DEBIAN/prerm << 'EOF'
+          #!/bin/bash
+          set -e
+          
+          # Remove symbolic link
+          if [ -L /usr/bin/zpl2pdf ]; then
+              rm -f /usr/bin/zpl2pdf
+          fi
+          
+          exit 0
+          EOF
+          chmod +x ./deb/DEBIAN/prerm
+          
+          # Build .deb package
+          dpkg-deb --build ./deb
+          mv ./deb.deb ./ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb
+          
+          # Verify package
+          dpkg-deb -I ./ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb
+          
+          echo "✅ .deb package created successfully!"
+      
+      - name: Build .rpm tarball
+        run: |
+          echo "Building .rpm tarball..."
+          
+          # Create RPM structure
+          mkdir -p ./rpm/usr/bin
+          mkdir -p ./rpm/usr/share/doc/zpl2pdf
+          mkdir -p ./rpm/usr/share/man/man1
+          
+          # Copy binary
+          cp ./publish/ZPL2PDF ./rpm/usr/bin/
+          chmod +x ./rpm/usr/bin/ZPL2PDF
+          
+          # Copy documentation
+          cp README.md LICENSE CHANGELOG.md ./rpm/usr/share/doc/zpl2pdf/
+          
+          # Create tarball
+          cd ./rpm
+          tar czf ../ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz usr/
+          cd ..
+          
+          # Verify tarball
+          tar -tzf ./ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz
+          
+          echo "✅ .rpm tarball created successfully!"
+      
+      - name: Calculate checksums
+        run: |
+          sha256sum ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb > SHA256SUMS-LINUX.txt
+          sha256sum ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz >> SHA256SUMS-LINUX.txt
+          cat SHA256SUMS-LINUX.txt
+      
+      - name: Upload .deb package
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-deb-package
+          path: ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb
+          retention-days: 30
+      
+      - name: Upload .rpm tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-rpm-tarball
+          path: ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz
+          retention-days: 30
+      
+      - name: Upload checksums
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-checksums
+          path: SHA256SUMS-LINUX.txt
+          retention-days: 30
+      
+      - name: Upload to Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb
+            ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz
+            SHA256SUMS-LINUX.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Summary
+        run: |
+          echo "## 📦 Linux Packages Built Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Packages" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb\` - $(du -h ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz\` - $(du -h ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### SHA256 Checksums" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          cat SHA256SUMS-LINUX.txt >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
