@@ -36,7 +36,7 @@ RUN dotnet publish ZPL2PDF.csproj \
 # -----------------------------------------------------------------------------
 # Stage 2: Runtime (Alpine Linux - Ultra Light)
 # -----------------------------------------------------------------------------
-FROM alpine:3.19 AS runtime
+FROM alpine:3.22 AS runtime
 
 # Install runtime dependencies (minimal)
 RUN apk add --no-cache \
