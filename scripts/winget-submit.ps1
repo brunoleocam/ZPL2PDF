@@ -360,7 +360,8 @@ See: https://github.com/$RepoOwner/$RepoName/releases/tag/v$Version
 "@
 
 Write-Host "Creating PR: $WinGetRepo" -ForegroundColor Gray
-gh pr create --repo $WinGetRepo --title $prTitle --body $prBody --head "$RepoOwner:$branchName"
+$headBranch = "${RepoOwner}:${branchName}"
+gh pr create --repo $WinGetRepo --title $prTitle --body $prBody --head $headBranch
 
 if ($LASTEXITCODE -eq 0) {
     Write-Success "Pull Request created successfully!"
