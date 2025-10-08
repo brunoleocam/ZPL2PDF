@@ -229,7 +229,7 @@ jobs:
         find . -type f -name "ZPL2PDF*" -exec sha256sum {} \; > checksums.txt
 
     - name: Upload release assets
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: ./release/checksums.txt
       env:
