@@ -1,4 +1,4 @@
-<![CDATA[# ============================================================================
+# ============================================================================
 # ZPL2PDF - WinGet Package Submission Script
 # ============================================================================
 # This script automates the WinGet package submission process
@@ -392,4 +392,3 @@ Write-Host ""
 Write-Host "============================================" -ForegroundColor Green
 Write-Host "          WinGet Submission Complete!       " -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
-]]>
