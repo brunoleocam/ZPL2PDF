@@ -15,7 +15,10 @@ param(
     [switch]$SkipValidation,
     
     [Parameter(Mandatory=$false)]
-    [switch]$DryRun
+    [switch]$DryRun,
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$NoConfirm
 )
 
 # Configuration
@@ -232,10 +235,14 @@ Write-Host "  4. Commit and push changes" -ForegroundColor White
 Write-Host "  5. Create a Pull Request to microsoft/winget-pkgs" -ForegroundColor White
 Write-Host ""
 
-$confirmation = Read-Host "Continue? (Y/N)"
-if ($confirmation -ne 'Y' -and $confirmation -ne 'y') {
-    Write-Warning "Submission cancelled by user"
-    exit 0
+if (-not $NoConfirm) {
+    $confirmation = Read-Host "Continue? (Y/N)"
+    if ($confirmation -ne 'Y' -and $confirmation -ne 'y') {
+        Write-Warning "Submission cancelled by user"
+        exit 0
+    }
+} else {
+    Write-Host "Auto-confirming (NoConfirm mode)" -ForegroundColor Gray
 }
 
 # ============================================================================
