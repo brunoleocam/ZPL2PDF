@@ -75,7 +75,7 @@ jobs:
           
           .\scripts\winget-submit.ps1 -Version $version -InstallerPath $installerPath -NoConfirm
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WINGET_TOKEN || secrets.GITHUB_TOKEN }}
       
       - name: Upload Manifests as Artifacts
         uses: actions/upload-artifact@v4

@@ -272,7 +272,15 @@ if (Test-Path $tempDir) {
 }
 
 Write-Host "Cloning: $WinGetFork" -ForegroundColor Gray
-git clone "https://github.com/$WinGetFork.git" $tempDir --depth=1
+
+# Use GH_TOKEN for authentication if available
+$gitUrl = "https://github.com/$WinGetFork.git"
+if ($env:GH_TOKEN) {
+    $gitUrl = "https://$($env:GH_TOKEN)@github.com/$WinGetFork.git"
+    Write-Host "Using authenticated clone" -ForegroundColor Gray
+}
+
+git clone $gitUrl $tempDir --depth=1
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to clone fork"
     exit 1
@@ -285,6 +293,13 @@ Set-Location $tempDir
 # Configure Git
 git config user.name $RepoOwner
 git config user.email "$RepoOwner@users.noreply.github.com"
+
+# Configure push URL with token if available
+if ($env:GH_TOKEN) {
+    $pushUrl = "https://$($env:GH_TOKEN)@github.com/$WinGetFork.git"
+    git remote set-url origin $pushUrl
+    Write-Host "Configured authenticated push" -ForegroundColor Gray
+}
 
 # Add upstream remote
 git remote add upstream "https://github.com/$WinGetRepo.git"
@@ -349,7 +364,13 @@ git commit -m "New version: $PackageId version $Version"
 Write-Success "Changes committed"
 
 Write-Host "Pushing to fork..." -ForegroundColor Gray
-git push origin $branchName
+git push origin $branchName 2>&1 | Out-String | Write-Host
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Failed to push changes to fork"
+    Write-Warning "Please check your GitHub authentication and permissions"
+    exit 1
+}
 Write-Success "Changes pushed"
 
 # ============================================================================
@@ -389,7 +410,13 @@ See: https://github.com/$RepoOwner/$RepoName/releases/tag/v$Version
 
 Write-Host "Creating PR: $WinGetRepo" -ForegroundColor Gray
 $headBranch = "${RepoOwner}:${branchName}"
-gh pr create --repo $WinGetRepo --title $prTitle --body $prBody --head $headBranch
+
+# Try to create PR with explicit authentication
+if ($env:GH_TOKEN) {
+    $env:GITHUB_TOKEN = $env:GH_TOKEN
+}
+
+gh pr create --repo $WinGetRepo --title $prTitle --body $prBody --head $headBranch --base master 2>&1 | Out-String | Write-Host
 
 if ($LASTEXITCODE -eq 0) {
     Write-Success "Pull Request created successfully!"
@@ -401,10 +428,17 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     Write-Success "WinGet submission complete!"
 } else {
-    Write-Error "Failed to create Pull Request"
-    Write-Warning "You may need to create it manually at:"
+    Write-Warning "Could not create Pull Request automatically"
+    Write-Warning "This may be due to GitHub token permissions"
+    Write-Host ""
+    Write-Host "The manifests were successfully prepared and pushed to your fork!" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "Please create the PR manually at:" -ForegroundColor Yellow
     $compareUrl = "https://github.com/$WinGetRepo/compare/master...${RepoOwner}:${branchName}"
-    Write-Host "  $compareUrl" -ForegroundColor Yellow
+    Write-Host "  $compareUrl" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "Or run this command locally:" -ForegroundColor Yellow
+    Write-Host "  gh pr create --repo $WinGetRepo --title `"$prTitle`" --head ${RepoOwner}:${branchName} --base master" -ForegroundColor Cyan
 }
 
 # ============================================================================
