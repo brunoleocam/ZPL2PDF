@@ -95,7 +95,11 @@ jobs:
       run: |
         cd ./publish/${{ matrix.runtime }}
         if [[ "${{ matrix.runtime }}" == win-* ]]; then
-          zip -r ../ZPL2PDF-${{ matrix.runtime }}.zip .
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            powershell -Command "Compress-Archive -Path * -DestinationPath ../ZPL2PDF-${{ matrix.runtime }}.zip -Force"
+          else
+            zip -r ../ZPL2PDF-${{ matrix.runtime }}.zip .
+          fi
         else
           tar -czf ../ZPL2PDF-${{ matrix.runtime }}.tar.gz .
         fi
