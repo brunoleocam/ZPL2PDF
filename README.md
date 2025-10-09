@@ -281,7 +281,7 @@ Run:
 docker-compose up -d
 ```
 
-📘 **Full Docker Guide:** [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md)
+📘 **Full Docker Guide:** [docs/user/installation/docker.md](docs/user/installation/docker.md)
 
 ---
 
@@ -314,7 +314,7 @@ See [zpl2pdf.json.example](zpl2pdf.json.example) for full configuration options.
 | `ZPL2PDF_LANGUAGE` | Application language | `pt-BR` |
 | `ZPL2PDF_LOG_LEVEL` | Logging level | `Debug` |
 
-📘 **Language Configuration Guide:** [docs/LANGUAGE_CONFIGURATION.md](docs/LANGUAGE_CONFIGURATION.md)
+📘 **Language Configuration Guide:** [docs/user/usage/configuration.md#language-configuration](docs/user/usage/configuration.md#language-configuration)
 
 ---
 
@@ -401,22 +401,32 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ## 📚 **Documentation**
 
-### **User Guides**
-- 📖 [Complete Documentation](docs/README.md) - Full user manual
-- 🌍 [Multi-language Configuration](docs/LANGUAGE_CONFIGURATION.md)
-- 🐳 [Docker Usage Guide](docs/DOCKER_GUIDE.md)
-- 📦 [Inno Setup Guide](docs/INNO_SETUP_GUIDE.md)
+### **User Documentation**
+- 📖 [Documentation Index](docs/README.md) - Complete documentation hub
+- 🚀 [Quick Start Guide](docs/user/usage/quick-start.md) - Get started in 5 minutes
+- 📦 [Installation Guide](docs/user/installation/) - All installation methods
+  - 🖥️ [Windows Installation](docs/user/installation/windows.md) - Professional installer
+  - 🐧 [Linux Installation](docs/user/installation/linux.md) - .deb and .rpm packages
+  - 🍎 [macOS Installation](docs/user/installation/macos.md) - Manual installation
+  - 🐳 [Docker Installation](docs/user/installation/docker.md) - Container deployment
+- 🎯 [Usage Guides](docs/user/usage/) - Complete usage documentation
+- 🔧 [Configuration Guide](docs/user/usage/configuration.md) - All configuration options
+- 🐛 [Troubleshooting](docs/user/troubleshooting/common-issues.md) - Common issues and solutions
 
-### **Developer Guides**
-- 🛠️ [Contributing Guide](CONTRIBUTING.md)
-- 📋 [Changelog](CHANGELOG.md)
-- 🏗️ [Architecture Overview](docs/ARCHITECTURE.md)
-- 🔄 [CI/CD Workflow](docs/CI_CD_WORKFLOW.md)
+### **Developer Documentation**
+- 🛠️ [Contributing Guide](CONTRIBUTING.md) - How to contribute
+- 📋 [Changelog](CHANGELOG.md) - Version history
+- 🔄 [CI/CD Pipeline](docs/developer/workflows/ci-cd.md) - Automated build and deployment
+- 🏗️ [Architecture Overview](docs/developer/architecture.md) - System architecture
+- 🔨 [Build Process](docs/developer/setup/build-process.md) - Build for all platforms
+- 🧪 [Testing Guide](docs/developer/setup/testing.md) - Testing strategy and guides
+- 🌿 [Git Workflow](docs/developer/workflows/git-workflow.md) - Development workflow
+- 🚀 [Release Process](docs/developer/workflows/releases.md) - Release automation
 
 ### **Build & Deployment**
-- 🔨 [Build Scripts](scripts/README.md)
-- 🐳 [Docker Publishing](docs/DOCKER_PUBLISH_GUIDE.md)
-- 📦 [Windows Installer](installer/README.md)
+- 🔨 [Build Scripts](scripts/README.md) - Automated build scripts
+- 📦 [Windows Installer](installer/README.md) - Inno Setup installer
+- 📦 [Linux Packages](manifests/README.md) - .deb and .rpm packages
 
 ---
 

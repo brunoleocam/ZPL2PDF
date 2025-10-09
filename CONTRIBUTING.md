@@ -1,336 +1,381 @@
 # 🤝 Contributing to ZPL2PDF
 
-Thank you for your interest in contributing to ZPL2PDF! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to ZPL2PDF! This guide will help you understand how to contribute effectively and follow our development practices.
 
----
+## 📋 Table of Contents
 
-## 🚀 Getting Started
+- [🚀 Quick Start](#-quick-start)
+- [🔒 Branch Protection](#-branch-protection)
+- [🛠️ Environment Setup](#️-environment-setup)
+- [📝 Conventions](#-conventions)
+- [🔄 Contribution Workflow](#-contribution-workflow)
+- [🧪 Testing](#-testing)
+- [📚 Documentation](#-documentation)
+- [🚨 Special Cases](#-special-cases)
+- [❓ FAQ](#-faq)
 
-### Prerequisites
-- ✅ .NET 9.0 SDK or later
-- ✅ Git
-- ✅ Visual Studio 2022, VS Code, or Rider (recommended)
-- ✅ Docker (for cross-platform testing)
-- ✅ Inno Setup (for Windows installer, optional)
+## 🚀 Quick Start
 
-### Development Setup
+### 1. Fork the Repository
 ```bash
-# 1. Fork and clone the repository
+# Fork the repository on GitHub
+# Then clone your fork
 git clone https://github.com/YOUR_USERNAME/ZPL2PDF.git
 cd ZPL2PDF
+```
 
-# 2. Restore dependencies
+### 2. Setup Remote
+```bash
+# Add the original repository as upstream
+git remote add upstream https://github.com/brunoleocam/ZPL2PDF.git
+
+# Verify remotes
+git remote -v
+```
+
+### 3. Create Feature Branch
+```bash
+# Update main with latest changes
+git checkout main
+git pull upstream main
+
+# Create new branch
+git checkout -b feature/your-feature
+```
+
+## 🔒 Branch Protection
+
+⚠️ **IMPORTANT**: The `main` branch is protected! You **CANNOT** push directly to it.
+
+### ✅ Required Workflow:
+1. **Create branch** from `main`
+2. **Make commits** following convention
+3. **Push branch** to your fork
+4. **Create Pull Request** in the original repository
+5. **Wait for CI/CD** to pass (5 status checks)
+6. **Wait for approval** from maintainer
+7. **Merge** after approval
+
+## 🛠️ Environment Setup
+
+### Prerequisites
+- **.NET 9.0 SDK**
+- **Git** (2.30+)
+- **Visual Studio 2022** or **VS Code** (recommended)
+- **Docker** (for Linux testing)
+
+### Configuration
+```bash
+# 1. Restore dependencies
 dotnet restore
 
-# 3. Build the solution
+# 2. Build solution
 dotnet build
 
-# 4. Run tests
+# 3. Run tests
 dotnet test
 
-# 5. Build for your platform
-dotnet publish -c Release -r win-x64 --self-contained true
-
-# 6. Test locally
-.\bin\Release\net9.0\win-x64\publish\ZPL2PDF.exe -help
+# 4. Run application
+dotnet run --project src/ZPL2PDF.csproj --help
 ```
 
-## 🏗️ Project Structure
+### Recommended VS Code Extensions
+- **C# Dev Kit**
+- **GitLens**
+- **GitHub Pull Requests**
+- **Git Graph**
 
+## 📝 Conventions
+
+### Commits (Conventional Commits)
+```bash
+# Format: type(scope): description
+
+# Allowed types:
+feat: add new feature
+fix: fix bug
+docs: update documentation
+style: formatting (spaces, etc)
+refactor: refactor code
+test: add/modify tests
+chore: maintenance tasks
+perf: performance improvement
+ci: CI/CD changes
+build: build system changes
+
+# Examples:
+git commit -m "feat(daemon): add custom configuration support"
+git commit -m "fix(conversion): fix unit conversion error"
+git commit -m "docs(readme): update installation instructions"
+git commit -m "test(integration): add tests for daemon mode"
 ```
-ZPL2PDF/
-├── src/                    # Source code
-│   ├── Application/        # Use cases and services
-│   ├── Domain/            # Business entities and rules
-│   ├── Infrastructure/    # External concerns
-│   ├── Presentation/      # CLI and user interface
-│   └── Shared/           # Common utilities
-├── tests/                 # Test projects
-│   ├── ZPL2PDF.Unit/     # Unit tests
-│   └── ZPL2PDF.Integration/ # Integration tests
-├── docs/                  # Documentation
-└── build/                 # Build scripts
+
+### Branch Naming
+```bash
+# Patterns:
+feature/feature-name
+fix/bug-description
+hotfix/urgent-fix
+docs/documentation-type
+refactor/refactored-area
+test/test-type
+chore/maintenance-task
+
+# Examples:
+feature/docker-compose
+fix/memory-leak-conversion
+hotfix/critical-security-issue
+docs/api-reference
+refactor/clean-architecture
+test/unit-tests-coverage
 ```
+
+### Code
+- **Language**: Code in English, comments in English
+- **Formatting**: Follow .NET standards
+- **Naming**: PascalCase for classes, camelCase for variables
+- **Documentation**: XMLDoc for public APIs
+
+## 🔄 Contribution Workflow
+
+### 1. Planning
+- [ ] Check existing [Issues](https://github.com/brunoleocam/ZPL2PDF/issues)
+- [ ] Create issue if needed (discuss before coding)
+- [ ] Define scope and approach
+
+### 2. Development
+```bash
+# Create branch
+git checkout -b feature/new-feature
+
+# Make incremental changes
+git add .
+git commit -m "feat: implement feature X"
+
+# Regular push for backup
+git push origin feature/new-feature
+```
+
+### 3. Local Testing
+```bash
+# Run all tests
+dotnet test
+
+# Specific test
+dotnet test tests/ZPL2PDF.Unit/UnitTests/Application/ConversionServiceTests.cs
+
+# Release build
+dotnet build --configuration Release
+
+# Manual application test
+dotnet run --project src/ZPL2PDF.csproj --help
+```
+
+### 4. Pull Request
+```bash
+# Ensure you're up to date
+git checkout main
+git pull upstream main
+git checkout feature/new-feature
+git rebase main
+
+# Final push
+git push origin feature/new-feature
+```
+
+#### PR Template:
+```markdown
+## 📝 Description
+Brief description of what was implemented/fixed.
+
+## 🔗 Related Issue
+Closes #123
+
+## 🧪 Tests
+- [ ] Unit tests passing
+- [ ] Integration tests passing
+- [ ] Manual testing done
+- [ ] Tested on Windows/Linux
+
+## 📋 Checklist
+- [ ] Code follows project conventions
+- [ ] Documentation updated
+- [ ] No breaking changes (or documented)
+- [ ] Commits follow conventional commits
+- [ ] Branch updated with main
+
+## 📸 Screenshots (if applicable)
+Add screenshots if UI changes.
+
+## 🚀 How to Test
+1. Testing instructions
+2. Step by step
+3. Expected result
+```
+
+### 5. Code Review
+- **Respond** to reviewer comments
+- **Make requested** adjustments
+- **Keep discussion** constructive
+- **Accept suggestions** when appropriate
+
+### 6. Merge
+- **Only maintainer** can merge
+- **CI/CD must pass** (5 status checks)
+- **At least 1 approval** required
 
 ## 🧪 Testing
 
-### Running Tests
+### Test Structure
+```
+tests/
+├── ZPL2PDF.Unit/           # Unit tests
+│   ├── UnitTests/
+│   │   ├── Application/    # Service tests
+│   │   ├── Domain/         # Value object tests
+│   │   ├── Infrastructure/ # Infrastructure tests
+│   │   └── Presentation/   # CLI tests
+│   └── TestData/           # Test data
+└── ZPL2PDF.Integration/    # Integration tests
+    ├── IntegrationTests/
+    └── TestData/
+```
+
+### Run Tests
 ```bash
-# Run all tests
+# All tests
 dotnet test
 
-# Run unit tests only
+# Unit tests only
 dotnet test tests/ZPL2PDF.Unit/
 
-# Run integration tests only
+# Integration tests only
 dotnet test tests/ZPL2PDF.Integration/
 
-# Run with coverage
+# With coverage
 dotnet test --collect:"XPlat Code Coverage"
+
+# Verbose
+dotnet test --verbosity normal
 ```
 
-### Test Guidelines
-- Write tests for all new functionality
-- Maintain test coverage above 90%
-- Use descriptive test names
-- Follow AAA pattern (Arrange, Act, Assert)
-- Mock external dependencies
-
-## 📝 Code Style
-
-### C# Guidelines
-- Follow Microsoft C# coding conventions
-- Use meaningful variable and method names
-- Add XML documentation for public APIs
-- Use `var` when type is obvious
-- Prefer `string.IsNullOrWhiteSpace()` over `string.IsNullOrEmpty()`
-
-### Architecture Guidelines
-- Follow Clean Architecture principles
-- Use dependency injection
-- Keep classes focused on single responsibility
-- Use interfaces for abstractions
-- Implement proper error handling
-
-## 🔧 Development Workflow
-
-### 1. Create a Feature Branch
-```bash
-git checkout -b feature/your-feature-name
-```
-
-### 2. Make Your Changes
-- Write code following the style guidelines
-- Add tests for new functionality
-- Update documentation if needed
-
-### 3. Test Your Changes
-```bash
-# Run all tests
-dotnet test
-
-# Build for all platforms
-dotnet build -c Release
-
-# Test cross-platform (if applicable)
-docker run --rm -v ${PWD}:/app -w /app mcr.microsoft.com/dotnet/sdk:9.0 dotnet test
-```
-
-### 4. Commit Your Changes
-```bash
-git add .
-git commit -m "feat: add new feature description"
-```
-
-### 5. Push and Create Pull Request
-```bash
-git push origin feature/your-feature-name
-```
-
-## 📋 Pull Request Guidelines
-
-### Before Submitting
-- [ ] Code follows style guidelines
-- [ ] All tests pass
-- [ ] New functionality has tests
-- [ ] Documentation is updated
-- [ ] No breaking changes (or clearly documented)
-
-### Pull Request Template
-```markdown
-## Description
-Brief description of changes
-
-## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
-
-## Testing
-- [ ] Unit tests added/updated
-- [ ] Integration tests added/updated
-- [ ] Manual testing completed
-
-## Checklist
-- [ ] Code follows style guidelines
-- [ ] Self-review completed
-- [ ] Documentation updated
-- [ ] No breaking changes
-```
-
-## 🐛 Bug Reports
-
-### Before Reporting
-1. Check existing issues
-2. Ensure you're using the latest version
-3. Try to reproduce the issue
-
-### Bug Report Template
-```markdown
-**Describe the bug**
-A clear description of what the bug is.
-
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Run command '...'
-2. See error
-
-**Expected behavior**
-What you expected to happen.
-
-**Environment**
-- OS: [e.g. Windows 11, Ubuntu 22.04]
-- Version: [e.g. 2.0.0]
-- .NET Version: [e.g. 9.0]
-
-**Additional context**
-Any other context about the problem.
-```
-
-## ✨ Feature Requests
-
-### Before Requesting
-1. Check existing feature requests
-2. Consider if it fits the project scope
-3. Provide clear use case
-
-### Feature Request Template
-```markdown
-**Is your feature request related to a problem?**
-A clear description of what the problem is.
-
-**Describe the solution you'd like**
-A clear description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear description of any alternative solutions.
-
-**Additional context**
-Add any other context or screenshots about the feature request.
-```
-
-## 🏷️ Release Process
-
-### Version Numbering
-We follow [Semantic Versioning](https://semver.org/):
-- **MAJOR** (3.0.0): Breaking changes
-- **MINOR** (2.1.0): New features (backward compatible)
-- **PATCH** (2.0.1): Bug fixes (backward compatible)
-
-### Release Checklist
-- [ ] All tests pass (`dotnet test`)
-- [ ] Documentation updated
-- [ ] Version numbers updated in:
-  - [ ] `ZPL2PDF.csproj`
-  - [ ] `installer/ZPL2PDF-Setup.iss`
-  - [ ] `CHANGELOG.md`
-- [ ] Changelog updated with changes
-- [ ] Cross-platform builds tested
-- [ ] Create Git tag (`git tag -a v2.1.0 -m "Release v2.1.0"`)
-- [ ] Push tag (`git push origin v2.1.0`)
-- [ ] Create GitHub Release (automatic CI/CD takes over)
-
-### Automated Release Process
-
-When you create a GitHub Release, our CI/CD automatically:
-1. ✅ Runs all tests on all platforms
-2. ✅ Builds for 8 platforms (Windows, Linux, macOS)
-3. ✅ Builds and publishes Docker images
-4. ✅ Builds Windows installer (Inno Setup)
-5. ✅ Uploads all artifacts to GitHub Release
-6. ✅ Creates WinGet package update PR
-
-See [CI/CD Workflow](docs/development/CI_CD_WORKFLOW.md) for details.
-
-## 🌍 Cross-Platform Development
-
-### Supported Platforms
-- Windows (x64, x86)
-- Linux (x64, ARM64, ARM)
-- macOS (x64, ARM64)
-
-### Testing on Different Platforms
-```bash
-# Windows
-dotnet publish -c Release -r win-x64 --self-contained true
-
-# Linux
-dotnet publish -c Release -r linux-x64 --self-contained true
-
-# macOS
-dotnet publish -c Release -r osx-x64 --self-contained true
-```
-
-### Docker Testing
-```bash
-# Test on Linux
-docker run --rm -v ${PWD}:/app -w /app mcr.microsoft.com/dotnet/sdk:9.0 dotnet test
-
-# Test on Alpine
-docker run --rm -v ${PWD}:/app -w /app mcr.microsoft.com/dotnet/sdk:9.0-alpine dotnet test
+### Write Tests
+```csharp
+[Test]
+public void ConversionService_ValidInput_ReturnsExpectedResult()
+{
+    // Arrange
+    var service = new ConversionService();
+    var input = "test data";
+    
+    // Act
+    var result = service.Convert(input);
+    
+    // Assert
+    Assert.That(result, Is.Not.Null);
+    Assert.That(result.IsSuccess, Is.True);
+}
 ```
 
 ## 📚 Documentation
 
-### Code Documentation
-- ✅ Use XML documentation for public APIs (`///`)
-- ✅ Include examples for complex methods
-- ✅ Document all parameters and return values
-- ✅ Add remarks for important notes
+### Documentation Types
+- **README**: Overview and quick start
+- **Wiki**: Detailed documentation
+- **Comments**: Inline code
+- **XMLDoc**: Public APIs
+- **CHANGELOG**: Changes per version
 
-### User Documentation
+### Update Documentation
+```bash
+# Main documentation
+README.md
+CONTRIBUTING.md
+SECURITY.md
 
-Documentation is organized in `docs/`:
+# Wiki (copy from wiki/ to GitHub Wiki)
+wiki/
+├── Home.md
+├── Installation-Guide.md
+├── Basic-Usage.md
+└── ...
 
-- **User Guides** (`docs/guides/`): For end-users
-- **Development** (`docs/development/`): For contributors
-- **Translations** (`docs/i18n/`): Multi-language READMEs
+# Code comments
+/// <summary>
+/// Converts ZPL content to PDF format
+/// </summary>
+/// <param name="zplContent">ZPL content to convert</param>
+/// <returns>Conversion result</returns>
+public ConversionResult Convert(string zplContent)
+```
 
-**When to update:**
-- ✅ Update README.md for user-facing changes
-- ✅ Add examples for new features
-- ✅ Update command-line help text (src/Presentation/HelpDisplay.cs)
-- ✅ Document configuration options in zpl2pdf.json.example
-- ✅ Update localization resources (Resources/Messages.*.resx)
+## 🚨 Special Cases
 
-### Documentation Standards
-- ✅ Use clear, concise language
-- ✅ Include code examples
-- ✅ Add screenshots for visual features
-- ✅ Keep multi-language docs in sync
+### Urgent Hotfix
+```bash
+# For critical production bugs
+git checkout -b hotfix/critical-bug-fix
+# Make minimal fix
+git commit -m "fix: fix critical conversion bug"
+git push origin hotfix/critical-bug-fix
+# Create PR immediately with "urgent" label
+```
 
-## 🤝 Community Guidelines
+### Breaking Changes
+```bash
+# Document breaking changes in PR
+git commit -m "feat!: change conversion API (breaking change)
 
-### Code of Conduct
-- Be respectful and inclusive
-- Focus on constructive feedback
-- Help others learn and grow
-- Follow the golden rule
+BREAKING CHANGE: Convert() method now returns Task<Result>
+instead of Result directly."
+```
 
-### Communication
-- Use clear, concise language
-- Provide context for questions
-- Be patient with newcomers
-- Celebrate contributions
+### Rollback
+```bash
+# Revert specific commit
+git checkout -b hotfix/rollback-commit-xyz
+git revert <commit-hash>
+git commit -m "revert: undo problematic changes"
+```
 
-## 🆘 Getting Help
+## ❓ FAQ
 
-### Resources
-- [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
-- [GitHub Issues](https://github.com/brunoleocam/ZPL2PDF/issues)
-- [Documentation](https://github.com/brunoleocam/ZPL2PDF/wiki)
+### Q: Can I contribute even as a beginner?
+**A**: Yes! Start with:
+- Fixing typos in documentation
+- Improving tests
+- Issues with "good first issue" label
 
-### Questions
-- Check existing discussions first
-- Provide clear problem description
-- Include relevant code snippets
-- Share error messages and logs
+### Q: How do I know if my contribution is welcome?
+**A**: Always create an issue first to discuss:
+- Bugs: Use bug report template
+- Features: Use feature request template
+- Improvements: Discuss before implementing
 
-## 📄 License
+### Q: How long does it take for my PR to be reviewed?
+**A**: Usually 2-5 business days. For hotfixes, it can be faster.
 
-By contributing to ZPL2PDF, you agree that your contributions will be licensed under the MIT License.
+### Q: Can I contribute translations?
+**A**: Yes! See `Resources/Messages.*.resx` to add new languages.
+
+### Q: How to report security issues?
+**A**: Use the process in `SECURITY.md` - **DO NOT** create public issue.
+
+### Q: Can I suggest architectural changes?
+**A**: Yes! Create issue for discussion before implementing.
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/brunoleocam/ZPL2PDF/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
+- **Wiki**: [Complete Documentation](https://github.com/brunoleocam/ZPL2PDF/wiki)
+- **Security**: See `SECURITY.md` for vulnerability reporting
+
+## 🎉 Thank You!
+
+Your contribution is very important to ZPL2PDF. Together, we can make this tool even better for the community!
 
 ---
 
-Thank you for contributing to ZPL2PDF! 🎉
+**Last updated**: December 2024  
+**Version**: 2.0.0

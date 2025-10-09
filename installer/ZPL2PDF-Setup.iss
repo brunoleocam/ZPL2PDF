@@ -123,14 +123,15 @@ Source: "..\CHANGELOG.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "..\CONTRIBUTING.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 
 ; User Guides
-Source: "..\docs\guides\*.md"; DestDir: "{app}\docs\guides"; Flags: ignoreversion
+Source: "..\docs\user\**\*.md"; DestDir: "{app}\docs\user"; Flags: ignoreversion recursesubdirs
+Source: "..\docs\developer\**\*.md"; DestDir: "{app}\docs\developer"; Flags: ignoreversion recursesubdirs
 
 ; Sample Files
-Source: "..\docs\Sample\*.txt"; DestDir: "{app}\samples"; Flags: ignoreversion
-Source: "..\docs\Sample\*.prn"; DestDir: "{app}\samples"; Flags: ignoreversion
+Source: "..\docs\assets\samples\*.txt"; DestDir: "{app}\samples"; Flags: ignoreversion
+Source: "..\docs\assets\samples\*.prn"; DestDir: "{app}\samples"; Flags: ignoreversion
 
 ; Icons
-Source: "..\docs\Image\ZPL2PDF.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\docs\assets\images\ZPL2PDF.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Dirs]
 ; Create default watch and output directories

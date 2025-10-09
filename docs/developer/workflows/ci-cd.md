@@ -1,12 +1,21 @@
-# 🔄 CI/CD Workflow - Complete Automation Flow
+# 🔄 CI/CD Pipeline Guide
 
-## 🎯 **Overview**
-
-This document describes the **complete automated workflow** for ZPL2PDF, from development to publication.
+Complete guide to ZPL2PDF's automated build, test, and deployment pipeline.
 
 ---
 
-## 📊 **Complete Flow Diagram**
+## 🎯 **Overview**
+
+ZPL2PDF uses GitHub Actions for fully automated CI/CD, including:
+- ✅ **Automated testing** on all platforms
+- ✅ **Multi-platform builds** (8 architectures)
+- ✅ **Docker image publishing** (2 registries)
+- ✅ **Package distribution** (WinGet, Linux packages)
+- ✅ **Release automation** (GitHub Releases)
+
+---
+
+## 📊 **Pipeline Architecture**
 
 ```
 Developer commits code
@@ -78,22 +87,14 @@ Developer commits code
     │   - Automated submission            │
     └─────────────────────────────────────┘
         ↓
-    ┌─────────────────────────────────────┐
-    │   Step 8: Update Package Repos      │
-    │   - Debian/Ubuntu (.deb)            │
-    │   - Red Hat/CentOS (.rpm)           │
-    │   - Homebrew (macOS/Linux)          │
-    └─────────────────────────────────────┘
-        ↓
     ✅ Complete! Users can download/install
 ```
 
 ---
 
-## 🚀 **Workflow Details**
+## 🚀 **Workflow Triggers**
 
-### **Trigger 1: Push to Main Branch**
-
+### **1. Push to Main Branch**
 ```yaml
 on:
   push:
@@ -101,17 +102,14 @@ on:
 ```
 
 **What happens:**
-1. ✅ Run all tests
-2. ✅ Build all platforms
-3. ✅ Save artifacts (for manual download)
-4. ❌ Does NOT publish (development build)
+- ✅ Run all tests
+- ✅ Build all platforms
+- ✅ Save artifacts (for manual download)
+- ❌ Does NOT publish (development build)
 
 **Purpose:** Continuous Integration - ensure code quality
 
----
-
-### **Trigger 2: Create Release (v2.0.0, v2.1.0, etc.)**
-
+### **2. Create Release (v2.0.0, v2.1.0, etc.)**
 ```yaml
 on:
   release:
@@ -119,21 +117,17 @@ on:
 ```
 
 **What happens:**
-1. ✅ Run all tests
-2. ✅ Build all platforms
-3. ✅ Build Docker images
-4. ✅ Build Windows installer
-5. ✅ **Publish Docker** → ghcr.io + Docker Hub
-6. ✅ **Create GitHub Release** → Upload all builds
-7. ✅ **Create WinGet PR** → Automated submission
-8. ✅ **Update package repos** → .deb, .rpm, Homebrew
+- ✅ Run all tests
+- ✅ Build all platforms
+- ✅ Build Docker images
+- ✅ Build Windows installer
+- ✅ **Publish Docker** → ghcr.io + Docker Hub
+- ✅ **Create GitHub Release** → Upload all builds
+- ✅ **Create WinGet PR** → Automated submission
 
 **Purpose:** Continuous Deployment - full automated release
 
----
-
-### **Trigger 3: Manual Workflow Dispatch**
-
+### **3. Manual Workflow Dispatch**
 ```yaml
 on:
   workflow_dispatch:
@@ -148,14 +142,14 @@ on:
 
 ## 📋 **GitHub Actions Workflows**
 
-### **Current Workflows:**
+### **Current Workflows**
 
 | Workflow | File | Trigger | Purpose |
 |----------|------|---------|---------|
-| **Docker Publish** | `.github/workflows/docker-publish.yml` | ✅ Release | Build & publish Docker images |
-| **WinGet Publish** | `.github/workflows/winget-publish.yml` | ✅ Release | Submit to microsoft/winget-pkgs |
-| **CI Tests** | `.github/workflows/ci.yml` | ⏳ To create | Run tests on every push |
-| **Release Build** | `.github/workflows/release.yml` | ⏳ To create | Build all platforms on release |
+| **CI Tests** | `.github/workflows/ci.yml` | Push/PR | Run tests on every push |
+| **Docker Publish** | `.github/workflows/docker-publish.yml` | Release | Build & publish Docker images |
+| **WinGet Publish** | `.github/workflows/winget-publish.yml` | Release | Submit to microsoft/winget-pkgs |
+| **Linux Packages** | `.github/workflows/build-linux-packages.yml` | Release | Build .deb and .rpm packages |
 
 ---
 
@@ -182,12 +176,10 @@ git push origin feature/new-feature
 # → Merge to main
 ```
 
----
-
 ### **Step 2: Automated Testing (On Every Push)**
 
 ```yaml
-# .github/workflows/ci.yml (TO CREATE)
+# .github/workflows/ci.yml
 name: CI Tests
 
 on:
@@ -221,8 +213,6 @@ jobs:
 
 **Result:** ✅ or ❌ Prevents broken code from being merged
 
----
-
 ### **Step 3: Create Release**
 
 ```bash
@@ -255,14 +245,12 @@ git push origin v2.1.0
 #    ✅ Creates WinGet PR
 ```
 
----
-
 ### **Step 4: Automated Docker Publishing**
 
 When you create a release, Docker workflow automatically:
 
 ```yaml
-# .github/workflows/docker-publish.yml (ALREADY EXISTS)
+# .github/workflows/docker-publish.yml
 
 1. Log in to GitHub Container Registry (ghcr.io)
    - Uses: secrets.GITHUB_TOKEN (automatic)
@@ -289,12 +277,10 @@ When you create a release, Docker workflow automatically:
 
 **Result:** Users can `docker pull brunoleocam/zpl2pdf:latest`
 
----
-
 ### **Step 5: Automated Windows Installer**
 
 ```yaml
-# .github/workflows/release.yml (TO CREATE)
+# .github/workflows/ci.yml (release job)
 
 1. Build all Windows platforms
    - win-x64, win-x86, win-arm64
@@ -312,12 +298,10 @@ When you create a release, Docker workflow automatically:
    - ZPL2PDF-Setup-2.1.0.exe.sha256
 ```
 
----
-
 ### **Step 6: Automated WinGet Update**
 
 ```yaml
-# .github/workflows/winget-publish.yml (CREATED)
+# .github/workflows/winget-publish.yml
 
 1. Download installer from GitHub Release
    - URL: github.com/brunoleocam/ZPL2PDF/releases/download/v2.1.0/ZPL2PDF-Setup-2.1.0.exe
@@ -343,11 +327,28 @@ When you create a release, Docker workflow automatically:
 
 **Result:** WinGet package updated after PR approval (~1-7 days)
 
+### **Step 7: Automated Linux Packages**
+
+```yaml
+# .github/workflows/build-linux-packages.yml
+
+1. Build .deb package (Debian/Ubuntu)
+   - Uses: debian/control
+   - Output: ZPL2PDF-v2.1.0-linux-amd64.deb
+
+2. Build .rpm tarball (Fedora/CentOS/RHEL)
+   - Uses: rpm/zpl2pdf.spec
+   - Output: ZPL2PDF-v2.1.0-linux-x64-rpm.tar.gz
+
+3. Upload to GitHub Release
+   - Both packages with checksums
+```
+
 ---
 
 ## 🎯 **Manual vs Automated**
 
-### **What You Do Manually:**
+### **What You Do Manually**
 
 | Action | Frequency | Time |
 |--------|-----------|------|
@@ -357,7 +358,7 @@ When you create a release, Docker workflow automatically:
 | Create GitHub Release | Per release | 2 min |
 | **TOTAL PER RELEASE** | - | **~3 minutes** |
 
-### **What GitHub Actions Does Automatically:**
+### **What GitHub Actions Does Automatically**
 
 | Action | Time | Status |
 |--------|------|--------|
@@ -368,15 +369,16 @@ When you create a release, Docker workflow automatically:
 | Build Windows installer | 2 min | ✅ Auto |
 | Upload to GitHub Release | 5 min | ✅ Auto |
 | Create WinGet PR | 2 min | ✅ Auto |
-| **TOTAL** | **~45 minutes** | **✅ AUTOMATED** |
+| Build Linux packages | 8 min | ✅ Auto |
+| **TOTAL** | **~50 minutes** | **✅ AUTOMATED** |
 
-**You save:** ~40 minutes per release! ✅
+**You save:** ~45 minutes per release! ✅
 
 ---
 
 ## 📝 **Versioning Strategy**
 
-### **Semantic Versioning (SemVer):**
+### **Semantic Versioning (SemVer)**
 
 ```
 MAJOR.MINOR.PATCH
@@ -387,7 +389,7 @@ Minor: New features (2.0.0 → 2.1.0)
 Patch: Bug fixes (2.1.0 → 2.1.1)
 ```
 
-### **When to Release:**
+### **When to Release**
 
 | Change Type | Version Bump | Example |
 |-------------|--------------|---------|
@@ -411,7 +413,7 @@ Configure these in GitHub Settings → Secrets:
 
 ## ✅ **Testing the Workflow**
 
-### **Test Before Release:**
+### **Test Before Release**
 
 ```bash
 # 1. Create test tag (doesn't trigger release)
@@ -424,7 +426,7 @@ git push origin test-v2.0.0
 # Click: "Run workflow"
 ```
 
-### **Validate After Release:**
+### **Validate After Release**
 
 ```bash
 # 1. Check Docker Hub
@@ -444,22 +446,22 @@ docker pull ghcr.io/brunoleocam/zpl2pdf:2.0.0
 
 ## 🐛 **Troubleshooting**
 
-### **Tests Fail:**
+### **Tests Fail**
 - Check logs in GitHub Actions
 - Fix issues locally
 - Push fix and retry
 
-### **Docker Build Fails:**
+### **Docker Build Fails**
 - Check Dockerfile syntax
 - Verify secrets are configured
 - Check Docker Hub quota
 
-### **Installer Build Fails:**
+### **Installer Build Fails**
 - Verify build artifacts exist
 - Check Inno Setup script
 - Validate file paths
 
-### **WinGet PR Fails:**
+### **WinGet PR Fails**
 - Check manifest syntax
 - Verify SHA256 matches
 - Ensure version format is correct
@@ -468,14 +470,14 @@ docker pull ghcr.io/brunoleocam/zpl2pdf:2.0.0
 
 ## 📚 **Files Involved in CI/CD**
 
-### **Configuration Files:**
+### **Configuration Files**
 
 ```
 .github/workflows/
-├── docker-publish.yml     ✅ EXISTS (Docker automation)
-├── winget-publish.yml     ✅ EXISTS (WinGet automation)
-├── ci.yml                 ⏳ TO CREATE (Test automation)
-└── release.yml            ⏳ TO CREATE (Build automation)
+├── ci.yml                    ✅ EXISTS (Test automation)
+├── docker-publish.yml        ✅ EXISTS (Docker automation)
+├── winget-publish.yml        ✅ EXISTS (WinGet automation)
+└── build-linux-packages.yml  ✅ EXISTS (Linux packages)
 
 scripts/
 ├── build-all-platforms.ps1  ✅ EXISTS
@@ -489,17 +491,7 @@ installer/
 
 Dockerfile                   ✅ EXISTS (Alpine optimized)
 docker-compose.yml           ✅ EXISTS
-winget-manifest.yaml         ⏳ TO VALIDATE
 ```
-
----
-
-## 🎯 **Next Steps to Complete Automation**
-
-1. ✅ **Docker Publish** - Already configured
-2. ✅ **WinGet Publish** - Already configured
-3. ⏳ **CI Tests** - Create `.github/workflows/ci.yml`
-4. ⏳ **Release Build** - Create `.github/workflows/release.yml`
 
 ---
 
@@ -513,9 +505,7 @@ After automated workflow, ZPL2PDF is available on:
 | **GitHub Container** | ghcr.io | `docker pull ghcr.io/brunoleocam/zpl2pdf` |
 | **Docker Hub** | [Docker Hub](https://hub.docker.com/r/brunoleocam/zpl2pdf) | `docker pull brunoleocam/zpl2pdf` |
 | **WinGet** | Microsoft Store | `winget install brunoleocam.ZPL2PDF` |
-| **APT** (future) | PPA | `apt install zpl2pdf` |
-| **YUM** (future) | RPM repo | `yum install zpl2pdf` |
-| **Homebrew** (future) | Brew tap | `brew install zpl2pdf` |
+| **Linux Packages** | GitHub Releases | Download .deb/.rpm files |
 
 ---
 
@@ -523,11 +513,21 @@ After automated workflow, ZPL2PDF is available on:
 
 1. ✅ **Consistency** - Same build process every time
 2. ✅ **Quality** - Tests before every release
-3. ✅ **Speed** - 45 minutes automated vs hours manual
+3. ✅ **Speed** - 50 minutes automated vs hours manual
 4. ✅ **Reliability** - No human error
 5. ✅ **Multi-platform** - All platforms built simultaneously
 6. ✅ **Documentation** - Release notes automated
 7. ✅ **Distribution** - Multiple channels updated
+
+---
+
+## 🚀 **Next Steps**
+
+1. ✅ **Configure secrets** in GitHub repository settings
+2. ✅ **Test workflow** with a test release
+3. ✅ **Create first release** with proper versioning
+4. ✅ **Monitor automation** and fix any issues
+5. ✅ **Enjoy automated releases!** 🎉
 
 ---
 

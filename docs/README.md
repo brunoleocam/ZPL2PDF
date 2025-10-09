@@ -1,137 +1,137 @@
-# 📚 ZPL2PDF - Documentation Index
+# 📚 ZPL2PDF - Documentation Center
 
-Welcome to the ZPL2PDF documentation! This index helps you find the right documentation for your needs.
-
----
-
-## 🌍 **Documentation by Language**
-
-### Translated READMEs
-
-- 🇺🇸 [English](../README.md) - Main README (root folder)
-- 🇧🇷 [Português (Brasil)](i18n/README.pt-BR.md)
-- 🇪🇸 [Español](i18n/README.es-ES.md)
-- 🇫🇷 [Français](i18n/README.fr-FR.md)
-- 🇩🇪 [Deutsch](i18n/README.de-DE.md)
-- 🇮🇹 [Italiano](i18n/README.it-IT.md)
-- 🇯🇵 [日本語](i18n/README.ja-JP.md)
-- 🇨🇳 [中文 (简体)](i18n/README.zh-CN.md)
-
-**Want to contribute improvements?** See [CONTRIBUTING.md](../CONTRIBUTING.md)
+Welcome to the ZPL2PDF documentation! This is your central hub for all project documentation.
 
 ---
 
-## 📖 **User Guides**
+## 🎯 **Quick Navigation**
 
-Documentation for end-users:
+### 👥 **For End Users**
+| Topic | Description | Link |
+|-------|-------------|------|
+| **🚀 Quick Start** | Get up and running in 5 minutes | [Quick Start](user/usage/quick-start.md) |
+| **📦 Installation** | Install on your platform | [Installation Guide](user/installation/) |
+| **🔄 Usage** | How to use ZPL2PDF | [Usage Guide](user/usage/) |
+| **🔧 Troubleshooting** | Solve common issues | [Troubleshooting](user/troubleshooting/) |
 
-### Getting Started
-- 🚀 [Quick Start Guide](../README.md#quick-start) - Get up and running in 5 minutes
-- 📦 [Installation Guide](../README.md#installation) - All installation methods
-
-### Usage Guides
-- 🐳 [Docker Guide](guides/DOCKER_GUIDE.md) - Complete Docker usage with examples
-- 🌍 [Multi-Language Configuration](guides/LANGUAGE_CONFIGURATION.md) - Set up your preferred language
-- 🧪 [Docker Testing Guide](guides/DOCKER_TESTING.md) - Test ZPL2PDF on all platforms
-- 📦 [Windows Installer Guide](guides/INNO_SETUP_GUIDE.md) - Professional Windows installation
-
-### Advanced Topics
-- ⚙️ [Configuration Reference](../zpl2pdf.json.example) - All configuration options
-- 🔧 [Troubleshooting](../README.md#troubleshooting) - Common issues and solutions
-- 📊 [Performance Optimization](../README.md#performance) - Benchmarks and tips
+### 👨‍💻 **For Developers**
+| Topic | Description | Link |
+|-------|-------------|------|
+| **🛠️ Development Setup** | Set up your development environment | [Development Setup](developer/setup/) |
+| **🔄 Workflows** | Git workflow, CI/CD, releases | [Workflows](developer/workflows/) |
+| **🤝 Contributing** | How to contribute to the project | [Contributing](developer/contributing/) |
 
 ---
 
-## 🛠️ **Developer Documentation**
+## 📖 **User Documentation**
 
-Documentation for contributors and developers:
+### 🚀 **Getting Started**
+- **[Quick Start Guide](user/usage/quick-start.md)** - Get ZPL2PDF running in minutes
+- **[Installation](user/installation/)** - Platform-specific installation instructions
 
-### Development Workflow
-- 🤝 [Contributing Guide](../CONTRIBUTING.md) - How to contribute
-- 📋 [Changelog](../CHANGELOG.md) - Version history
-- 🔄 [CI/CD Workflow](development/CI_CD_WORKFLOW.md) - Automated build and deployment
+### 📦 **Installation Options**
+- **[Windows Installation](user/installation/windows.md)** - WinGet, Inno Setup installer
+- **[Linux Installation](user/installation/linux.md)** - .deb and .rpm packages
+- **[macOS Installation](user/installation/macos.md)** - Native macOS installation
+- **[Docker Installation](user/installation/docker.md)** - Container deployment
 
-### Build & Deployment
-- 🔨 [Build Scripts Documentation](../scripts/README.md) - Build for all platforms
-- 🐳 [Docker Publishing Guide](development/DOCKER_PUBLISH_GUIDE.md) - Publish Docker images
-- 📝 [Build Validation](development/BUILD_SCRIPTS_VALIDATION.md) - Validate builds
-- 📦 [Installer Documentation](../installer/README.md) - Windows installer creation
+### 🔄 **Usage Guide**
+- **[Conversion Mode](user/usage/conversion-mode.md)** - Convert individual files
+- **[Daemon Mode](user/usage/daemon-mode.md)** - Automatic file monitoring
+- **[Configuration](user/usage/configuration.md)** - Language and settings
 
-### Internal Documentation
-- 🏗️ [Architecture Overview](development/ARCHITECTURE.md) *(Coming soon)*
-- 🧪 [Testing Strategy](../tests/ZPL2PDF.Unit/PLANO_TESTES.md)
-- 📚 [API Documentation](development/API.md) *(Coming soon)*
-
----
-
-## 🎯 **Quick Links by Task**
-
-### "I want to..."
-
-| Task | Documentation |
-|------|--------------|
-| **Install ZPL2PDF** | [Installation Guide](../README.md#installation) |
-| **Convert a ZPL file** | [Quick Start](../README.md#quick-start) |
-| **Set up auto-conversion** | [Daemon Mode Guide](../README.md#daemon-mode) |
-| **Use Docker** | [Docker Guide](guides/DOCKER_GUIDE.md) |
-| **Change language** | [Language Configuration](guides/LANGUAGE_CONFIGURATION.md) |
-| **Build from source** | [Development Setup](../CONTRIBUTING.md#development-setup) |
-| **Contribute code** | [Contributing Guide](../CONTRIBUTING.md) |
-| **Report a bug** | [Bug Reports](../CONTRIBUTING.md#bug-reports) |
-| **Request a feature** | [Feature Requests](../CONTRIBUTING.md#feature-requests) |
-| **Publish a release** | [CI/CD Workflow](development/CI_CD_WORKFLOW.md) |
-| **Test on Linux** | [Docker Testing](guides/DOCKER_TESTING.md) |
+### 🔧 **Support**
+- **[Troubleshooting](user/troubleshooting/common-issues.md)** - Common issues and solutions
 
 ---
 
-## 📁 **Documentation Structure**
+## 👨‍💻 **Developer Documentation**
+
+### 🛠️ **Development Setup**
+- **[Development Environment](developer/setup/development-environment.md)** - Set up your dev environment
+- **[Build Process](developer/setup/build-process.md)** - How to build the project
+- **[Testing](developer/setup/testing.md)** - Running and writing tests
+
+### 🔄 **Workflows**
+- **[Git Workflow](developer/workflows/git-workflow.md)** - Branching, commits, PRs
+- **[CI/CD Pipeline](developer/workflows/ci-cd.md)** - Automated builds and releases
+- **[Release Process](developer/workflows/releases.md)** - Creating new releases
+
+### 🤝 **Contributing**
+- **[Guidelines](developer/contributing/guidelines.md)** - How to contribute effectively
+
+---
+
+## 🌍 **Multi-Language Support**
+
+ZPL2PDF supports 8 languages:
+
+| Language | Code | Status |
+|----------|------|--------|
+| 🇺🇸 English | en-US | ✅ Complete |
+| 🇧🇷 Portuguese | pt-BR | ✅ Complete |
+| 🇪🇸 Spanish | es-ES | ✅ Complete |
+| 🇫🇷 French | fr-FR | ✅ Complete |
+| 🇩🇪 German | de-DE | ✅ Complete |
+| 🇮🇹 Italian | it-IT | ✅ Complete |
+| 🇯🇵 Japanese | ja-JP | ✅ Complete |
+| 🇨🇳 Chinese | zh-CN | ✅ Complete |
+
+**Configure language:** See [Configuration Guide](user/usage/configuration.md#language-configuration)
+
+---
+
+## 📦 **Package Information**
+
+### **Supported Platforms**
+- ✅ **Windows** x64, x86, ARM64
+- ✅ **Linux** x64, ARM64, ARM
+- ✅ **macOS** x64, ARM64 (Apple Silicon)
+- ✅ **Docker** Multi-architecture support
+
+### **Distribution Channels**
+- 📦 **GitHub Releases** - Direct downloads
+- 🐳 **Docker Hub** - `brunoleocam/zpl2pdf`
+- 📦 **GitHub Container Registry** - `ghcr.io/brunoleocam/zpl2pdf`
+- 📦 **WinGet** - `winget install brunoleocam.ZPL2PDF`
+- 📦 **Linux Packages** - .deb and .rpm
+
+---
+
+## 🔗 **Quick Links**
+
+### **Project Resources**
+- 🏠 **[Main Repository](https://github.com/brunoleocam/ZPL2PDF)** - Source code
+- 📦 **[Releases](https://github.com/brunoleocam/ZPL2PDF/releases)** - Download latest version
+- 🐛 **[Issues](https://github.com/brunoleocam/ZPL2PDF/issues)** - Report bugs
+- 💬 **[Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)** - Ask questions
+- 📖 **[Wiki](https://github.com/brunoleocam/ZPL2PDF/wiki)** - Community documentation
+
+### **External Resources**
+- 🐳 **[Docker Hub](https://hub.docker.com/r/brunoleocam/zpl2pdf)** - Docker images
+- 📦 **[WinGet Package](https://github.com/microsoft/winget-pkgs/tree/master/manifests/b/brunoleocam/ZPL2PDF)** - Windows Package Manager
+
+---
+
+## 📋 **Documentation Structure**
 
 ```
 docs/
-├── README.md                      (This file - Documentation index)
-├── i18n/                          (Internationalization)
-│   ├── README.pt-BR.md            (Portuguese)
-│   ├── README.es-ES.md            (Spanish)
-│   └── README.fr-FR.md            (French)
-├── guides/                        (User guides)
-│   ├── DOCKER_GUIDE.md            (Docker usage)
-│   ├── DOCKER_TESTING.md          (Cross-platform testing)
-│   ├── INNO_SETUP_GUIDE.md        (Windows installer)
-│   └── LANGUAGE_CONFIGURATION.md  (Multi-language setup)
-├── development/                   (Developer docs)
-│   ├── CI_CD_WORKFLOW.md          (Automation workflow)
-│   ├── BUILD_SCRIPTS_VALIDATION.md (Build validation)
-│   ├── DOCKER_PUBLISH_GUIDE.md    (Docker publishing)
-│   ├── DOCKER_RESUMO_PUBLICACAO.md (Publishing summary PT)
-│   └── DOCKER_SUMMARY.md          (Docker summary)
-├── Image/                         (Screenshots & icons)
-│   ├── ZPL2PDF.ico
-│   ├── ZPL2PDF.png
-│   └── example_*.png
-└── Sample/                        (Sample ZPL files)
-    ├── example.txt
-    ├── test-*.txt
-    └── *.prn
+├── README.md                    # This file - Documentation index
+├── user/                        # End-user documentation
+│   ├── installation/            # Installation guides
+│   ├── usage/                   # Usage guides
+│   └── troubleshooting/         # Support
+├── developer/                   # Developer documentation
+│   ├── setup/                   # Development setup
+│   ├── workflows/               # Git, CI/CD, releases
+│   └── contributing/            # Contribution guidelines
+├── assets/                      # Resources
+│   ├── images/                  # Screenshots, icons
+│   └── samples/                 # Example files
+└── i18n/                        # Internationalization
+    └── README.*.md              # Translated READMEs
 ```
-
----
-
-## 🔍 **Search Documentation**
-
-Can't find what you're looking for? Try:
-
-1. **Search the Wiki**: [GitHub Wiki](https://github.com/brunoleocam/ZPL2PDF/wiki)
-2. **Browse Issues**: [GitHub Issues](https://github.com/brunoleocam/ZPL2PDF/issues)
-3. **Ask in Discussions**: [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
-
----
-
-## 🆕 **Recently Updated**
-
-- 📅 **2025-01-07**: Docker Publishing Guide
-- 📅 **2025-01-07**: Multi-language Configuration Guide
-- 📅 **2025-01-07**: CI/CD Workflow Documentation
-- 📅 **2025-01-07**: Inno Setup Guide
 
 ---
 
@@ -139,12 +139,23 @@ Can't find what you're looking for? Try:
 
 Found a typo or want to improve the docs?
 
-1. Fork the repository
-2. Edit the documentation
-3. Submit a Pull Request
+1. **Fork the repository**
+2. **Edit the documentation**
+3. **Submit a Pull Request**
 
-See [Contributing Guide](../CONTRIBUTING.md#documentation) for details.
+See [Contributing Guidelines](developer/contributing/guidelines.md) for details.
 
 ---
 
-**Need help?** Open an [Issue](https://github.com/brunoleocam/ZPL2PDF/issues) or start a [Discussion](https://github.com/brunoleocam/ZPL2PDF/discussions)!
+## 📞 **Need Help?**
+
+- 📖 **Check this documentation first**
+- 🐛 **Open an [Issue](https://github.com/brunoleocam/ZPL2PDF/issues)**
+- 💬 **Start a [Discussion](https://github.com/brunoleocam/ZPL2PDF/discussions)**
+- 📧 **Contact the maintainer**
+
+---
+
+**Last Updated:** January 2025  
+**Version:** 2.0.0  
+**Documentation Version:** 1.0.0

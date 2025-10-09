@@ -64,7 +64,7 @@ The script `scripts\winget-submit.ps1` automatically:
 ## 🔗 **Links**
 
 - **WinGet Repository**: https://github.com/microsoft/winget-pkgs
-- **Documentation**: [WINGET_GUIDE.md](../docs/development/WINGET_GUIDE.md)
+- **CI/CD Workflow**: [CI/CD Pipeline Guide](../docs/developer/workflows/ci-cd.md#winget-publishing)
 - **Manifest Schema**: https://aka.ms/winget-manifest.version.1.6.0.schema.json
 
 ---

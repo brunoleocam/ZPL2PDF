@@ -358,8 +358,8 @@ These scripts are designed to work with GitHub Actions, Azure Pipelines, and oth
 - [../README.md](../README.md) - Project documentation
 - [../CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 - [../CHANGELOG.md](../CHANGELOG.md) - Version history
-- [../docs/development/WINGET_GUIDE.md](../docs/development/WINGET_GUIDE.md) - WinGet packaging guide
-- [../docs/guides/LANGUAGE_CONFIGURATION.md](../docs/guides/LANGUAGE_CONFIGURATION.md) - Language system
+- [../docs/developer/workflows/ci-cd.md](../docs/developer/workflows/ci-cd.md) - CI/CD Pipeline (includes WinGet)
+- [../docs/user/usage/configuration.md](../docs/user/usage/configuration.md) - Configuration guide (includes language setup)
 
 ---
 
