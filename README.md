@@ -12,7 +12,7 @@
 
 A powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents. Perfect for label printing workflows, automated document generation, and enterprise label management systems.
 
-![ZPL2PDF Demo](docs/Image/example_1.png)
+![ZPL2PDF Demo](docs/Image/example_converted.png)
 
 ---
 
