@@ -111,9 +111,6 @@ MANEOF
 gzip %{buildroot}%{_mandir}/man1/zpl2pdf.1
 
 %post
-# Create default directories
-mkdir -p /var/zpl2pdf/{watch,output} || true
-
 echo ""
 echo "ZPL2PDF installed successfully!"
 echo ""

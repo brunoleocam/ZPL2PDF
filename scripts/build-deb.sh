@@ -143,9 +143,6 @@ cat > "${BUILD_DIR}/DEBIAN/postinst" << 'EOF'
 #!/bin/bash
 set -e
 
-# Create default directories
-mkdir -p /var/zpl2pdf/{watch,output}
-
 echo ""
 echo "ZPL2PDF installed successfully!"
 echo ""
