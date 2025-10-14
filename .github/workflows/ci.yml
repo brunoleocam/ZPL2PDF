@@ -91,11 +91,12 @@ jobs:
       run: dotnet publish ${{ env.PROJECT_NAME }}.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true --output ./publish/${{ matrix.runtime }}
 
     - name: Create archive
+      shell: bash
       run: |
         cd ./publish/${{ matrix.runtime }}
         if [[ "${{ matrix.runtime }}" == win-* ]]; then
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            Compress-Archive -Path * -DestinationPath ../ZPL2PDF-${{ matrix.runtime }}.zip -Force
+            powershell -Command "Compress-Archive -Path * -DestinationPath ../ZPL2PDF-${{ matrix.runtime }}.zip -Force"
           else
             zip -r ../ZPL2PDF-${{ matrix.runtime }}.zip .
           fi

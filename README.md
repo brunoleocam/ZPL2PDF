@@ -1,10 +1,5 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![CI/CD Pipeline](https://github.com/brunoleocam/ZPL2PDF/workflows/CI/CD%20Pipeline/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/ci.yml)
-[![Docker](https://github.com/brunoleocam/ZPL2PDF/workflows/Publish%20to%20Docker/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/docker-publish.yml)
-[![WinGet](https://github.com/brunoleocam/ZPL2PDF/workflows/Publish%20to%20WinGet/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/winget-publish.yml)
-[![Linux Packages](https://github.com/brunoleocam/ZPL2PDF/workflows/Build%20Linux%20Packages/badge.svg)](https://github.com/brunoleocam/ZPL2PDF/actions/workflows/build-linux-packages.yml)
-
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
@@ -17,7 +12,7 @@
 
 A powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents. Perfect for label printing workflows, automated document generation, and enterprise label management systems.
 
-![ZPL2PDF Demo](docs/Image/example_1.png)
+![ZPL2PDF Demo](docs/Image/example_converted.png)
 
 ---
 
