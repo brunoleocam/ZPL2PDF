@@ -59,7 +59,7 @@ WORKDIR /app
 COPY --from=build /app/publish/ZPL2PDF .
 
 # Create directories and set permissions
-RUN mkdir -p /app/watch /app/output /app/config && \
+RUN mkdir -p /app/config && \
     chmod +x /app/ZPL2PDF && \
     chown -R zpl2pdf:zpl2pdf /app
 
@@ -78,7 +78,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD /app/ZPL2PDF status || exit 1
 
 # Volume mount points
-VOLUME ["/app/watch", "/app/output", "/app/config"]
+VOLUME ["/app/config"]
 
 # Default command
 CMD ["/app/ZPL2PDF", "run", "-l", "/app/watch"]

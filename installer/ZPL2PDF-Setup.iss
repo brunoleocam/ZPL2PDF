@@ -133,10 +133,8 @@ Source: "..\docs\Sample\*.prn"; DestDir: "{app}\samples"; Flags: ignoreversion
 Source: "..\docs\Image\ZPL2PDF.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Dirs]
-; Create default watch and output directories
+; Create default directory
 Name: "{userdocs}\ZPL2PDF Auto Converter"; Flags: uninsneveruninstall
-Name: "{userdocs}\ZPL2PDF Auto Converter\watch"; Flags: uninsneveruninstall
-Name: "{userdocs}\ZPL2PDF Auto Converter\output"; Flags: uninsneveruninstall
 
 [Icons]
 ; Start Menu
@@ -145,8 +143,6 @@ Name: "{group}\{#MyAppName} (Start Daemon)"; Filename: "{app}\{#MyAppExeName}"; 
 Name: "{group}\{#MyAppName} (Stop Daemon)"; Filename: "{app}\{#MyAppExeName}"; Parameters: "stop"; Comment: "Stop conversion daemon"; IconIndex: 0
 Name: "{group}\Documentation"; Filename: "{app}\docs\README.md"
 Name: "{group}\Sample Files"; Filename: "{app}\samples"
-Name: "{group}\Watch Folder"; Filename: "{userdocs}\ZPL2PDF Auto Converter\watch"
-Name: "{group}\Output Folder"; Filename: "{userdocs}\ZPL2PDF Auto Converter\output"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 ; Desktop Icon
