@@ -53,3 +53,7 @@ Desktop.ini
 
 # Cursor
 .cursor/
+
+# Test directories
+test-docker/
+test-*/
