@@ -1,12 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace ZPL2PDF {
     /// <summary>
     /// Responsible for reading the input file and splitting the ZPL labels.
     /// </summary>
     public static class LabelFileReader {
+        /// <summary>
+        /// Pre-compiled regex for better performance (compiled once, used many times).
+        /// Pattern: ^FN followed by digits, optional whitespace, then lookahead for ^FD.
+        /// Includes timeout protection against ReDoS attacks on large inputs.
+        /// </summary>
+        private static readonly Regex FieldNumberRegex = new Regex(
+            @"\^FN\d+\s*(?=\^FD)", 
+            RegexOptions.IgnoreCase | RegexOptions.Compiled,
+            TimeSpan.FromSeconds(5)
+        );
+
         /// <summary>
         /// Reads the file and returns its content.
         /// </summary>
@@ -50,6 +62,28 @@ namespace ZPL2PDF {
                 }
             }
             return labels;
+        }
+
+        /// <summary>
+        /// Preprocesses ZPL content to handle unsupported or problematic commands.
+        /// Currently handles:
+        /// - ^FN (Field Number): Removes ^FN tags when followed by ^FD, as BinaryKits.Zpl.Viewer
+        ///   doesn't fully support field templates. The ^FD content is preserved for direct rendering.
+        /// </summary>
+        /// <param name="content">Raw ZPL content.</param>
+        /// <returns>Preprocessed ZPL content ready for rendering.</returns>
+        /// <example>
+        /// Input:  ^FO90,12^A0N,20,20^FN6^FDHello World^FS
+        /// Output: ^FO90,12^A0N,20,20^FDHello World^FS
+        /// </example>
+        public static string PreprocessZpl(string content) {
+            if (string.IsNullOrWhiteSpace(content)) {
+                return content ?? string.Empty;
+            }
+
+            // Remove ^FN<number> when followed by ^FD
+            // Uses pre-compiled regex with timeout for safety and performance
+            return FieldNumberRegex.Replace(content, string.Empty);
         }
     }
 }

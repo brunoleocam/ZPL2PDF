@@ -53,7 +53,7 @@ if ($Version -notmatch '^\d+\.\d+\.\d+$') {
     exit 1
 }
 
-Write-ColorOutput "🚀 ZPL2PDF Release Script v2.0.0" $Blue
+Write-ColorOutput "🚀 ZPL2PDF Release Script v2.0.1" $Blue
 Write-ColorOutput "=================================" $Blue
 Write-ColorOutput "Version: $Version" $Yellow
 Write-ColorOutput "Pre-release: $PreRelease" $Yellow
