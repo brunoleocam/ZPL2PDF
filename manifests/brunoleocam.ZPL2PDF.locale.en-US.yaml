@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
 
 PackageIdentifier: brunoleocam.ZPL2PDF
-PackageVersion: 2.0.0
+PackageVersion: 2.0.1
 PackageLocale: en-US
 Publisher: Bruno Campos
 PublisherUrl: https://github.com/brunoleocam
@@ -46,49 +46,22 @@ Tags:
 - zebra
 - zpl
 ReleaseNotes: |-
-  What's New in v2.0.0:
+  What's New in v2.0.1:
   
-  🌍 Multi-language Support
-  • 8 languages: EN, PT, ES, FR, DE, IT, JA, ZH
-  • Automatic system language detection
-  • Persistent configuration via environment variables
+  🐛 Bug Fixes
   
-  🔄 Daemon Mode
-  • Automatic folder monitoring
-  • Batch conversion with retry mechanism
-  • PID management and process control
-  • Configurable retry delays and max retries
+  Docker/Linux CLI Mode:
+  • Fixed font rendering issues in Alpine Linux Docker images
+  • Added fontconfig, ttf-dejavu, ttf-liberation, and font-noto packages
+  • Resolved "asset null" errors when running in CLI mode (non-daemon)
   
-  🏗️ Architecture Improvements
-  • Complete Clean Architecture refactoring
-  • SOLID principles implementation
-  • 90%+ test coverage (unit + integration)
-  • Eliminated code duplication
-  
-  🌍 Cross-Platform
-  • Windows (x64, x86, ARM64)
-  • Linux (x64, ARM64, ARM)
-  • macOS (Intel, Apple Silicon)
-  • Docker support (Alpine Linux, 470MB)
-  
-  📐 Smart Dimensions
-  • Automatic ZPL dimension extraction (^PW, ^LL)
-  • Priority-based dimension resolution
-  • Multiple unit support (mm, cm, in, points)
-  
-  ⚡ Performance
-  • Async processing
-  • File locking detection with retry
-  • Memory-efficient image processing
-  • Optimized PDF generation
-  
-  📦 Distribution
-  • Professional Windows installer (Inno Setup)
-  • Docker images (GitHub Container Registry + Docker Hub)
-  • Automated CI/CD with GitHub Actions
+  ZPL ^FN Tag Rendering:
+  • Fixed issue where text fields using ^FN (Field Number) followed by ^FD (Field Data) were not rendered
+  • Added ZPL preprocessing to handle unsupported ^FN commands
+  • ^FD content is now correctly displayed in generated PDFs
   
   For detailed changes, see: https://github.com/brunoleocam/ZPL2PDF/blob/main/CHANGELOG.md
-ReleaseNotesUrl: https://github.com/brunoleocam/ZPL2PDF/releases/tag/v2.0.0
+ReleaseNotesUrl: https://github.com/brunoleocam/ZPL2PDF/releases/tag/v2.0.1
 Documentations:
 - DocumentLabel: Documentation
   DocumentUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/docs/README.md

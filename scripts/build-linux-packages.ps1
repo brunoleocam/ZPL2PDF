@@ -2,7 +2,7 @@
 # Works on Windows with Docker Desktop
 
 param(
-    [string]$Version = "2.0.0",
+    [string]$Version = "2.0.1",
     [switch]$DebOnly,
     [switch]$RpmOnly
 )
@@ -69,10 +69,10 @@ RUN mkdir -p /deb/DEBIAN /deb/usr/bin /deb/usr/share/doc/zpl2pdf /deb/usr/share/
     cp /app/publish/ZPL2PDF /deb/usr/bin/ && \
     chmod +x /deb/usr/bin/ZPL2PDF && \
     cp README.md LICENSE CHANGELOG.md /deb/usr/share/doc/zpl2pdf/ && \
-    echo 'Package: zpl2pdf\nVersion: 2.0.0\nSection: utils\nPriority: optional\nArchitecture: amd64\nDepends: libgdiplus, libc6-dev\nMaintainer: Bruno Leonardo Campos <brunoleocam@gmail.com>\nDescription: ZPL to PDF Converter' > /deb/DEBIAN/control && \
-    dpkg-deb --build /deb /build/ZPL2PDF-v2.0.0-linux-amd64.deb
+    echo 'Package: zpl2pdf\nVersion: 2.0.1\nSection: utils\nPriority: optional\nArchitecture: amd64\nDepends: libgdiplus, libc6-dev\nMaintainer: Bruno Leonardo Campos <brunoleocam@gmail.com>\nDescription: ZPL to PDF Converter' > /deb/DEBIAN/control && \
+    dpkg-deb --build /deb /build/ZPL2PDF-v2.0.1-linux-amd64.deb
 
-CMD ["sh", "-c", "cp /build/ZPL2PDF-v2.0.0-linux-amd64.deb /output/ && echo 'Package created successfully'"]
+CMD ["sh", "-c", "cp /build/ZPL2PDF-v2.0.1-linux-amd64.deb /output/ && echo 'Package created successfully'"]
 "@
 
     $debDockerfile | Out-File -FilePath "Dockerfile.deb" -Encoding UTF8
@@ -156,9 +156,9 @@ RUN mkdir -p /rpm/usr/bin /rpm/usr/share/doc/zpl2pdf /rpm/usr/share/man/man1 && 
     cp /app/publish/ZPL2PDF /rpm/usr/bin/ && \
     chmod +x /rpm/usr/bin/ZPL2PDF && \
     cp README.md LICENSE CHANGELOG.md /rpm/usr/share/doc/zpl2pdf/ && \
-    cd /rpm && tar czf /build/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz usr/
+    cd /rpm && tar czf /build/ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz usr/
 
-CMD ["sh", "-c", "cp /build/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz /output/ && echo 'Package created successfully'"]
+CMD ["sh", "-c", "cp /build/ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz /output/ && echo 'Package created successfully'"]
 "@
 
     $rpmDockerfile | Out-File -FilePath "Dockerfile.rpm" -Encoding UTF8
