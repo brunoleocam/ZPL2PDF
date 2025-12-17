@@ -82,7 +82,7 @@ jobs:
           GH_TOKEN: ${{ secrets.WINGET_TOKEN || secrets.GITHUB_TOKEN }}
       
       - name: Upload Manifests as Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: winget-manifests-${{ steps.version.outputs.VERSION }}
           path: manifests/
