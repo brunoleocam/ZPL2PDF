@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 # Stage 1: Build
 # -----------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:9.0.306 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.101 AS build
 
 # Set working directory
 WORKDIR /src
@@ -36,7 +36,7 @@ RUN dotnet publish ZPL2PDF.csproj \
 # -----------------------------------------------------------------------------
 # Stage 2: Runtime (Alpine Linux - Ultra Light)
 # -----------------------------------------------------------------------------
-FROM alpine:3.19 AS runtime
+FROM alpine:3.23 AS runtime
 
 # Install runtime dependencies
 # - libgdiplus: Required for System.Drawing compatibility

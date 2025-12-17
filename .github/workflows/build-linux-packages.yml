@@ -24,7 +24,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       
       - name: Set version
         id: version
@@ -44,7 +44,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       
       - name: Cache NuGet packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -165,21 +165,21 @@ jobs:
           cat SHA256SUMS-LINUX.txt
       
       - name: Upload .deb package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: linux-deb-package
           path: ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-amd64.deb
           retention-days: 30
       
       - name: Upload .rpm tarball
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: linux-rpm-tarball
           path: ZPL2PDF-v${{ steps.version.outputs.VERSION }}-linux-x64-rpm.tar.gz
           retention-days: 30
       
       - name: Upload checksums
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: linux-checksums
           path: SHA256SUMS-LINUX.txt
