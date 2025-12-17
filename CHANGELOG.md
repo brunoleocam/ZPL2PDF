@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.1] - 2025-12-16
+
+### 🐛 Fixed
+
+#### Docker/Linux CLI Mode Issue
+- **Missing Fonts in Alpine Linux**: Fixed "Value cannot be null (Parameter 'asset')" error when running in CLI mode on Docker/Amazon Linux
+- **Root Cause**: SkiaSharp/BinaryKits.Zpl requires fonts for text rendering, which were missing in the Alpine base image
+- **Solution**: Added `fontconfig`, `ttf-dejavu`, `ttf-liberation`, and `font-noto` packages to Dockerfile
+- **Impact**: ZPL2PDF now works correctly in both daemon and CLI modes on all Linux environments
+
+#### ZPL ^FN (Field Number) Tag Issue
+- **^FN Not Rendering with ^FD**: Fixed issue where ZPL lines containing `^FN` tags were not appearing in generated PDFs
+- **Root Cause**: BinaryKits.Zpl.Viewer doesn't fully support field templates when `^FN` is followed by `^FD`
+- **Solution**: Implemented ZPL preprocessing to remove `^FN<number>` tags when followed by `^FD`, preserving the field data for direct rendering
+- **Example**: `^FO90,12^A0N,20,20^FN6^FDHello World^FS` → `^FO90,12^A0N,20,20^FDHello World^FS`
+
+### 🔧 Improved
+
+- **Code Quality**: Added ReDoS protection timeout to regex operations
+- **Performance**: Pre-compiled regex patterns for ZPL preprocessing
+- **Validation**: Improved input validation consistency (`IsNullOrWhiteSpace` vs `IsNullOrEmpty`)
+- **Documentation**: Enhanced Dockerfile comments explaining font packages and their purpose
+
+### 📦 Technical Details
+
+- **Files Modified**:
+  - `Dockerfile`: Added font packages for SkiaSharp text rendering support
+  - `src/Shared/LabelFileReader.cs`: Added `PreprocessZpl` method with compiled regex
+  - `src/Application/Services/ConversionService.cs`: Integrated ZPL preprocessing in conversion pipeline
+
+---
+
 ## [2.0.0] - 2025-01-07
 
 ### 🎉 Major Release - Complete Rewrite
