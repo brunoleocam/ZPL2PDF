@@ -148,9 +148,59 @@ This directory contains automation scripts for building, packaging, and releasin
 
 ---
 
-### 4️⃣ **`release.ps1` / `release.sh`**
+### 4️⃣ **`full-release.ps1`** ⭐ RECOMENDADO
 
-**Purpose:** Complete release automation (version update + build + git tag + publish)
+**Purpose:** Script completo de release que automatiza TODO o processo de deploy
+
+**Prerequisites:**
+- .NET SDK 9.0+
+- Docker Desktop (para pacotes Linux e imagens Docker)
+- GitHub CLI (`gh`) autenticado
+- Inno Setup 6 (para instalador Windows)
+
+**Usage:**
+
+```powershell
+# Release completo
+.\scripts\full-release.ps1 -Version "2.1.0"
+
+# Dry run (testar sem publicar)
+.\scripts\full-release.ps1 -Version "2.1.0" -DryRun
+
+# Pular etapas específicas
+.\scripts\full-release.ps1 -Version "2.1.0" -SkipTests
+.\scripts\full-release.ps1 -Version "2.1.0" -SkipDocker
+.\scripts\full-release.ps1 -Version "2.1.0" -SkipWinGet
+.\scripts\full-release.ps1 -Version "2.1.0" -SkipGitHubRelease
+```
+
+**O que faz (12 etapas):**
+1. ✅ Verifica pré-requisitos (git, dotnet, docker, gh)
+2. ✅ Atualiza versão em TODOS os arquivos do projeto
+3. ✅ Gera builds para 8 plataformas (Windows, Linux, macOS)
+4. ✅ Gera pacotes Linux (.deb e .rpm) via Docker
+5. ✅ Gera instalador Windows (Inno Setup)
+6. ✅ Gera checksums SHA256
+7. ✅ Build e push de imagens Docker (Docker Hub + GHCR)
+8. ✅ Cria release no GitHub com todos os assets
+9. ✅ Atualiza manifests do WinGet
+10. ✅ Submete PR para microsoft/winget-pkgs
+11. ✅ Commita alterações no repositório
+12. ✅ Exibe resumo final
+
+**Output:**
+- Builds para todas as plataformas em `build/publish/`
+- Instalador Windows
+- Pacotes .deb e .rpm
+- Imagens Docker publicadas
+- Release no GitHub
+- PR no WinGet
+
+---
+
+### 5️⃣ **`release.ps1` / `release.sh`**
+
+**Purpose:** Release básico (versão + build + git tag) - Use `full-release.ps1` para deploy completo
 
 **Usage:**
 
@@ -227,9 +277,24 @@ Want to test on multiple platforms?
 ./scripts/build-all-platforms.sh --skip-tests
 ```
 
-### Create Release
+### Create Release (Recomendado) ⭐
 
-Ready to publish a new version?
+Ready to publish a new version? Use o script completo:
+
+```powershell
+# Windows - Test first with dry-run
+.\scripts\full-release.ps1 -Version "2.1.0" -DryRun
+
+# Windows - Actual release (faz TUDO automaticamente)
+.\scripts\full-release.ps1 -Version "2.1.0"
+
+# Pular etapas se necessário
+.\scripts\full-release.ps1 -Version "2.1.0" -SkipDocker -SkipWinGet
+```
+
+### Create Release (Básico)
+
+Se preferir o script básico (sem Docker/WinGet):
 
 ```powershell
 # Windows - Test first with dry-run
@@ -251,17 +316,20 @@ Ready to publish a new version?
 
 ## 📊 Script Comparison
 
-| Feature | build-all-platforms | build-installer | winget-submit | release |
-|---------|---------------------|-----------------|---------------|---------|
-| **Build all platforms** | ✅ | ❌ | ❌ | ✅ (uses build-all-platforms) |
-| **Create archives** | ✅ | ❌ | ❌ | ✅ |
-| **Windows installer** | ❌ | ✅ | ❌ | ✅ (uses build-installer) |
-| **Update versions** | ❌ | ❌ | ❌ | ✅ |
-| **Run tests** | ✅ (optional) | ❌ | ❌ | ✅ |
-| **Git operations** | ❌ | ❌ | ✅ (fork/PR) | ✅ |
-| **Checksums** | ✅ | ❌ | ✅ (SHA256) | ✅ |
-| **WinGet submission** | ❌ | ❌ | ✅ | ❌ |
-| **Cross-platform** | ✅ | ❌ (Windows only) | ❌ (Windows only) | ✅ |
+| Feature | full-release ⭐ | build-all-platforms | build-installer | winget-submit | release |
+|---------|----------------|---------------------|-----------------|---------------|---------|
+| **Build all platforms** | ✅ | ✅ | ❌ | ❌ | ✅ |
+| **Create archives** | ✅ | ✅ | ❌ | ❌ | ✅ |
+| **Windows installer** | ✅ | ❌ | ✅ | ❌ | ✅ |
+| **Linux packages (.deb/.rpm)** | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Docker build & push** | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **GitHub Release** | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Update versions** | ✅ | ❌ | ❌ | ❌ | ✅ |
+| **Run tests** | ✅ (opcional) | ✅ (opcional) | ❌ | ❌ | ✅ |
+| **Git operations** | ✅ | ❌ | ❌ | ✅ (fork/PR) | ✅ |
+| **Checksums** | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **WinGet submission** | ✅ | ❌ | ❌ | ✅ | ❌ |
+| **GHCR push** | ✅ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
@@ -373,5 +441,5 @@ To improve these scripts:
 
 ---
 
-**Last Updated:** October 2025  
-**Version:** 2.0.0
+**Last Updated:** December 2025  
+**Version:** 2.0.1
