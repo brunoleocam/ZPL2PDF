@@ -1,5 +1,5 @@
 Name:           zpl2pdf
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        ZPL to PDF Converter
 
@@ -47,7 +47,7 @@ install -m 0644 CHANGELOG.md %{buildroot}%{_docdir}/%{name}/
 
 # Create man page
 cat > %{buildroot}%{_mandir}/man1/zpl2pdf.1 << 'MANEOF'
-.TH ZPL2PDF 1 "2024" "ZPL2PDF 2.0.0" "User Commands"
+.TH ZPL2PDF 1 "2025" "ZPL2PDF 2.0.1" "User Commands"
 .SH NAME
 zpl2pdf \- ZPL to PDF Converter
 .SH SYNOPSIS
@@ -134,6 +134,13 @@ fi
 %{_mandir}/man1/zpl2pdf.1.gz
 
 %changelog
+* Mon Dec 16 2025 Bruno Leonardo Campos <brunoleocam@gmail.com> - 2.0.1-1
+- Fix: Docker/Linux CLI mode "asset null" error (missing fonts)
+- Fix: ZPL ^FN tag not rendering with ^FD
+- Added: Font packages for Alpine Linux (fontconfig, ttf-dejavu, ttf-liberation, font-noto)
+- Improved: ZPL preprocessing for unsupported commands
+- Improved: Code quality with ReDoS protection
+
 * Wed Oct 08 2025 Bruno Leonardo Campos <brunoleocam@gmail.com> - 2.0.0-1
 - Release v2.0.0 with multi-language support
 - Added daemon mode for automatic folder monitoring

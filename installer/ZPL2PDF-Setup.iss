@@ -15,7 +15,7 @@
 ; =============================================================================
 
 #define MyAppName "ZPL2PDF"
-#define MyAppVersion "2.0.0"
+#define MyAppVersion "2.0.1"
 #define MyAppPublisher "Bruno Campos"
 #define MyAppURL "https://github.com/brunoleocam/ZPL2PDF"
 #define MyAppExeName "ZPL2PDF.exe"
@@ -109,7 +109,7 @@ Name: "setlanguage"; Description: "{cm:ConfigureLanguage}"; GroupDescription: "C
 
 [Files]
 ; Main Application (x64)
-Source: "..\build\publish\ZPL2PDF-v{#MyAppVersion}-win-x64\ZPL2PDF.exe"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
+Source: "..\build\publish\win-x64\ZPL2PDF.exe"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
 
 ; Configuration Example
 Source: "..\zpl2pdf.json.example"; DestDir: "{app}"; DestName: "zpl2pdf.json.example"; Flags: ignoreversion

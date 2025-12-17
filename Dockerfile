@@ -1,9 +1,9 @@
 # =============================================================================
-# ZPL2PDF - Alpine Linux Build (Ultra Lightweight)
+# ZPL2PDF - Alpine Linux Build (Lightweight)
 # =============================================================================
-# This Dockerfile creates an ULTRA-LIGHT container using Alpine Linux
-# Target size: ~150MB (vs 674MB original)
-# Build: docker build -f Dockerfile.alpine -t zpl2pdf:alpine .
+# This Dockerfile creates a lightweight container using Alpine Linux
+# Includes fonts required for SkiaSharp text rendering
+# Build: docker build -t zpl2pdf:latest .
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -38,7 +38,17 @@ RUN dotnet publish ZPL2PDF.csproj \
 # -----------------------------------------------------------------------------
 FROM alpine:3.19 AS runtime
 
-# Install runtime dependencies (minimal)
+# Install runtime dependencies
+# - libgdiplus: Required for System.Drawing compatibility
+# - icu-libs/icu-data-full: Unicode and globalization support
+# - fontconfig + fonts: Required for SkiaSharp text rendering (fixes "asset null" error)
+#   * ttf-dejavu: Good coverage for Western characters (~3MB)
+#   * ttf-liberation: Microsoft font alternatives (~2MB)
+#   * font-noto: Extensive Unicode coverage including accented characters (~100MB)
+#
+# NOTE: font-noto significantly increases image size but provides best Unicode support.
+# For smaller images with basic Latin support only, remove font-noto line.
+# Current image size: ~250MB (with all fonts) vs ~150MB (without font-noto)
 RUN apk add --no-cache \
     libgdiplus \
     libintl \
@@ -47,7 +57,12 @@ RUN apk add --no-cache \
     libstdc++ \
     libgcc \
     ca-certificates \
-    tzdata
+    tzdata \
+    fontconfig \
+    ttf-dejavu \
+    ttf-liberation \
+    font-noto \
+    && fc-cache -f
 
 # Create non-root user
 RUN addgroup -S zpl2pdf && adduser -S zpl2pdf -G zpl2pdf
