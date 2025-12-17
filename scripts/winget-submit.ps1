@@ -97,14 +97,20 @@ $issFile = "installer\ZPL2PDF-Setup.iss"
 if (Test-Path $issFile) {
     $appId = (Get-Content $issFile | Select-String "AppId=(.*)").Matches.Groups[1].Value
     if ($appId) {
-        Write-Success "Product Code: $appId"
+        # Inno Setup uses {{ to escape {, but we need the actual GUID
+        # Format: {{GUID} -> {GUID} for the actual ProductCode
+        # But in YAML, we need to escape { as {{ again
+        # So {{GUID} from .iss becomes '{{GUID}_is1' in YAML
+        $appId = $appId + "_is1"
+        Write-Success "Product Code (from .iss): $appId"
+        Write-Host "  Note: In YAML, this will be escaped as '${appId}'" -ForegroundColor Gray
     } else {
         Write-Warning "Could not extract Product Code from .iss file"
-        $appId = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
+        $appId = "{{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}_is1"
     }
 } else {
     Write-Warning "Inno Setup script not found, using placeholder"
-    $appId = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
+    $appId = "{{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}_is1"
 }
 
 # ============================================================================
@@ -122,7 +128,8 @@ $installerManifest = "$manifestDir\$PackageId.installer.yaml"
 if (Test-Path $installerManifest) {
     $content = Get-Content $installerManifest -Raw
     $content = $content -replace "REPLACE_WITH_ACTUAL_SHA256", $sha256
-    $content = $content -replace "\{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\}", $appId
+    # Replace placeholder ProductCode with actual value (already includes _is1 suffix)
+    $content = $content -replace "\{\{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\}_is1", $appId
     $content = $content -replace "PackageVersion: .*", "PackageVersion: $Version"
     $content = $content -replace "v[0-9]+\.[0-9]+\.[0-9]+", "v$Version"
     $content = $content -replace "ReleaseDate: .*", "ReleaseDate: $(Get-Date -Format 'yyyy-MM-dd')"
