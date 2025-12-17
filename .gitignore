@@ -29,6 +29,7 @@ installer/*.sha256
 
 # WinGet temporary files
 winget-pkgs-*/
+winget-submission/
 *.msi
 *.zip
 *.tar.gz
