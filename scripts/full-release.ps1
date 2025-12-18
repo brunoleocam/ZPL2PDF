@@ -114,13 +114,32 @@ function Save-Checkpoint {
         [hashtable]$Data = @{}
     )
     
-    $checkpoint = Get-Checkpoint
-    if (-not $checkpoint) {
+    $checkpointObj = Get-Checkpoint
+    if (-not $checkpointObj) {
         $checkpoint = @{
             Version = $Version
             StartedAt = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
             CompletedSteps = @()
             Data = @{}
+        }
+    } else {
+        # Converter PSObject para hashtable
+        $checkpoint = @{
+            Version = $checkpointObj.Version
+            StartedAt = $checkpointObj.StartedAt
+            CompletedSteps = @()
+            Data = @{}
+        }
+        
+        if ($checkpointObj.CompletedSteps) {
+            $checkpoint.CompletedSteps = @($checkpointObj.CompletedSteps)
+        }
+        
+        if ($checkpointObj.Data) {
+            $checkpoint.Data = @{}
+            $checkpointObj.Data.PSObject.Properties | ForEach-Object {
+                $checkpoint.Data[$_.Name] = $_.Value
+            }
         }
     }
     
@@ -150,8 +169,12 @@ function Test-StepCompleted {
     }
     
     $checkpoint = Get-Checkpoint
-    if ($checkpoint -and $checkpoint.Version -eq $Version) {
-        return $checkpoint.CompletedSteps -contains $Step
+    if ($checkpoint) {
+        $checkpointVersion = if ($checkpoint.Version) { $checkpoint.Version } else { $null }
+        if ($checkpointVersion -eq $Version) {
+            $steps = if ($checkpoint.CompletedSteps) { @($checkpoint.CompletedSteps) } else { @() }
+            return $steps -contains $Step
+        }
     }
     
     return $false
@@ -495,9 +518,14 @@ function Build-DockerImages {
     $dockerHubDone = $false
     $ghcrDone = $false
     
-    if ($checkpoint) {
-        $dockerHubDone = $checkpoint.Data.DockerHubPushed -eq $true
-        $ghcrDone = $checkpoint.Data.GHCRPushed -eq $true
+    if ($checkpoint -and $checkpoint.Data) {
+        $data = $checkpoint.Data
+        if ($data.PSObject.Properties['DockerHubPushed']) {
+            $dockerHubDone = $data.DockerHubPushed -eq $true
+        }
+        if ($data.PSObject.Properties['GHCRPushed']) {
+            $ghcrDone = $data.GHCRPushed -eq $true
+        }
     }
     
     if ($dockerHubDone -and $ghcrDone) {
