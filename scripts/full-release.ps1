@@ -31,6 +31,9 @@ param(
     [switch]$DryRun,
     
     [Parameter(Mandatory=$false)]
+    [switch]$Resume,
+    
+    [Parameter(Mandatory=$false)]
     [string]$GitHubToken = ""
 )
 
@@ -45,6 +48,7 @@ $RepoOwner = "brunoleocam"
 $RepoName = "ZPL2PDF"
 $DockerImage = "brunoleocam/zpl2pdf"
 $GhcrImage = "ghcr.io/brunoleocam/zpl2pdf"
+$CheckpointFile = Join-Path $ProjectRoot ".release-checkpoint-$Version.json"
 
 # ============================================================================
 # Funções de Output
@@ -86,6 +90,78 @@ function Write-ErrorMsg {
 function Test-Command {
     param([string]$Command)
     return [bool](Get-Command $Command -ErrorAction SilentlyContinue)
+}
+
+# ============================================================================
+# Sistema de Checkpoint/Log
+# ============================================================================
+function Get-Checkpoint {
+    if (Test-Path $CheckpointFile) {
+        try {
+            $content = Get-Content $CheckpointFile -Raw | ConvertFrom-Json
+            return $content
+        } catch {
+            Write-Warning "Erro ao ler checkpoint: $_"
+            return $null
+        }
+    }
+    return $null
+}
+
+function Save-Checkpoint {
+    param(
+        [string]$Step,
+        [hashtable]$Data = @{}
+    )
+    
+    $checkpoint = Get-Checkpoint
+    if (-not $checkpoint) {
+        $checkpoint = @{
+            Version = $Version
+            StartedAt = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            CompletedSteps = @()
+            Data = @{}
+        }
+    }
+    
+    if ($checkpoint.CompletedSteps -notcontains $Step) {
+        $checkpoint.CompletedSteps += $Step
+    }
+    
+    foreach ($key in $Data.Keys) {
+        $checkpoint.Data[$key] = $Data[$key]
+    }
+    
+    $checkpoint.LastUpdated = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    
+    try {
+        $checkpoint | ConvertTo-Json -Depth 10 | Set-Content $CheckpointFile -Force
+        Write-Info "Checkpoint salvo: $Step"
+    } catch {
+        Write-Warning "Erro ao salvar checkpoint: $_"
+    }
+}
+
+function Test-StepCompleted {
+    param([string]$Step)
+    
+    if (-not $Resume) {
+        return $false
+    }
+    
+    $checkpoint = Get-Checkpoint
+    if ($checkpoint -and $checkpoint.Version -eq $Version) {
+        return $checkpoint.CompletedSteps -contains $Step
+    }
+    
+    return $false
+}
+
+function Clear-Checkpoint {
+    if (Test-Path $CheckpointFile) {
+        Remove-Item $CheckpointFile -Force
+        Write-Info "Checkpoint limpo"
+    }
 }
 
 # ============================================================================
@@ -140,6 +216,11 @@ function Test-Prerequisites {
 # ============================================================================
 function Update-Version {
     Write-Step "2/12" "Atualizando versão para $Version..."
+    
+    if (Test-StepCompleted "UpdateVersion") {
+        Write-Info "Etapa já concluída - pulando atualização de versão"
+        return
+    }
     
     Set-Location $ProjectRoot
     
@@ -210,6 +291,7 @@ function Update-Version {
     }
     
     Write-Success "Versão atualizada em todos os arquivos!"
+    Save-Checkpoint "UpdateVersion"
 }
 
 # ============================================================================
@@ -217,6 +299,16 @@ function Update-Version {
 # ============================================================================
 function Build-AllPlatforms {
     Write-Step "3/12" "Gerando builds para todas as plataformas..."
+    
+    if (Test-StepCompleted "BuildAllPlatforms") {
+        Write-Info "Etapa já concluída - pulando builds"
+        if (Test-Path $BuildDir) {
+            Write-Info "Builds existentes encontrados em: $BuildDir"
+            return $true
+        } else {
+            Write-Warning "Checkpoint indica que builds foram feitos, mas diretório não existe. Refazendo..."
+        }
+    }
     
     Set-Location $ProjectRoot
     
@@ -281,6 +373,7 @@ function Build-AllPlatforms {
     }
     
     Write-Success "Builds gerados para todas as plataformas!"
+    Save-Checkpoint "BuildAllPlatforms" @{ BuildDir = $BuildDir }
     return $true
 }
 
@@ -292,6 +385,11 @@ function Build-LinuxPackages {
     
     if ($SkipDocker) {
         Write-Warning "Docker pulado - pacotes Linux não serão gerados"
+        return $true
+    }
+    
+    if (Test-StepCompleted "BuildLinuxPackages") {
+        Write-Info "Etapa já concluída - pulando pacotes Linux"
         return $true
     }
     
@@ -309,6 +407,7 @@ function Build-LinuxPackages {
         Write-Warning "Script build-linux-packages.ps1 não encontrado"
     }
     
+    Save-Checkpoint "BuildLinuxPackages"
     return $true
 }
 
@@ -317,6 +416,11 @@ function Build-LinuxPackages {
 # ============================================================================
 function Build-WindowsInstaller {
     Write-Step "5/12" "Gerando instalador Windows..."
+    
+    if (Test-StepCompleted "BuildWindowsInstaller") {
+        Write-Info "Etapa já concluída - pulando instalador Windows"
+        return $true
+    }
     
     Set-Location $ProjectRoot
     
@@ -346,6 +450,7 @@ function Build-WindowsInstaller {
         }
     }
     
+    Save-Checkpoint "BuildWindowsInstaller"
     return $true
 }
 
@@ -354,6 +459,11 @@ function Build-WindowsInstaller {
 # ============================================================================
 function Generate-Checksums {
     Write-Step "6/12" "Gerando checksums SHA256..."
+    
+    if (Test-StepCompleted "GenerateChecksums") {
+        Write-Info "Etapa já concluída - pulando checksums"
+        return $true
+    }
     
     $checksumFile = Join-Path $BuildDir "SHA256SUMS.txt"
     if (Test-Path $checksumFile) {
@@ -366,6 +476,7 @@ function Generate-Checksums {
     }
     
     Write-Success "Checksums gerados!"
+    Save-Checkpoint "GenerateChecksums"
     return $true
 }
 
@@ -380,51 +491,155 @@ function Build-DockerImages {
         return $true
     }
     
-    Set-Location $ProjectRoot
+    $checkpoint = Get-Checkpoint
+    $dockerHubDone = $false
+    $ghcrDone = $false
     
-    # Build da imagem
-    Write-Info "Building Docker image..."
-    docker build -t "$DockerImage`:$Version" -t "$DockerImage`:latest" .
-    if ($LASTEXITCODE -ne 0) {
-        Write-ErrorMsg "Falha ao buildar imagem Docker"
-        return $false
+    if ($checkpoint) {
+        $dockerHubDone = $checkpoint.Data.DockerHubPushed -eq $true
+        $ghcrDone = $checkpoint.Data.GHCRPushed -eq $true
     }
     
-    # Tags adicionais
-    docker tag "$DockerImage`:$Version" "$DockerImage`:alpine"
+    if ($dockerHubDone -and $ghcrDone) {
+        Write-Info "Etapa já concluída - imagens Docker já foram publicadas"
+        return $true
+    }
     
-    $majorMinor = $Version -replace '\.\d+$', ''
-    $major = $Version -replace '\.\d+\.\d+$', ''
-    docker tag "$DockerImage`:$Version" "$DockerImage`:$majorMinor"
-    docker tag "$DockerImage`:$Version" "$DockerImage`:$major"
+    if ($dockerHubDone) {
+        Write-Info "Docker Hub já foi publicado - pulando"
+    }
     
-    # Tags para GHCR
-    docker tag "$DockerImage`:$Version" "$GhcrImage`:$Version"
-    docker tag "$DockerImage`:$Version" "$GhcrImage`:latest"
-    docker tag "$DockerImage`:$Version" "$GhcrImage`:alpine"
-    docker tag "$DockerImage`:$Version" "$GhcrImage`:$majorMinor"
-    docker tag "$DockerImage`:$Version" "$GhcrImage`:$major"
+    if ($ghcrDone) {
+        Write-Info "GHCR já foi publicado - pulando"
+    }
+    
+    Set-Location $ProjectRoot
+    
+    # Build da imagem (só se não foi feito antes)
+    if (-not (docker images "$DockerImage`:$Version" --format "{{.Repository}}:{{.Tag}}" | Select-String "$DockerImage`:$Version")) {
+        Write-Info "Building Docker image..."
+        docker build -t "$DockerImage`:$Version" -t "$DockerImage`:latest" .
+        if ($LASTEXITCODE -ne 0) {
+            Write-ErrorMsg "Falha ao buildar imagem Docker"
+            return $false
+        }
+        
+        # Tags adicionais
+        docker tag "$DockerImage`:$Version" "$DockerImage`:alpine"
+        
+        $majorMinor = $Version -replace '\.\d+$', ''
+        $major = $Version -replace '\.\d+\.\d+$', ''
+        docker tag "$DockerImage`:$Version" "$DockerImage`:$majorMinor"
+        docker tag "$DockerImage`:$Version" "$DockerImage`:$major"
+        
+        # Tags para GHCR
+        docker tag "$DockerImage`:$Version" "$GhcrImage`:$Version"
+        docker tag "$DockerImage`:$Version" "$GhcrImage`:latest"
+        docker tag "$DockerImage`:$Version" "$GhcrImage`:alpine"
+        docker tag "$DockerImage`:$Version" "$GhcrImage`:$majorMinor"
+        docker tag "$DockerImage`:$Version" "$GhcrImage`:$major"
+    } else {
+        Write-Info "Imagens Docker já existem - usando imagens existentes"
+        $majorMinor = $Version -replace '\.\d+$', ''
+        $major = $Version -replace '\.\d+\.\d+$', ''
+    }
     
     if (-not $DryRun) {
-        # Push para Docker Hub
-        Write-Info "Pushing para Docker Hub..."
-        docker push "$DockerImage`:$Version"
-        docker push "$DockerImage`:latest"
-        docker push "$DockerImage`:alpine"
-        docker push "$DockerImage`:$majorMinor"
-        docker push "$DockerImage`:$major"
+        # Push para Docker Hub (só se não foi feito antes)
+        if (-not $dockerHubDone) {
+            # Verificar autenticação Docker Hub
+            Write-Info "Verificando autenticação Docker Hub..."
+            $dockerHubAuth = docker info 2>&1 | Select-String "Username"
+            if (-not $dockerHubAuth) {
+                Write-Warning "Não autenticado no Docker Hub. Execute: docker login"
+                Write-Info "Tentando push mesmo assim..."
+            }
+            
+            # Push para Docker Hub
+            Write-Info "Pushing para Docker Hub..."
+            $pushFailed = $false
+            docker push "$DockerImage`:$Version" 2>&1 | Out-Null
+            if ($LASTEXITCODE -ne 0) { $pushFailed = $true }
+            
+            if (-not $pushFailed) {
+                docker push "$DockerImage`:latest" 2>&1 | Out-Null
+                docker push "$DockerImage`:alpine" 2>&1 | Out-Null
+                docker push "$DockerImage`:$majorMinor" 2>&1 | Out-Null
+                docker push "$DockerImage`:$major" 2>&1 | Out-Null
+                Write-Success "Imagens publicadas no Docker Hub!"
+                Save-Checkpoint "BuildDockerImages" @{ DockerHubPushed = $true }
+            } else {
+                Write-Warning "Falha ao fazer push para Docker Hub. Verifique autenticação: docker login"
+            }
+        }
         
-        # Push para GHCR
-        Write-Info "Pushing para GHCR..."
-        docker push "$GhcrImage`:$Version"
-        docker push "$GhcrImage`:latest"
-        docker push "$GhcrImage`:alpine"
-        docker push "$GhcrImage`:$majorMinor"
-        docker push "$GhcrImage`:$major"
-        
-        Write-Success "Imagens Docker publicadas!"
+        # Push para GHCR (só se não foi feito antes)
+        if (-not $ghcrDone) {
+            # Verificar autenticação GHCR (via GitHub CLI)
+            Write-Info "Verificando autenticação GHCR..."
+            $ghAuth = gh auth status 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning "GitHub CLI não autenticado. Execute: gh auth login"
+                Write-Info "Para fazer push no GHCR, você precisa estar autenticado no GitHub CLI"
+            } else {
+                # Fazer login no GHCR usando GitHub CLI token
+                $ghToken = gh auth token 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Info "Autenticando no GHCR..."
+                    echo $ghToken | docker login ghcr.io -u $RepoOwner --password-stdin 2>&1 | Out-Null
+                }
+            }
+            
+            # Push para GHCR
+            Write-Info "Pushing para GHCR..."
+            $ghcrPushFailed = $false
+            try {
+                $pushOutput = docker push "$GhcrImage`:$Version" 2>&1
+                if ($LASTEXITCODE -ne 0) { 
+                    $ghcrPushFailed = $true
+                    Write-Warning "Falha ao fazer push da tag $Version para GHCR"
+                }
+            } catch {
+                $ghcrPushFailed = $true
+                Write-Warning "Erro ao fazer push para GHCR: $_"
+            }
+            
+            if (-not $ghcrPushFailed) {
+                try {
+                    docker push "$GhcrImage`:latest" 2>&1 | Out-Null
+                    docker push "$GhcrImage`:alpine" 2>&1 | Out-Null
+                    docker push "$GhcrImage`:$majorMinor" 2>&1 | Out-Null
+                    docker push "$GhcrImage`:$major" 2>&1 | Out-Null
+                    Write-Success "Imagens publicadas no GHCR!"
+                    Save-Checkpoint "BuildDockerImages" @{ GHCRPushed = $true }
+                } catch {
+                    Write-Warning "Erro ao fazer push de tags adicionais para GHCR: $_"
+                    $ghcrPushFailed = $true
+                }
+            } else {
+                Write-Warning "Falha ao fazer push para GHCR. Verifique autenticação e permissões do token GitHub."
+                Write-Info "O token precisa ter escopo 'write:packages'. Execute: gh auth refresh -h github.com -s write:packages"
+                Write-Info "Depois, execute: .\scripts\push-ghcr.ps1 -Version `"$Version`""
+            }
+            
+            $checkpoint = Get-Checkpoint
+            $dockerHubDone = $checkpoint.Data.DockerHubPushed -eq $true
+            $ghcrDone = $checkpoint.Data.GHCRPushed -eq $true
+            
+            if ($dockerHubDone -and $ghcrDone) {
+                Write-Success "Todas as imagens Docker publicadas com sucesso!"
+            } elseif ($dockerHubDone) {
+                Write-Warning "Docker Hub: OK | GHCR: Falhou. O script continuará mesmo assim."
+            } else {
+                Write-Warning "Algumas imagens podem não ter sido publicadas. Verifique os erros acima."
+            }
+        }
     } else {
         Write-Warning "Dry run - imagens não foram publicadas"
+    }
+    
+    if (-not (Test-StepCompleted "BuildDockerImages")) {
+        Save-Checkpoint "BuildDockerImages"
     }
     
     return $true
@@ -443,6 +658,11 @@ function Create-GitHubRelease {
     
     if ($DryRun) {
         Write-Warning "Dry run - release não será criada"
+        return $true
+    }
+    
+    if (Test-StepCompleted "CreateGitHubRelease") {
+        Write-Info "Etapa já concluída - release já foi criada"
         return $true
     }
     
@@ -495,6 +715,7 @@ docker pull brunoleocam/zpl2pdf:$Version
         Write-Info "Crie manualmente em: https://github.com/$RepoOwner/$RepoName/releases/new"
     }
     
+    Save-Checkpoint "CreateGitHubRelease"
     return $true
 }
 
@@ -503,6 +724,11 @@ docker pull brunoleocam/zpl2pdf:$Version
 # ============================================================================
 function Update-WinGetManifests {
     Write-Step "9/12" "Atualizando manifests do WinGet..."
+    
+    if (Test-StepCompleted "UpdateWinGetManifests") {
+        Write-Info "Etapa já concluída - pulando atualização de manifests"
+        return $true
+    }
     
     Set-Location $ProjectRoot
     
@@ -532,6 +758,7 @@ function Update-WinGetManifests {
     }
     
     Write-Success "Manifests do WinGet atualizados!"
+    Save-Checkpoint "UpdateWinGetManifests"
     return $true
 }
 
@@ -548,6 +775,11 @@ function Submit-WinGetPR {
     
     if ($DryRun) {
         Write-Warning "Dry run - PR não será criado"
+        return $true
+    }
+    
+    if (Test-StepCompleted "SubmitWinGetPR") {
+        Write-Info "Etapa já concluída - PR já foi submetido"
         return $true
     }
     
@@ -608,6 +840,7 @@ function Submit-WinGetPR {
         }
     }
     
+    Save-Checkpoint "SubmitWinGetPR"
     return $true
 }
 
@@ -622,6 +855,11 @@ function Commit-Changes {
         return $true
     }
     
+    if (Test-StepCompleted "CommitChanges") {
+        Write-Info "Etapa já concluída - pulando commit"
+        return $true
+    }
+    
     Set-Location $ProjectRoot
     
     git add .
@@ -629,6 +867,7 @@ function Commit-Changes {
     git push origin HEAD 2>$null
     
     Write-Success "Alterações commitadas!"
+    Save-Checkpoint "CommitChanges"
     return $true
 }
 
@@ -669,6 +908,18 @@ function Main {
         Write-Warning "MODO DRY RUN - Nenhuma alteração será publicada"
     }
     
+    if ($Resume) {
+        $checkpoint = Get-Checkpoint
+        if ($checkpoint -and $checkpoint.Version -eq $Version) {
+            Write-Info "Modo RESUME ativado - continuando de onde parou"
+            Write-Info "Etapas já concluídas: $($checkpoint.CompletedSteps -join ', ')"
+            Write-Host ""
+        } else {
+            Write-Warning "Nenhum checkpoint encontrado para versão $Version. Executando do zero."
+            $Resume = $false
+        }
+    }
+    
     # Executar etapas
     if (-not (Test-Prerequisites)) { exit 1 }
     
@@ -697,6 +948,9 @@ function Main {
     Write-Host ""
     Write-Host "Release v$Version concluída com sucesso!" -ForegroundColor Green
     Write-Host ""
+    
+    # Limpar checkpoint ao finalizar com sucesso
+    Clear-Checkpoint
 }
 
 # Executar

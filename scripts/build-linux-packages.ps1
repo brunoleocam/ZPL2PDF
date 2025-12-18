@@ -2,7 +2,7 @@
 # Works on Windows with Docker Desktop
 
 param(
-    [string]$Version = "2.0.1",
+    [string]$Version = "3.0.0",
     [switch]$DebOnly,
     [switch]$RpmOnly
 )

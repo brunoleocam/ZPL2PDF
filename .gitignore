@@ -58,3 +58,6 @@ Desktop.ini
 # Test directories
 test-docker/
 test-*/
+
+# Release checkpoints
+.release-checkpoint-*.json
