@@ -27,6 +27,18 @@ namespace ZPL2PDF.Tests.Mocks
             return new List<byte[]> { GenerateMockPdfData(zplContent, explicitWidth, explicitHeight, unit, dpi) };
         }
 
+        public string? ExtractFileName(string zplContent)
+        {
+            // Mock implementation - delegates to actual LabelFileReader
+            return LabelFileReader.ExtractFileName(zplContent);
+        }
+
+        public string? ExtractForcedFileName(string zplContent)
+        {
+            // Mock implementation - delegates to actual LabelFileReader
+            return LabelFileReader.ExtractForcedFileName(zplContent);
+        }
+
         private byte[] GenerateMockPdfData(string zplContent, double width, double height, string unit, int dpi)
         {
             // Generate fake PDF data for testing

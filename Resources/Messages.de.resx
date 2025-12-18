@@ -155,7 +155,7 @@
     <value>Sie können auch Daemon-Optionen direkt übergeben: ZPL2PDF.exe -l "Ordner" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;eingabedatei_pfad&gt;       Pfad zur Eingabedatei .txt oder .prn</value>
+    <value>  -i &lt;eingabedatei_pfad&gt;       Pfad zur Eingabedatei (.txt, .prn, .zpl oder .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;zpl_inhalt&gt;           ZPL-Inhalt als Zeichenfolge</value>
@@ -264,5 +264,47 @@
   </data>
   <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
     <value>  --language &lt;sprache&gt;           Interface-Sprache (z.B. pt-BR, en-US, es-ES)</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;sprache&gt;      Sprache dauerhaft festlegen (setzt Umgebungsvariable)</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               Auf Systemstandard-Sprache zurücksetzen</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                Aktuelle Sprachkonfiguration anzeigen</value>
+  </data>
+  <data name="HELP_ADVANCED_OPTIONS" xml:space="preserve">
+    <value>ERWEITERTE OPTIONEN:</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;modus&gt;           Rendering-Engine: 'offline' (BinaryKits), 'labelary' (API), 'auto' (Fallback)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;ordner&gt;         Verzeichnis mit benutzerdefinierten TrueType-Schriften (.ttf, .otf)</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;ID=pfad&gt;             Bestimmte Schrift zuordnen (z.B. --font "A=C:\Fonts\arial.ttf")</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>TCP-SERVER-MODUS (Virtueller Drucker):</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Verwendung: ZPL2PDF.exe server start [Optionen] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_CMD_START" xml:space="preserve">
+    <value>  server start                TCP-Server starten (virtueller Drucker)</value>
+  </data>
+  <data name="HELP_TCP_CMD_STOP" xml:space="preserve">
+    <value>  server stop                 TCP-Server beenden</value>
+  </data>
+  <data name="HELP_TCP_CMD_STATUS" xml:space="preserve">
+    <value>  server status               TCP-Server-Status überprüfen</value>
+  </data>
+  <data name="HELP_TCP_OPT_PORT" xml:space="preserve">
+    <value>  --port &lt;port&gt;               TCP-Port zum Abhören (Standard: 9101)</value>
+  </data>
+  <data name="HELP_TCP_OPT_FOREGROUND" xml:space="preserve">
+    <value>  --foreground                Server im Vordergrund ausführen (nicht im Hintergrund)</value>
   </data>
 </root>

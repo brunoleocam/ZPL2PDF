@@ -12,7 +12,7 @@ namespace ZPL2PDF.Application.Services
         /// <summary>
         /// Valid file extensions for ZPL processing
         /// </summary>
-        private static readonly string[] ValidExtensions = { ".txt", ".prn" };
+        private static readonly string[] ValidExtensions = { ".txt", ".prn", ".zpl", ".imp" };
 
         /// <summary>
         /// Checks if the file is valid for processing

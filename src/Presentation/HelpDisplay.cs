@@ -20,6 +20,8 @@ namespace ZPL2PDF
             Console.WriteLine($"  {LocalizationManager.GetString(ResourceKeys.HELP_DEFAULT_DESCRIPTION)}");
             Console.WriteLine($"  {LocalizationManager.GetString(ResourceKeys.HELP_DAEMON_DIRECT_OPTIONS)}");
             Console.WriteLine();
+            
+            // Conversion Mode
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_CONVERSION_MODE));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_CONVERSION_USAGE));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAMETERS));
@@ -32,6 +34,8 @@ namespace ZPL2PDF
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_DENSITY));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_UNIT));
             Console.WriteLine();
+            
+            // Daemon Mode
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_DAEMON_MODE));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_DAEMON_USAGE));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_COMMANDS));
@@ -46,6 +50,28 @@ namespace ZPL2PDF
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_UNIT_DAEMON));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_DENSITY_DAEMON));
             Console.WriteLine();
+            
+            // TCP Server Mode
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_SERVER_MODE));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_SERVER_USAGE));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_COMMANDS));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_CMD_START));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_CMD_STOP));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_CMD_STATUS));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_DAEMON_OPTIONS));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_OPT_PORT));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_LISTEN_FOLDER));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_OPT_FOREGROUND));
+            Console.WriteLine();
+            
+            // Advanced Options
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_ADVANCED_OPTIONS));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_RENDERER));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_FONTS_DIR));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_FONT));
+            Console.WriteLine();
+            
+            // Language Options
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_LANGUAGE_PARAM));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_SET_LANGUAGE));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_RESET_LANGUAGE));

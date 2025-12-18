@@ -211,8 +211,22 @@ namespace ZPL2PDF
                     return false;
                 }
 
-                // Generate PDF
-                var outputFileName = Path.ChangeExtension(item.FileName, ".pdf");
+                // Try to extract custom file name from ZPL content (^FX FileName: syntax)
+                var customFileName = LabelFileReader.ExtractFileName(item.Content);
+                string outputFileName;
+                
+                if (!string.IsNullOrEmpty(customFileName))
+                {
+                    // Use custom file name from ZPL
+                    outputFileName = customFileName + ".pdf";
+                    Console.WriteLine($"Using custom file name from ZPL: {outputFileName}");
+                }
+                else
+                {
+                    // Use original file name with .pdf extension
+                    outputFileName = Path.ChangeExtension(item.FileName, ".pdf");
+                }
+                
                 var outputFolder = _customOutputFolder ?? Path.GetDirectoryName(item.FilePath)!;
                 var outputPath = Path.Combine(outputFolder, outputFileName);
                 

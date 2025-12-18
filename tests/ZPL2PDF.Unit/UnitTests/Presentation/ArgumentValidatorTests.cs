@@ -105,7 +105,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
 
             // Assert
             result.IsValid.Should().BeFalse();
-            result.ErrorMessage.Should().Contain("Input file must be .txt or .prn");
+            result.ErrorMessage.Should().Contain("Input file must be .txt, .prn, .zpl, or .imp");
         }
 
         [Fact]

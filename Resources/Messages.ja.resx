@@ -155,7 +155,7 @@
     <value>デーモンオプションを直接渡すこともできます: ZPL2PDF.exe -l "フォルダ" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;入力ファイルパス&gt;       入力.txtまたは.prnファイルへのパス</value>
+    <value>  -i &lt;入力ファイルパス&gt;       入力ファイルへのパス (.txt, .prn, .zpl, .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;zplコンテンツ&gt;          文字列としてのZPLコンテンツ</value>
@@ -264,5 +264,47 @@
   </data>
   <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
     <value>  --language &lt;言語&gt;           インターフェース言語（例：pt-BR、en-US、es-ES）</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;言語&gt;      言語を永続的に設定（環境変数を設定）</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               システムデフォルト言語にリセット</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                現在の言語設定を表示</value>
+  </data>
+  <data name="HELP_ADVANCED_OPTIONS" xml:space="preserve">
+    <value>高度なオプション:</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;モード&gt;         レンダリングエンジン: 'offline' (BinaryKits)、'labelary' (API)、'auto' (フォールバック)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;フォルダ&gt;      カスタムTrueTypeフォントのディレクトリ（.ttf、.otf）</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;ID=パス&gt;            特定のフォントをマップ（例：--font "A=C:\Fonts\arial.ttf"）</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>TCPサーバーモード（仮想プリンター）:</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>使用方法: ZPL2PDF.exe server start [オプション] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_CMD_START" xml:space="preserve">
+    <value>  server start                TCPサーバーを開始（仮想プリンター）</value>
+  </data>
+  <data name="HELP_TCP_CMD_STOP" xml:space="preserve">
+    <value>  server stop                 TCPサーバーを停止</value>
+  </data>
+  <data name="HELP_TCP_CMD_STATUS" xml:space="preserve">
+    <value>  server status               TCPサーバーのステータスを確認</value>
+  </data>
+  <data name="HELP_TCP_OPT_PORT" xml:space="preserve">
+    <value>  --port &lt;ポート&gt;             リッスンするTCPポート（デフォルト：9101）</value>
+  </data>
+  <data name="HELP_TCP_OPT_FOREGROUND" xml:space="preserve">
+    <value>  --foreground                フォアグラウンドでサーバーを実行（バックグラウンドではなく）</value>
   </data>
 </root>

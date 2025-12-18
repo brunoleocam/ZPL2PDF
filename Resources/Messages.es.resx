@@ -155,7 +155,7 @@
     <value>También puede pasar opciones del daemon directamente: ZPL2PDF.exe -l "carpeta" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;ruta_archivo_entrada&gt;       Ruta al archivo .txt o .prn de entrada</value>
+    <value>  -i &lt;ruta_archivo_entrada&gt;       Ruta al archivo de entrada (.txt, .prn, .zpl o .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;contenido_zpl&gt;           Contenido ZPL como cadena</value>
@@ -312,5 +312,38 @@
   </data>
   <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
     <value>Prioridad: 1) Parámetro --language, 2) Variable de entorno, 3) Archivo config, 4) Detección del sistema</value>
+  </data>
+  <data name="HELP_ADVANCED_OPTIONS" xml:space="preserve">
+    <value>OPCIONES AVANZADAS:</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;modo&gt;           Motor de renderizado: 'offline' (BinaryKits), 'labelary' (API), 'auto' (fallback)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;carpeta&gt;       Directorio con fuentes TrueType personalizadas (.ttf, .otf)</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;ID=ruta&gt;            Mapear fuente específica (ej: --font "A=C:\Fonts\arial.ttf")</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>MODO SERVIDOR TCP (Impresora Virtual):</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe server start [opciones] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_CMD_START" xml:space="preserve">
+    <value>  server start                Iniciar servidor TCP (impresora virtual)</value>
+  </data>
+  <data name="HELP_TCP_CMD_STOP" xml:space="preserve">
+    <value>  server stop                 Detener servidor TCP</value>
+  </data>
+  <data name="HELP_TCP_CMD_STATUS" xml:space="preserve">
+    <value>  server status               Verificar estado del servidor TCP</value>
+  </data>
+  <data name="HELP_TCP_OPT_PORT" xml:space="preserve">
+    <value>  --port &lt;puerto&gt;             Puerto TCP para escuchar (predeterminado: 9101)</value>
+  </data>
+  <data name="HELP_TCP_OPT_FOREGROUND" xml:space="preserve">
+    <value>  --foreground                Ejecutar servidor en primer plano (no en segundo plano)</value>
   </data>
 </root>

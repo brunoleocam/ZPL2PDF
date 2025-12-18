@@ -446,7 +446,7 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.ValueObjects
             var result = fileInfo.GetValidationError();
 
             // Assert
-            result.Should().Be("Invalid file extension: .doc. Valid extensions are: .txt, .prn");
+            result.Should().Be("Invalid file extension: .doc. Valid extensions are: .txt, .prn, .zpl, .imp");
         }
 
         #endregion

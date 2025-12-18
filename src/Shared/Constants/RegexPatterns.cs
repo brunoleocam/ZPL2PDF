@@ -38,7 +38,7 @@ namespace ZPL2PDF.Shared.Constants
         /// <summary>
         /// Pattern to match valid file extensions
         /// </summary>
-        public static readonly Regex ValidFileExtensionPattern = new Regex(@"\.(txt|prn)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex ValidFileExtensionPattern = new Regex(@"\.(txt|prn|zpl|imp)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         /// <summary>
         /// Pattern to match PDF file extension

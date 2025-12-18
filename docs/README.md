@@ -59,7 +59,6 @@ Documentation for contributors and developers:
 
 ### Internal Documentation
 - 🏗️ [Architecture Overview](development/ARCHITECTURE.md) *(Coming soon)*
-- 🧪 [Testing Strategy](../tests/ZPL2PDF.Unit/PLANO_TESTES.md)
 - 📚 [API Documentation](development/API.md) *(Coming soon)*
 
 ---

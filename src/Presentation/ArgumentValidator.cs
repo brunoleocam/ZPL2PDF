@@ -42,9 +42,10 @@ namespace ZPL2PDF
                 }
 
                 var extension = Path.GetExtension(inputFilePath).ToLowerInvariant();
-                if (extension != ".txt" && extension != ".prn")
+                var validExtensions = new[] { ".txt", ".prn", ".zpl", ".imp" };
+                if (!Array.Exists(validExtensions, ext => ext == extension))
                 {
-                    return (false, "Input file must be .txt or .prn");
+                    return (false, "Input file must be .txt, .prn, .zpl, or .imp");
                 }
             }
 
@@ -109,7 +110,7 @@ namespace ZPL2PDF
             // Check if any dimension parameter is explicitly specified (not default values)
             bool hasWidth = width > 0;
             bool hasHeight = height > 0;
-            bool hasUnit = !string.IsNullOrWhiteSpace(unit) && IsValidUnit(unit) && unit != "mm"; // "mm" is default
+            bool hasUnit = !string.IsNullOrWhiteSpace(unit) && IsValidUnit(unit); // "mm" is valid and can be explicit
 
             // Check if any dimension is specified - only consider it specified if width OR height is > 0
             if (hasWidth || hasHeight)

@@ -97,7 +97,7 @@ namespace ZPL2PDF
                 Console.WriteLine($"Polling timer started (interval: {_pollingIntervalMs}ms)");
 
                 Console.WriteLine($"Monitoring folder: {_listenFolder}");
-                Console.WriteLine($"File types: .txt, .prn");
+                Console.WriteLine($"File types: .txt, .prn, .zpl, .imp");
                 Console.WriteLine($"Dimensions: {(_useFixedDimensions ? "Fixed" : "Extracted from ZPL")}");
                 
                 if (_useFixedDimensions)
@@ -376,7 +376,8 @@ namespace ZPL2PDF
         private bool IsValidFile(string filePath)
         {
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            return extension == ".txt" || extension == ".prn";
+            var validExtensions = new[] { ".txt", ".prn", ".zpl", ".imp" };
+            return Array.Exists(validExtensions, ext => ext == extension);
         }
 
         /// <summary>

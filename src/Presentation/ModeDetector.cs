@@ -28,6 +28,12 @@ namespace ZPL2PDF
 
             string firstArg = args[0].ToLowerInvariant();
             
+            // Check for TCP server mode
+            if (firstArg == "server")
+            {
+                return OperationMode.TcpServer;
+            }
+
             // Check for explicit daemon commands
             if (firstArg == "start" || firstArg == "stop" || firstArg == "status" || firstArg == "run")
             {

@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.6.0.schema.json
 
 PackageIdentifier: brunoleocam.ZPL2PDF
-PackageVersion: 2.0.1
+PackageVersion: 3.0.0
 PackageLocale: fr-FR
 Publisher: Bruno Campos
 PublisherUrl: https://github.com/brunoleocam

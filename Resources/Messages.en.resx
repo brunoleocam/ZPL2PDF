@@ -155,7 +155,7 @@
     <value>You can also pass daemon options directly: ZPL2PDF.exe -l "folder" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;input_file_path&gt;       Path to the input .txt or .prn file</value>
+    <value>  -i &lt;input_file_path&gt;       Path to the input file (.txt, .prn, .zpl, or .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;zpl_content&gt;           ZPL content as a string</value>
@@ -315,5 +315,38 @@
   </data>
   <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
     <value>Priority: 1) --language param, 2) Environment variable, 3) Config file, 4) System detection</value>
+  </data>
+  <data name="HELP_ADVANCED_OPTIONS" xml:space="preserve">
+    <value>ADVANCED OPTIONS:</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;mode&gt;           Rendering engine: 'offline' (BinaryKits), 'labelary' (API), 'auto' (fallback)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;folder&gt;        Directory with custom TrueType fonts (.ttf, .otf)</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;ID=path&gt;            Map specific font (e.g., --font "A=C:\Fonts\arial.ttf")</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>TCP SERVER MODE (Virtual Printer):</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Usage: ZPL2PDF.exe server start [options] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_CMD_START" xml:space="preserve">
+    <value>  server start                Start TCP server (virtual printer)</value>
+  </data>
+  <data name="HELP_TCP_CMD_STOP" xml:space="preserve">
+    <value>  server stop                 Stop TCP server</value>
+  </data>
+  <data name="HELP_TCP_CMD_STATUS" xml:space="preserve">
+    <value>  server status               Check TCP server status</value>
+  </data>
+  <data name="HELP_TCP_OPT_PORT" xml:space="preserve">
+    <value>  --port &lt;port&gt;               TCP port to listen on (default: 9101)</value>
+  </data>
+  <data name="HELP_TCP_OPT_FOREGROUND" xml:space="preserve">
+    <value>  --foreground                Run server in foreground (not background)</value>
   </data>
 </root>

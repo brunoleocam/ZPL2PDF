@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using ZPL2PDF.Shared.Constants;
 using ZPL2PDF.Shared.Localization;
+using ZPL2PDF.Infrastructure.Rendering;
 
 namespace ZPL2PDF
 {
@@ -18,6 +20,10 @@ namespace ZPL2PDF
         /// Daemon mode - monitors folder and converts automatically.
         /// </summary>
         Daemon,
+        /// <summary>
+        /// TCP Server mode - acts as virtual printer on TCP port.
+        /// </summary>
+        TcpServer,
         /// <summary>
         /// Help mode - shows help message and exits.
         /// </summary>
@@ -54,6 +60,16 @@ namespace ZPL2PDF
         /// Gets the daemon command (start, stop, status).
         /// </summary>
         public string DaemonCommand { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the TCP server command (start, stop, status).
+        /// </summary>
+        public string TcpServerCommand { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the TCP server arguments.
+        /// </summary>
+        public TcpServerArguments TcpServerArgs { get; private set; } = new TcpServerArguments();
 
         /// <summary>
         /// Gets the listen folder path for daemon mode.
@@ -101,6 +117,21 @@ namespace ZPL2PDF
         public int Dpi { get; set; } = 203;
 
         /// <summary>
+        /// Gets or sets the renderer mode (offline, labelary, auto).
+        /// </summary>
+        public RendererMode RendererMode { get; set; } = RendererMode.Offline;
+
+        /// <summary>
+        /// Gets or sets the fonts directory path.
+        /// </summary>
+        public string? FontsDirectory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of font mappings (e.g., "A=C:\Fonts\Arial.ttf").
+        /// </summary>
+        public List<string> FontMappings { get; set; } = new List<string>();
+
+        /// <summary>
         /// Processes the command line arguments.
         /// </summary>
         /// <param name="args">Array of command line arguments.</param>
@@ -144,6 +175,10 @@ namespace ZPL2PDF
             {
                 ProcessDaemonMode(args);
             }
+            else if (Mode == OperationMode.TcpServer)
+            {
+                ProcessTcpServerMode(args);
+            }
         }
 
         /// <summary>
@@ -162,6 +197,9 @@ namespace ZPL2PDF
             Height = conversionArgs.Height;
             Unit = conversionArgs.Unit;
             Dpi = conversionArgs.Dpi;
+            RendererMode = conversionArgs.RendererMode;
+            FontsDirectory = conversionArgs.FontsDirectory;
+            FontMappings = conversionArgs.FontMappings;
 
             // Validate arguments
             var validation = _validator.ValidateConversionMode(InputFilePath, ZplContent, OutputFolderPath, Width, Height, Unit);
@@ -255,6 +293,103 @@ namespace ZPL2PDF
         {
             // Daemon status logic will be handled by DaemonManager
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.CHECKING_DAEMON_STATUS));
+        }
+
+        /// <summary>
+        /// Processes TCP server mode arguments
+        /// </summary>
+        private void ProcessTcpServerMode(string[] args)
+        {
+            // Extract command (start, stop, status)
+            TcpServerCommand = "start"; // default
+            int startIndex = 1; // skip "server"
+
+            if (args.Length > 1)
+            {
+                var possibleCommand = args[1].ToLowerInvariant();
+                if (possibleCommand == "start" || possibleCommand == "stop" || possibleCommand == "status")
+                {
+                    TcpServerCommand = possibleCommand;
+                    startIndex = 2;
+                }
+            }
+
+            // Parse remaining arguments
+            TcpServerArgs = ParseTcpServerArgs(args, startIndex);
+        }
+
+        /// <summary>
+        /// Parses TCP server arguments
+        /// </summary>
+        private TcpServerArguments ParseTcpServerArgs(string[] args, int startIndex)
+        {
+            var result = new TcpServerArguments();
+
+            for (int i = startIndex; i < args.Length; i++)
+            {
+                string arg = args[i].ToLowerInvariant();
+
+                switch (arg)
+                {
+                    case "--port":
+                    case "-p":
+                        if (i + 1 < args.Length && int.TryParse(args[i + 1], out int port))
+                        {
+                            result.Port = port;
+                            i++;
+                        }
+                        break;
+
+                    case "--output":
+                    case "-o":
+                        if (i + 1 < args.Length)
+                        {
+                            result.OutputDirectory = args[i + 1];
+                            i++;
+                        }
+                        break;
+
+                    case "--renderer":
+                    case "-r":
+                        if (i + 1 < args.Length)
+                        {
+                            result.RendererMode = RendererFactory.ParseMode(args[i + 1]);
+                            i++;
+                        }
+                        break;
+
+                    case "-w":
+                        if (i + 1 < args.Length && _validator.TryParseDouble(args[i + 1], out double width))
+                        {
+                            result.WidthMm = width;
+                            i++;
+                        }
+                        break;
+
+                    case "-h":
+                        if (i + 1 < args.Length && _validator.TryParseDouble(args[i + 1], out double height))
+                        {
+                            result.HeightMm = height;
+                            i++;
+                        }
+                        break;
+
+                    case "-d":
+                        if (i + 1 < args.Length && int.TryParse(args[i + 1], out int dpi))
+                        {
+                            result.Dpi = dpi;
+                            i++;
+                        }
+                        break;
+
+                    case "--foreground":
+                    case "-f":
+                        result.Background = false;
+                        break;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

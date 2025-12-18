@@ -1,0 +1,97 @@
+{
+  "defaultFontsDirectory": null,
+  "defaultFontId": "0",
+  "fontMappings": {
+    "0": {
+      "zplFontId": "0",
+      "name": "Font 0 (Default)",
+      "fontFile": "DejaVuSansMono.ttf",
+      "style": "Regular",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": true
+    },
+    "A": {
+      "zplFontId": "A",
+      "name": "CG Triumvirate Bold Condensed",
+      "fontFile": "LiberationSansNarrow-Bold.ttf",
+      "style": "Bold",
+      "widthFactor": 0.85,
+      "heightFactor": 1.0,
+      "isBitmapStyle": false
+    },
+    "B": {
+      "zplFontId": "B",
+      "name": "CG Triumvirate",
+      "fontFile": "LiberationSans-Regular.ttf",
+      "style": "Regular",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": false
+    },
+    "C": {
+      "zplFontId": "C",
+      "name": "OCR-B",
+      "fontFile": "OCRB.ttf",
+      "style": "Regular",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": true
+    },
+    "D": {
+      "zplFontId": "D",
+      "name": "CG Triumvirate Bold",
+      "fontFile": "LiberationSans-Bold.ttf",
+      "style": "Bold",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": false
+    },
+    "P": {
+      "zplFontId": "P",
+      "name": "OCR-A",
+      "fontFile": "OCRA.ttf",
+      "style": "Regular",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": true
+    },
+    "Q": {
+      "zplFontId": "Q",
+      "name": "MICR E-13B",
+      "fontFile": "MICRE13B.ttf",
+      "style": "Regular",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": true
+    },
+    "R": {
+      "zplFontId": "R",
+      "name": "CG Triumvirate",
+      "fontFile": "LiberationSans-Regular.ttf",
+      "style": "Regular",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": false
+    },
+    "T": {
+      "zplFontId": "T",
+      "name": "CG Triumvirate Bold",
+      "fontFile": "LiberationSans-Bold.ttf",
+      "style": "Bold",
+      "widthFactor": 1.0,
+      "heightFactor": 1.0,
+      "isBitmapStyle": false
+    },
+    "U": {
+      "zplFontId": "U",
+      "name": "CG Triumvirate Bold Condensed",
+      "fontFile": "LiberationSansNarrow-Bold.ttf",
+      "style": "Bold",
+      "widthFactor": 0.85,
+      "heightFactor": 1.0,
+      "isBitmapStyle": false
+    }
+  }
+}
+

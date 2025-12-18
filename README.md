@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -16,13 +16,30 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v2.0.1**
+## 🚀 **What's New in v3.0.0**
 
-- 🐛 **Docker/Linux CLI Fix** - Fixed font rendering issues on Alpine Linux and Amazon Linux
-- 🐛 **ZPL `^FN` Tag Fix** - Fixed Field Number tags not rendering when followed by `^FD`
-- 🔧 **WinGet Upgrade Fix** - Fixed ProductCode for proper `winget upgrade` detection
+### 🎉 Major New Features
+- 🎨 **Labelary API Integration** - High-fidelity ZPL rendering with vector PDF output
+- 🖨️ **TCP Server Mode** - Virtual Zebra printer on TCP port (default: 9101)
+- 🔤 **Custom Fonts** - Load TrueType/OpenType fonts with `--fonts-dir` and `--font`
+- 📁 **Extended File Support** - Added `.zpl` and `.imp` file extensions
+- 📝 **Custom Naming** - Set output filename via `^FX FileName:` in ZPL
 
-### v2.0 Features
+### 🔧 Rendering Options
+```bash
+--renderer offline    # BinaryKits (default, works offline)
+--renderer labelary   # Labelary API (high-fidelity, requires internet)
+--renderer auto       # Try Labelary, fallback to BinaryKits
+```
+
+### 🖨️ TCP Server (Virtual Printer)
+```bash
+ZPL2PDF server start --port 9101 -o output/
+ZPL2PDF server status
+ZPL2PDF server stop
+```
+
+### v2.x Features (Still Available)
 - 🌍 **Multi-language Support** - 8 languages (EN, PT, ES, FR, DE, IT, JA, ZH)
 - 🔄 **Daemon Mode** - Automatic folder monitoring and batch conversion
 - 🏗️ **Clean Architecture** - Completely refactored with SOLID principles
@@ -36,7 +53,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ## ✨ **Key Features**
 
-### 🎯 **Dual Operation Modes**
+### 🎯 **Three Operation Modes**
 
 #### **Conversion Mode** - Convert individual files
 ```bash
@@ -46,6 +63,11 @@ ZPL2PDF -i label.txt -o output/ -n mylabel.pdf
 #### **Daemon Mode** - Auto-monitor folders
 ```bash
 ZPL2PDF start -l "C:\Labels"
+```
+
+#### **TCP Server Mode** - Virtual printer
+```bash
+ZPL2PDF server start --port 9101 -o output/
 ```
 
 ### 📐 **Intelligent Dimension Handling**
@@ -203,7 +225,7 @@ ZPL2PDF -z <zpl_content> -o <output_folder> [options]
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
-| `-i <file>` | Input ZPL file (.txt or .prn) | `-i label.txt` |
+| `-i <file>` | Input ZPL file (.txt, .prn, .zpl, .imp) | `-i label.zpl` |
 | `-z <content>` | ZPL content as string | `-z "^XA...^XZ"` |
 | `-o <folder>` | Output folder for PDF | `-o C:\Output` |
 | `-n <name>` | Output PDF filename (optional) | `-n result.pdf` |
@@ -211,6 +233,9 @@ ZPL2PDF -z <zpl_content> -o <output_folder> [options]
 | `-h <height>` | Label height | `-h 5` |
 | `-u <unit>` | Unit (mm, cm, in) | `-u cm` |
 | `-d <dpi>` | Print density (default: 203) | `-d 300` |
+| `--renderer` | Rendering engine (offline/labelary/auto) | `--renderer labelary` |
+| `--fonts-dir` | Custom fonts directory | `--fonts-dir C:\Fonts` |
+| `--font` | Map specific font | `--font "A=arial.ttf"` |
 
 ### **Daemon Mode Commands**
 
@@ -229,6 +254,21 @@ ZPL2PDF run [options]      # Run daemon in foreground (testing)
 | `-u <unit>` | Unit of measurement | `mm` |
 | `-d <dpi>` | Print density | `203` |
 
+### **TCP Server Commands**
+
+```bash
+ZPL2PDF server start [options]    # Start TCP server (virtual printer)
+ZPL2PDF server stop               # Stop TCP server
+ZPL2PDF server status             # Check TCP server status
+```
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--port <port>` | TCP port to listen on | `9101` |
+| `-o <folder>` | Output folder for PDFs | `Documents/ZPL2PDF TCP Output` |
+| `--foreground` | Run in foreground (not background) | Background |
+| `--renderer` | Rendering engine | `offline` |
+
 ### **Language Commands**
 
 ```bash
@@ -237,6 +277,34 @@ ZPL2PDF run [options]      # Run daemon in foreground (testing)
 --reset-language            # Reset to system default
 --show-language             # Show current configuration
 ```
+
+---
+
+## 🎨 **Rendering Engines**
+
+### **Offline (BinaryKits)** - Default
+```bash
+ZPL2PDF -i label.txt -o output/ --renderer offline
+```
+- ✅ Works without internet
+- ✅ Fast processing
+- ⚠️ Some ZPL commands may render differently
+
+### **Labelary (API)** - High Fidelity
+```bash
+ZPL2PDF -i label.txt -o output/ --renderer labelary
+```
+- ✅ Exact Zebra printer emulation
+- ✅ Vector PDF output (smaller files)
+- ✅ Automatic batching for 50+ labels
+- ⚠️ Requires internet connection
+
+### **Auto (Fallback)**
+```bash
+ZPL2PDF -i label.txt -o output/ --renderer auto
+```
+- ✅ Tries Labelary first
+- ✅ Falls back to BinaryKits if offline
 
 ---
 
@@ -325,6 +393,8 @@ See [zpl2pdf.json.example](zpl2pdf.json.example) for full configuration options.
 - ✅ `^XA` / `^XZ` - Label start/end
 - ✅ `^PW<width>` - Print width in points
 - ✅ `^LL<length>` - Label length in points
+- ✅ `^FX FileName:` - Custom output filename
+- ✅ `^FX !FileName:` - Forced output filename (overrides `-n`)
 - ✅ All standard ZPL text, graphics, and barcode commands
 
 ### **Dimension Extraction**

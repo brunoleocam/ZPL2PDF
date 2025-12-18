@@ -10,13 +10,13 @@ namespace ZPL2PDF.Shared.Constants
     {
         #region Application Information
         public const string APPLICATION_NAME = "ZPL2PDF";
-        public const string APPLICATION_VERSION = "2.0.1";
+        public const string APPLICATION_VERSION = "3.0.0";
         public const string APPLICATION_DESCRIPTION = "ZPL to PDF Converter";
         #endregion
 
         #region File Extensions
-        public static readonly string[] VALID_FILE_EXTENSIONS = { ".txt", ".prn" };
-        public const string DEFAULT_FILE_FILTER = "*.txt;*.prn";
+        public static readonly string[] VALID_FILE_EXTENSIONS = { ".txt", ".prn", ".zpl", ".imp" };
+        public const string DEFAULT_FILE_FILTER = "*.txt;*.prn;*.zpl;*.imp";
         public const string PDF_EXTENSION = ".pdf";
         public const string CONFIG_EXTENSION = ".json";
         public const string PID_EXTENSION = ".pid";

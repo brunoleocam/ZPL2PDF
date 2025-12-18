@@ -58,3 +58,8 @@ Desktop.ini
 # Test directories
 test-docker/
 test-*/
+
+# Documentation files (internal/research)
+docs/LABELARY_API.md
+docs/ROADMAP.md
+docs/zebra-fonts-research.md

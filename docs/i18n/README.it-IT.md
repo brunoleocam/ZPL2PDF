@@ -1,20 +1,43 @@
 # ZPL2PDF - Convertitore da ZPL a PDF
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![Docker](https://img.shields.io/badge/docker-Alpine%20470MB-blue.svg)](https://hub.docker.com/r/brunoleocam/zpl2pdf)
+[![WinGet](https://img.shields.io/badge/winget-brunoleocam.ZPL2PDF-blue)](https://github.com/microsoft/winget-pkgs/tree/master/manifests/b/brunoleocam/ZPL2PDF)
 
-**[English](../../README.md)** | **[Português-BR](README.pt-BR.md)** | **[Español](README.es-ES.md)** | **[Français](README.fr-FR.md)** | **[Deutsch](README.de-DE.md)** | **[Italiano](#)**
+**[English](../../README.md)** | **[Português-BR](README.pt-BR.md)** | **[Español](README.es-ES.md)** | **[Français](README.fr-FR.md)** | **[Deutsch](README.de-DE.md)** | **[Italiano](#)** | **[日本語](README.ja-JP.md)** | **[中文](README.zh-CN.md)**
 
 Un potente strumento da riga di comando multipiattaforma che converte file ZPL (Zebra Programming Language) in documenti PDF di alta qualità. Perfetto per flussi di lavoro di stampa etichette, generazione automatica di documenti e sistemi di gestione etichette aziendali.
 
 ---
 
-## 🚀 **Novità nella v2.0**
+## 🚀 **Novità nella v3.0.0**
 
+### 🎉 Principali Nuove Funzionalità
+- 🎨 **Integrazione API Labelary** - Rendering ZPL ad alta fedeltà con output PDF vettoriale
+- 🖨️ **Modalità Server TCP** - Stampante Zebra virtuale su porta TCP (predefinito: 9101)
+- 🔤 **Font Personalizzati** - Carica font TrueType/OpenType con `--fonts-dir` e `--font`
+- 📁 **Supporto File Esteso** - Aggiunte estensioni `.zpl` e `.imp`
+- 📝 **Denominazione Personalizzata** - Imposta il nome del file di output tramite `^FX FileName:` in ZPL
+
+### 🔧 Opzioni di Rendering
+```bash
+--renderer offline    # BinaryKits (predefinito, funziona offline)
+--renderer labelary   # API Labelary (alta fedeltà, richiede internet)
+--renderer auto       # Prova Labelary, fallback su BinaryKits
+```
+
+### 🖨️ Server TCP (Stampante Virtuale)
+```bash
+ZPL2PDF server start --port 9101 -o output/
+ZPL2PDF server status
+ZPL2PDF server stop
+```
+
+### Funzionalità v2.x (Ancora Disponibili)
 - 🌍 **Supporto Multi-lingua** - 8 lingue (EN, PT, ES, FR, DE, IT, JA, ZH)
 - 🔄 **Modalità Daemon** - Monitoraggio automatico delle cartelle e conversione batch
 - 🏗️ **Architettura Pulita** - Completamente rifattorizzato con principi SOLID
@@ -23,6 +46,48 @@ Un potente strumento da riga di comando multipiattaforma che converte file ZPL (
 - ⚡ **Alte Prestazioni** - Elaborazione asincrona con meccanismi di retry
 - 🐳 **Supporto Docker** - Ottimizzato per Alpine Linux (470MB)
 - 📦 **Installer Professionale** - Installer Windows con configurazione multi-lingua
+
+---
+
+## ✨ **Funzionalità Principali**
+
+### 🎯 **Tre Modalità di Operazione**
+
+#### **Modalità Conversione** - Convertire file singoli
+```bash
+ZPL2PDF -i etichetta.txt -o cartella_output/ -n mia_etichetta.pdf
+```
+
+#### **Modalità Daemon** - Monitoraggio automatico cartelle
+```bash
+ZPL2PDF start -l "C:\Etichette"
+```
+
+#### **Modalità Server TCP** - Stampante virtuale
+```bash
+ZPL2PDF server start --port 9101 -o cartella_output/
+```
+
+### 📐 **Gestione Intelligente delle Dimensioni**
+
+- ✅ Estrarre dimensioni dai comandi ZPL (`^PW`, `^LL`)
+- ✅ Supporto per più unità (mm, cm, pollici, punti)
+- ✅ Fallback automatico a valori predefiniti sensati
+- ✅ Risoluzione delle dimensioni basata su priorità
+
+### 🌍 **Interfaccia Multi-lingua**
+
+Imposta la tua lingua preferita:
+```bash
+# Temporaneo (sessione corrente)
+ZPL2PDF --language it-IT status
+
+# Permanente (tutte le sessioni)
+ZPL2PDF --set-language it-IT
+
+# Vedere la configurazione
+ZPL2PDF --show-language
+```
 
 ---
 
@@ -36,7 +101,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### Opzione 2: Installer
-1. Scaricare [ZPL2PDF-Setup-2.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+1. Scaricare [ZPL2PDF-Setup-3.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
 2. Eseguire l'installer
 3. Scegliere la lingua durante l'installazione
 4. Fatto! ✅
@@ -46,31 +111,13 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (pacchetto .deb)
 ```bash
 # Scaricare il pacchetto .deb
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.0/ZPL2PDF-v3.0.0-linux-amd64.deb
 
 # Installare il pacchetto
-sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.0.0-linux-amd64.deb
 
 # Correggere le dipendenze se necessario
 sudo apt-get install -f
-
-# Verificare l'installazione
-zpl2pdf --help
-```
-
-#### Fedora/CentOS/RHEL (.tar.gz)
-```bash
-# Scaricare l'archivio
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
-
-# Estrarre nel sistema
-sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
-
-# Rendere eseguibile
-sudo chmod +x /usr/bin/ZPL2PDF
-
-# Creare link simbolico
-sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
 
 # Verificare l'installazione
 zpl2pdf --help
@@ -92,6 +139,11 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 ZPL2PDF -i etichetta.txt -o cartella_output -n mia_etichetta.pdf
 ```
 
+### **Convertire con Labelary (Alta Fedeltà)**
+```bash
+ZPL2PDF -i etichetta.txt -o cartella_output --renderer labelary
+```
+
 ### **Modalità Daemon (Auto-Conversione)**
 ```bash
 # Avviare con configurazione predefinita
@@ -107,25 +159,73 @@ ZPL2PDF status
 ZPL2PDF stop
 ```
 
-### **Configurare la Lingua**
+---
+
+## 📖 **Guida all'Uso**
+
+### **Parametri della Modalità Conversione**
+
+| Parametro | Descrizione | Esempio |
+|-----------|-------------|---------|
+| `-i <file>` | File ZPL di input (.txt, .prn, .zpl, .imp) | `-i etichetta.zpl` |
+| `-z <contenuto>` | Contenuto ZPL come stringa | `-z "^XA...^XZ"` |
+| `-o <cartella>` | Cartella di output per PDF | `-o C:\Output` |
+| `-n <nome>` | Nome del file PDF di output | `-n risultato.pdf` |
+| `-w <larghezza>` | Larghezza dell'etichetta | `-w 10` |
+| `-h <altezza>` | Altezza dell'etichetta | `-h 5` |
+| `-u <unità>` | Unità (mm, cm, in) | `-u cm` |
+| `-d <dpi>` | Densità di stampa (predefinito: 203) | `-d 300` |
+| `--renderer` | Motore di rendering (offline/labelary/auto) | `--renderer labelary` |
+| `--fonts-dir` | Directory font personalizzati | `--fonts-dir C:\Font` |
+| `--font` | Mappare font specifico | `--font "A=arial.ttf"` |
+
+### **Comandi Server TCP**
+
 ```bash
-# Temporaneo (sessione corrente)
-ZPL2PDF --language it-IT status
-
-# Permanente (tutte le sessioni)
-ZPL2PDF --set-language it-IT
-
-# Vedere la configurazione
-ZPL2PDF --show-language
+ZPL2PDF server start [opzioni]    # Avviare server TCP (stampante virtuale)
+ZPL2PDF server stop               # Fermare server TCP
+ZPL2PDF server status             # Verificare stato server TCP
 ```
+
+---
+
+## 🎨 **Motori di Rendering**
+
+### **Offline (BinaryKits)** - Predefinito
+- ✅ Funziona senza internet
+- ✅ Elaborazione veloce
+- ⚠️ Alcuni comandi ZPL potrebbero essere renderizzati diversamente
+
+### **Labelary (API)** - Alta Fedeltà
+- ✅ Emulazione esatta stampante Zebra
+- ✅ Output PDF vettoriale (file più piccoli)
+- ✅ Batching automatico per 50+ etichette
+- ⚠️ Richiede connessione internet
+
+### **Auto (Fallback)**
+- ✅ Prova prima Labelary
+- ✅ Fallback su BinaryKits se offline
+
+---
+
+## 📐 **Supporto ZPL**
+
+### **Comandi Supportati**
+
+- ✅ `^XA` / `^XZ` - Inizio/fine etichetta
+- ✅ `^PW<larghezza>` - Larghezza di stampa in punti
+- ✅ `^LL<lunghezza>` - Lunghezza dell'etichetta in punti
+- ✅ `^FX FileName:` - Nome personalizzato del file di output
+- ✅ `^FX !FileName:` - Nome forzato del file (sovrascrive `-n`)
+- ✅ Tutti i comandi ZPL standard per testo, grafica e codici a barre
 
 ---
 
 ## 📚 **Documentazione**
 
 - 📖 [Documentazione Completa](../README.md)
-- 🌍 [Configurazione Multi-lingua](../guides/LANGUAGE_CONFIGURATION.md)
-- 🐳 [Guida Docker](../guides/DOCKER_GUIDE.md)
+- 🌍 [Configurazione Multi-lingua](../LANGUAGE_CONFIGURATION.md)
+- 🐳 [Guida Docker](../DOCKER_GUIDE.md)
 - 🛠️ [Guida al Contributo](../../CONTRIBUTING.md)
 - 📋 [Registro delle Modifiche](../../CHANGELOG.md)
 
@@ -154,4 +254,3 @@ Grazie a tutti i contributori che hanno aiutato a migliorare ZPL2PDF!
 ---
 
 **ZPL2PDF** - Converti etichette ZPL in PDF facilmente ed efficientemente.
-

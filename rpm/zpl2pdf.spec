@@ -1,5 +1,5 @@
 Name:           zpl2pdf
-Version:        2.0.1
+Version: 3.0.0
 Release:        1%{?dist}
 Summary:        ZPL to PDF Converter
 

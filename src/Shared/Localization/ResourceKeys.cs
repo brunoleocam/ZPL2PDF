@@ -100,6 +100,21 @@ namespace ZPL2PDF.Shared.Localization
         public const string CURRENT_ZPL2PDF_CONFIGURATION = "CURRENT_ZPL2PDF_CONFIGURATION";
         public const string MONITORING_FOLDER_CONFIG = "MONITORING_FOLDER_CONFIG";
         
+        // Advanced options
+        public const string HELP_ADVANCED_OPTIONS = "HELP_ADVANCED_OPTIONS";
+        public const string HELP_PARAM_RENDERER = "HELP_PARAM_RENDERER";
+        public const string HELP_PARAM_FONTS_DIR = "HELP_PARAM_FONTS_DIR";
+        public const string HELP_PARAM_FONT = "HELP_PARAM_FONT";
+        
+        // TCP Server mode
+        public const string HELP_TCP_SERVER_MODE = "HELP_TCP_SERVER_MODE";
+        public const string HELP_TCP_SERVER_USAGE = "HELP_TCP_SERVER_USAGE";
+        public const string HELP_TCP_CMD_START = "HELP_TCP_CMD_START";
+        public const string HELP_TCP_CMD_STOP = "HELP_TCP_CMD_STOP";
+        public const string HELP_TCP_CMD_STATUS = "HELP_TCP_CMD_STATUS";
+        public const string HELP_TCP_OPT_PORT = "HELP_TCP_OPT_PORT";
+        public const string HELP_TCP_OPT_FOREGROUND = "HELP_TCP_OPT_FOREGROUND";
+        
         // Language configuration commands
         public const string HELP_SET_LANGUAGE = "HELP_SET_LANGUAGE";
         public const string HELP_RESET_LANGUAGE = "HELP_RESET_LANGUAGE";

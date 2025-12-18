@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using ZPL2PDF.Infrastructure.Rendering;
 
 namespace ZPL2PDF
 {
@@ -91,6 +93,28 @@ namespace ZPL2PDF
                             i++; // Skip next argument as it's the value
                         }
                         break;
+                    case "--renderer":
+                    case "-r":
+                        if (i + 1 < args.Length)
+                        {
+                            result.RendererMode = RendererFactory.ParseMode(args[i + 1]);
+                            i++; // Skip next argument as it's the value
+                        }
+                        break;
+                    case "--fonts-dir":
+                        if (i + 1 < args.Length)
+                        {
+                            result.FontsDirectory = args[i + 1];
+                            i++; // Skip next argument as it's the value
+                        }
+                        break;
+                    case "--font":
+                        if (i + 1 < args.Length)
+                        {
+                            result.FontMappings.Add(args[i + 1]);
+                            i++; // Skip next argument as it's the value
+                        }
+                        break;
                 }
             }
 
@@ -159,9 +183,31 @@ namespace ZPL2PDF
                         }
                         break;
                     case "-d":
-                        if (i + 1 < args.Length && int.TryParse(args[i + 1], out int dpi))
+                        if (i + 1 < args.Length && int.TryParse(args[i + 1], out int daemonDpi))
                         {
-                            result.Dpi = dpi;
+                            result.Dpi = daemonDpi;
+                            i++; // Skip next argument as it's the value
+                        }
+                        break;
+                    case "--renderer":
+                    case "-r":
+                        if (i + 1 < args.Length)
+                        {
+                            result.RendererMode = RendererFactory.ParseMode(args[i + 1]);
+                            i++; // Skip next argument as it's the value
+                        }
+                        break;
+                    case "--fonts-dir":
+                        if (i + 1 < args.Length)
+                        {
+                            result.FontsDirectory = args[i + 1];
+                            i++; // Skip next argument as it's the value
+                        }
+                        break;
+                    case "--font":
+                        if (i + 1 < args.Length)
+                        {
+                            result.FontMappings.Add(args[i + 1]);
                             i++; // Skip next argument as it's the value
                         }
                         break;
@@ -212,6 +258,9 @@ namespace ZPL2PDF
         public double Height { get; set; } = 0;
         public string Unit { get; set; } = "mm";
         public int Dpi { get; set; } = 203;
+        public RendererMode RendererMode { get; set; } = RendererMode.Offline;
+        public string? FontsDirectory { get; set; }
+        public List<string> FontMappings { get; set; } = new List<string>();
     }
 
     /// <summary>
@@ -224,5 +273,8 @@ namespace ZPL2PDF
         public double Height { get; set; } = 0;
         public string Unit { get; set; } = "mm";
         public int Dpi { get; set; } = 203;
+        public RendererMode RendererMode { get; set; } = RendererMode.Offline;
+        public string? FontsDirectory { get; set; }
+        public List<string> FontMappings { get; set; } = new List<string>();
     }
 }

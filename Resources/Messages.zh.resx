@@ -155,7 +155,7 @@
     <value>您也可以直接传递守护进程选项: ZPL2PDF.exe -l "文件夹" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;输入文件路径&gt;       输入.txt或.prn文件的路径</value>
+    <value>  -i &lt;输入文件路径&gt;       输入文件路径 (.txt, .prn, .zpl, .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;zpl内容&gt;           ZPL内容作为字符串</value>
@@ -264,5 +264,47 @@
   </data>
   <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
     <value>  --language &lt;语言&gt;           界面语言（例如：pt-BR、en-US、es-ES）</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;语言&gt;      永久设置语言（设置环境变量）</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               重置为系统默认语言</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                显示当前语言配置</value>
+  </data>
+  <data name="HELP_ADVANCED_OPTIONS" xml:space="preserve">
+    <value>高级选项:</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;模式&gt;           渲染引擎：'offline'（BinaryKits）、'labelary'（API）、'auto'（回退）</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;文件夹&gt;        包含自定义TrueType字体的目录（.ttf、.otf）</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;ID=路径&gt;            映射特定字体（例如：--font "A=C:\Fonts\arial.ttf"）</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>TCP服务器模式（虚拟打印机）:</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>用法: ZPL2PDF.exe server start [选项] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_CMD_START" xml:space="preserve">
+    <value>  server start                启动TCP服务器（虚拟打印机）</value>
+  </data>
+  <data name="HELP_TCP_CMD_STOP" xml:space="preserve">
+    <value>  server stop                 停止TCP服务器</value>
+  </data>
+  <data name="HELP_TCP_CMD_STATUS" xml:space="preserve">
+    <value>  server status               检查TCP服务器状态</value>
+  </data>
+  <data name="HELP_TCP_OPT_PORT" xml:space="preserve">
+    <value>  --port &lt;端口&gt;               监听的TCP端口（默认：9101）</value>
+  </data>
+  <data name="HELP_TCP_OPT_FOREGROUND" xml:space="preserve">
+    <value>  --foreground                在前台运行服务器（非后台）</value>
   </data>
 </root>

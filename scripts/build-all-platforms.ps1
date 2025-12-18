@@ -33,7 +33,7 @@ function Write-ErrorMsg {
 }
 
 Write-Host "============================================" -ForegroundColor Blue
-Write-Host "  ZPL2PDF - Build All Platforms v2.0.1    " -ForegroundColor Blue
+Write-Host "  ZPL2PDF - Build All Platforms v3.0.0" -ForegroundColor Blue
 Write-Host "============================================" -ForegroundColor Blue
 Write-Host ""
 
@@ -122,7 +122,7 @@ foreach ($platform in $platforms) {
                 Write-Success "Built successfully! Size: $([math]::Round($fileSize, 2)) MB"
                 
                 # Create archive
-                $archiveName = "ZPL2PDF-v2.0.1-$runtime"
+                $archiveName = "ZPL2PDF-v3.0.0-$runtime"
                 if ($archiveType -eq "zip") {
                     Compress-Archive -Path "$platformDir/*" -DestinationPath "$OutputDir/$archiveName.zip" -Force
                     Write-Info "   Archive: $archiveName.zip"
