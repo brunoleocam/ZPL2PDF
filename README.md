@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -16,8 +16,13 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v2.0**
+## 🚀 **What's New in v2.0.1**
 
+- 🐛 **Docker/Linux CLI Fix** - Fixed font rendering issues on Alpine Linux and Amazon Linux
+- 🐛 **ZPL `^FN` Tag Fix** - Fixed Field Number tags not rendering when followed by `^FD`
+- 🔧 **WinGet Upgrade Fix** - Fixed ProductCode for proper `winget upgrade` detection
+
+### v2.0 Features
 - 🌍 **Multi-language Support** - 8 languages (EN, PT, ES, FR, DE, IT, JA, ZH)
 - 🔄 **Daemon Mode** - Automatic folder monitoring and batch conversion
 - 🏗️ **Clean Architecture** - Completely refactored with SOLID principles
@@ -86,7 +91,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### Option 2: Installer
-1. Download [ZPL2PDF-Setup-2.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+1. Download [ZPL2PDF-Setup-2.0.1.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
 2. Run installer
 3. Choose your language during installation
 4. Done! ✅
@@ -96,10 +101,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v2.0.1-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
@@ -111,10 +116,10 @@ zpl2pdf --help
 #### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -137,7 +142,7 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 #### Intel Macs
 ```bash
 # Download
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-x64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-osx-x64.tar.gz -o zpl2pdf.tar.gz
 
 # Extract and run
 tar -xzf zpl2pdf.tar.gz
@@ -146,7 +151,7 @@ tar -xzf zpl2pdf.tar.gz
 
 #### Apple Silicon (M1/M2/M3)
 ```bash
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-arm64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-osx-arm64.tar.gz -o zpl2pdf.tar.gz
 tar -xzf zpl2pdf.tar.gz
 ./ZPL2PDF -help
 ```
