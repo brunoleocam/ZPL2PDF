@@ -14,12 +14,15 @@ License: MIT
 LicenseUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
 Copyright: Copyright (c) 2025 Bruno Campos
 CopyrightUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
-ShortDescription: ZPLファイルをPDFに変換 - 多言語対応とデーモンモード搭載
+ShortDescription: ZPLファイルをPDFに変換 - Labelary API、TCPサーバーモード、多言語対応
 Description: |-
   ZPL2PDFは、ZPL（Zebra Programming Language）ファイルを高品質なPDFドキュメントに変換する強力なクロスプラットフォームコマンドラインツールです。
   
   主な機能:
-  • デュアル動作モード - 個別ファイルの変換モードと自動フォルダー監視のデーモンモード
+  • 複数のレンダリングエンジン - オフライン（BinaryKits）、Labelary API（高忠実度）、自動（フォールバック）
+  • TCPサーバーモード - アプリケーション統合用のTCPポート上の仮想Zebraプリンター
+  • カスタムフォントサポート - カスタムラベル用のTrueType/OpenTypeフォントを読み込み
+  • 3つの動作モード - 変換、デーモン（自動監視）、TCPサーバー（仮想プリンター）
   • 多言語サポート - 8言語（EN、PT、ES、FR、DE、IT、JA、ZH）
   • インテリジェントな寸法処理 - ZPLコマンドからの自動抽出（^PW、^LL）
   • クロスプラットフォーム - Windows、Linux、macOSのネイティブサポート
@@ -32,6 +35,7 @@ Description: |-
   • 自動ドキュメント生成
   • エンタープライズラベル管理システム
   • ERP統合
+  • 仮想プリンター統合
   • バッチ処理
 Tags:
 - cli

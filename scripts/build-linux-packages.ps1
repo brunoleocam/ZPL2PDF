@@ -2,7 +2,9 @@
 # Works on Windows with Docker Desktop
 
 param(
-    [string]$Version = "3.0.0",
+    [Parameter(Mandatory=$true)]
+    [string]$Version,
+    
     [switch]$DebOnly,
     [switch]$RpmOnly
 )
@@ -22,7 +24,7 @@ try {
 }
 
 # Create output directory
-$publishDir = "build/publish"
+$publishDir = "Assets"
 if (-not (Test-Path $publishDir)) {
     New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
 }
@@ -36,7 +38,7 @@ if (-not $RpmOnly) {
     $debDockerfile = @"
 FROM mcr.microsoft.com/dotnet/sdk:9.0
 
-ARG VERSION=3.0.0
+ARG VERSION=$Version
 
 # Install dependencies for .deb package creation
 RUN apt-get update && apt-get install -y \
@@ -137,7 +139,7 @@ if (-not $DebOnly) {
     $rpmDockerfile = @"
 FROM mcr.microsoft.com/dotnet/sdk:9.0
 
-ARG VERSION=3.0.0
+ARG VERSION=$Version
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \

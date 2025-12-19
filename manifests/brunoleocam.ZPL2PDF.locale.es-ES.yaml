@@ -14,12 +14,15 @@ License: MIT
 LicenseUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
 Copyright: Copyright (c) 2025 Bruno Campos
 CopyrightUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
-ShortDescription: Convierte archivos ZPL a PDF con soporte multi-idioma y modo daemon
+ShortDescription: Convierte archivos ZPL a PDF con API Labelary, modo servidor TCP y soporte multi-idioma
 Description: |-
   ZPL2PDF es una herramienta de línea de comandos potente y multiplataforma que convierte archivos ZPL (Zebra Programming Language) en documentos PDF de alta calidad.
   
   Características Principales:
-  • Modos de Operación Duales - Modo conversión para archivos individuales y modo daemon para monitoreo automático de carpetas
+  • Múltiples Motores de Renderizado - Offline (BinaryKits), API Labelary (alta fidelidad) y Auto (fallback)
+  • Modo Servidor TCP - Impresora Zebra virtual en puerto TCP para integración con aplicaciones
+  • Soporte de Fuentes Personalizadas - Cargue fuentes TrueType/OpenType para etiquetas personalizadas
+  • Tres Modos de Operación - Conversión, daemon (monitoreo automático) y servidor TCP (impresora virtual)
   • Soporte Multi-idioma - 8 idiomas (EN, PT, ES, FR, DE, IT, JA, ZH)
   • Manejo Inteligente de Dimensiones - Extracción automática de comandos ZPL (^PW, ^LL)
   • Multiplataforma - Soporte nativo para Windows, Linux y macOS
@@ -32,6 +35,7 @@ Description: |-
   • Generación automatizada de documentos
   • Sistemas empresariales de gestión de etiquetas
   • Integración con ERP
+  • Integración de impresora virtual
   • Procesamiento por lotes
 Tags:
 - cli

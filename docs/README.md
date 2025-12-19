@@ -30,10 +30,11 @@ Documentation for end-users:
 - 📦 [Installation Guide](../README.md#installation) - All installation methods
 
 ### Usage Guides
-- 🐳 [Docker Guide](guides/DOCKER_GUIDE.md) - Complete Docker usage with examples
+- 🐳 [Docker Guide](guides/DOCKER_GUIDE.md) - Complete Docker usage and deployment
+- 🧪 [Docker Testing Guide](guides/DOCKER_TESTING.md) - Test ZPL2PDF on all platforms with Docker
 - 🌍 [Multi-Language Configuration](guides/LANGUAGE_CONFIGURATION.md) - Set up your preferred language
-- 🧪 [Docker Testing Guide](guides/DOCKER_TESTING.md) - Test ZPL2PDF on all platforms
 - 📦 [Windows Installer Guide](guides/INNO_SETUP_GUIDE.md) - Professional Windows installation
+- 📦 [Linux Packages Guide](guides/LINUX_PACKAGES.md) - Install on Linux (DEB, RPM)
 
 ### Advanced Topics
 - ⚙️ [Configuration Reference](../zpl2pdf.json.example) - All configuration options
@@ -54,8 +55,9 @@ Documentation for contributors and developers:
 ### Build & Deployment
 - 🔨 [Build Scripts Documentation](../scripts/README.md) - Build for all platforms
 - 🐳 [Docker Publishing Guide](development/DOCKER_PUBLISH_GUIDE.md) - Publish Docker images
-- 📝 [Build Validation](development/BUILD_SCRIPTS_VALIDATION.md) - Validate builds
 - 📦 [Installer Documentation](../installer/README.md) - Windows installer creation
+- 📦 [WinGet Guide](development/WINGET_GUIDE.md) - WinGet package submission
+- 🔄 [Git Workflow](development/GIT_WORKFLOW_GUIDE.md) - Git workflow and branching strategy
 
 ### Internal Documentation
 - 🏗️ [Architecture Overview](development/ARCHITECTURE.md) *(Coming soon)*
@@ -92,17 +94,17 @@ docs/
 │   ├── README.pt-BR.md            (Portuguese)
 │   ├── README.es-ES.md            (Spanish)
 │   └── README.fr-FR.md            (French)
-├── guides/                        (User guides)
-│   ├── DOCKER_GUIDE.md            (Docker usage)
-│   ├── DOCKER_TESTING.md          (Cross-platform testing)
-│   ├── INNO_SETUP_GUIDE.md        (Windows installer)
-│   └── LANGUAGE_CONFIGURATION.md  (Multi-language setup)
-├── development/                   (Developer docs)
-│   ├── CI_CD_WORKFLOW.md          (Automation workflow)
-│   ├── BUILD_SCRIPTS_VALIDATION.md (Build validation)
-│   ├── DOCKER_PUBLISH_GUIDE.md    (Docker publishing)
-│   ├── DOCKER_RESUMO_PUBLICACAO.md (Publishing summary PT)
-│   └── DOCKER_SUMMARY.md          (Docker summary)
+├── guides/                        (User guides - for end users)
+│   ├── DOCKER_GUIDE.md            (Docker usage and deployment)
+│   ├── DOCKER_TESTING.md          (Cross-platform testing with Docker)
+│   ├── INNO_SETUP_GUIDE.md        (Windows installer guide)
+│   ├── LANGUAGE_CONFIGURATION.md  (Multi-language setup)
+│   └── LINUX_PACKAGES.md          (Linux package installation)
+├── development/                   (Developer docs - for contributors)
+│   ├── CI_CD_WORKFLOW.md          (CI/CD automation workflow)
+│   ├── GIT_WORKFLOW_GUIDE.md      (Git workflow and branching)
+│   ├── DOCKER_PUBLISH_GUIDE.md    (Docker image publishing)
+│   └── WINGET_GUIDE.md            (WinGet package submission)
 ├── Image/                         (Screenshots & icons)
 │   ├── ZPL2PDF.ico
 │   ├── ZPL2PDF.png

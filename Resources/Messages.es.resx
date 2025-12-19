@@ -155,7 +155,7 @@
     <value>También puede pasar opciones del daemon directamente: ZPL2PDF.exe -l "carpeta" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;ruta_archivo_entrada&gt;       Ruta al archivo .txt o .prn de entrada</value>
+    <value>  -i &lt;ruta_archivo_entrada&gt;       Ruta al archivo de entrada (.txt, .prn, .zpl o .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;contenido_zpl&gt;           Contenido ZPL como cadena</value>
@@ -312,5 +312,65 @@
   </data>
   <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
     <value>Prioridad: 1) Parámetro --language, 2) Variable de entorno, 3) Archivo config, 4) Detección del sistema</value>
+  </data>
+  <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
+    <value>Prioridad: 1) Parámetro --language, 2) Variable de entorno, 3) Archivo config, 4) Detección del sistema</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>MODO SERVIDOR TCP:</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe server start [opciones] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_SERVER_COMMANDS" xml:space="preserve">
+    <value>Comandos del Servidor:</value>
+  </data>
+  <data name="HELP_CMD_SERVER_START" xml:space="preserve">
+    <value>  server start              Iniciar servidor TCP (impresora virtual)</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STOP" xml:space="preserve">
+    <value>  server stop               Detener servidor TCP</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STATUS" xml:space="preserve">
+    <value>  server status             Verificar estado del servidor TCP</value>
+  </data>
+  <data name="HELP_OPT_SERVER_PORT" xml:space="preserve">
+    <value>  --port &lt;puerto&gt;              Puerto TCP para escuchar (predeterminado: 9101)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_OUTPUT" xml:space="preserve">
+    <value>  -o &lt;carpeta_salida&gt;         Carpeta de salida para PDFs (predeterminado: Documents/ZPL2PDF TCP Output)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_FOREGROUND" xml:space="preserve">
+    <value>  --foreground              Ejecutar en primer plano (para depuración)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Motor de renderizado: offline, labelary o auto (predeterminado: offline)</value>
+  </data>
+  <data name="TCP_SERVER_STARTED_SUCCESS" xml:space="preserve">
+    <value>¡Servidor TCP iniciado con éxito! Puerto: {0}, PID: {1}</value>
+  </data>
+  <data name="TCP_SERVER_STOPPED_SUCCESS" xml:space="preserve">
+    <value>¡Servidor TCP detenido con éxito!</value>
+  </data>
+  <data name="TCP_SERVER_ALREADY_RUNNING" xml:space="preserve">
+    <value>¡El servidor TCP ya está en ejecución!</value>
+  </data>
+  <data name="TCP_SERVER_NOT_RUNNING" xml:space="preserve">
+    <value>¡El servidor TCP no está en ejecución!</value>
+  </data>
+  <data name="TCP_SERVER_STATUS_RUNNING" xml:space="preserve">
+    <value>¡El servidor TCP está en ejecución! Puerto: {0}, PID: {1}</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Motor de renderizado: offline (BinaryKits), labelary (API) o auto (fallback)</value>
+  </data>
+  <data name="HELP_OPT_RENDERER_DAEMON" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Motor de renderizado para todas las conversiones (offline, labelary o auto)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;directorio&gt;    Directorio que contiene fuentes TrueType/OpenType personalizadas</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;id=ruta&gt;           Mapear ID de fuente a archivo de fuente (ej: "A=arial.ttf")</value>
   </data>
 </root>

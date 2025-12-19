@@ -2,6 +2,9 @@
 
 This directory contains automation scripts for building, packaging, and releasing ZPL2PDF across multiple platforms.
 
+> **📦 Para releases completas, use os scripts na pasta [`release/`](../release/README.md)**  
+> Os scripts desta pasta são utilitários de build individuais.
+
 ---
 
 ## 📋 Available Scripts
@@ -279,18 +282,23 @@ Want to test on multiple platforms?
 
 ### Create Release (Recomendado) ⭐
 
-Ready to publish a new version? Use o script completo:
+Ready to publish a new version? Use os scripts da pasta `release/`:
 
 ```powershell
 # Windows - Test first with dry-run
-.\scripts\full-release.ps1 -Version "2.1.0" -DryRun
+.\release\release-main.ps1 -Version "3.1.0" -DryRun
 
 # Windows - Actual release (faz TUDO automaticamente)
-.\scripts\full-release.ps1 -Version "2.1.0"
+.\release\release-main.ps1 -Version "3.1.0"
 
 # Pular etapas se necessário
-.\scripts\full-release.ps1 -Version "2.1.0" -SkipDocker -SkipWinGet
+.\release\release-main.ps1 -Version "3.1.0" -SkipDocker -SkipWinGet
+
+# Executar etapa específica
+.\release\07-build-all-platforms.ps1 -Version "3.1.0"
 ```
+
+**📚 Veja o [Guia Completo de Release](../release/README.md) para mais detalhes.**
 
 ### Create Release (Básico)
 
@@ -424,6 +432,7 @@ These scripts are designed to work with GitHub Actions, Azure Pipelines, and oth
 ## 📚 Additional Resources
 
 - [../README.md](../README.md) - Project documentation
+- [../release/README.md](../release/README.md) - **Guia completo de release** ⭐
 - [../CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 - [../CHANGELOG.md](../CHANGELOG.md) - Version history
 - [../docs/development/WINGET_GUIDE.md](../docs/development/WINGET_GUIDE.md) - WinGet packaging guide

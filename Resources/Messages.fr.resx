@@ -155,7 +155,7 @@
     <value>Vous pouvez aussi passer les options du démon directement : ZPL2PDF.exe -l "dossier" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;chemin_fichier_entrée&gt;       Chemin vers le fichier .txt ou .prn d'entrée</value>
+    <value>  -i &lt;chemin_fichier_entrée&gt;       Chemin vers le fichier d'entrée (.txt, .prn, .zpl ou .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;contenu_zpl&gt;           Contenu ZPL sous forme de chaîne</value>
@@ -264,5 +264,110 @@
   </data>
   <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
     <value>  --language &lt;langue&gt;           Langue de l'interface (ex: pt-BR, en-US, es-ES)</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;langue&gt;       Définir la langue de façon permanente (configure la variable d'environnement)</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               Réinitialiser à la langue par défaut du système</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                Afficher la configuration de langue actuelle</value>
+  </data>
+  <data name="INVALID_LANGUAGE_CODE" xml:space="preserve">
+    <value>Code de langue invalide : {0}</value>
+  </data>
+  <data name="SUPPORTED_LANGUAGES_LIST" xml:space="preserve">
+    <value>Langues prises en charge :</value>
+  </data>
+  <data name="LANGUAGE_SET_SUCCESS" xml:space="preserve">
+    <value>Langue définie sur : {0}</value>
+  </data>
+  <data name="LANGUAGE_RESET_SUCCESS" xml:space="preserve">
+    <value>Configuration de langue réinitialisée à la valeur par défaut du système</value>
+  </data>
+  <data name="RESTART_REQUIRED" xml:space="preserve">
+    <value>Veuillez redémarrer votre terminal/invite de commande pour que les modifications prennent effet.</value>
+  </data>
+  <data name="ERROR_SETTING_LANGUAGE" xml:space="preserve">
+    <value>Erreur lors de la définition de la langue : {0}</value>
+  </data>
+  <data name="ERROR_RESETTING_LANGUAGE" xml:space="preserve">
+    <value>Erreur lors de la réinitialisation de la langue : {0}</value>
+  </data>
+  <data name="CURRENT_LANGUAGE_CONFIG" xml:space="preserve">
+    <value>Configuration de langue actuelle :</value>
+  </data>
+  <data name="ENV_VAR_LANGUAGE" xml:space="preserve">
+    <value>Variable d'environnement : {0}</value>
+  </data>
+  <data name="ENV_VAR_NOT_SET" xml:space="preserve">
+    <value>Variable d'environnement : Non définie</value>
+  </data>
+  <data name="CURRENT_LANGUAGE" xml:space="preserve">
+    <value>Langue actuelle : {0}</value>
+  </data>
+  <data name="SYSTEM_LANGUAGE" xml:space="preserve">
+    <value>Langue du système : {0}</value>
+  </data>
+  <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
+    <value>Priorité : 1) Paramètre --language, 2) Variable d'environnement, 3) Fichier config, 4) Détection du système</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>MODE SERVEUR TCP :</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Usage : ZPL2PDF.exe server start [options] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_SERVER_COMMANDS" xml:space="preserve">
+    <value>Commandes du serveur :</value>
+  </data>
+  <data name="HELP_CMD_SERVER_START" xml:space="preserve">
+    <value>  server start              Démarrer le serveur TCP (imprimante virtuelle)</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STOP" xml:space="preserve">
+    <value>  server stop               Arrêter le serveur TCP</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STATUS" xml:space="preserve">
+    <value>  server status             Vérifier l'état du serveur TCP</value>
+  </data>
+  <data name="HELP_OPT_SERVER_PORT" xml:space="preserve">
+    <value>  --port &lt;port&gt;              Port TCP à écouter (par défaut : 9101)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_OUTPUT" xml:space="preserve">
+    <value>  -o &lt;dossier_sortie&gt;         Dossier de sortie pour les PDF (par défaut : Documents/ZPL2PDF TCP Output)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_FOREGROUND" xml:space="preserve">
+    <value>  --foreground              Exécuter au premier plan (pour le débogage)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Moteur de rendu : offline, labelary ou auto (par défaut : offline)</value>
+  </data>
+  <data name="TCP_SERVER_STARTED_SUCCESS" xml:space="preserve">
+    <value>Serveur TCP démarré avec succès ! Port : {0}, PID : {1}</value>
+  </data>
+  <data name="TCP_SERVER_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Serveur TCP arrêté avec succès !</value>
+  </data>
+  <data name="TCP_SERVER_ALREADY_RUNNING" xml:space="preserve">
+    <value>Le serveur TCP est déjà en cours d'exécution !</value>
+  </data>
+  <data name="TCP_SERVER_NOT_RUNNING" xml:space="preserve">
+    <value>Le serveur TCP n'est pas en cours d'exécution !</value>
+  </data>
+  <data name="TCP_SERVER_STATUS_RUNNING" xml:space="preserve">
+    <value>Le serveur TCP est en cours d'exécution ! Port : {0}, PID : {1}</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Moteur de rendu : offline (BinaryKits), labelary (API) ou auto (fallback)</value>
+  </data>
+  <data name="HELP_OPT_RENDERER_DAEMON" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Moteur de rendu pour toutes les conversions (offline, labelary ou auto)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;repertoire&gt;    Répertoire contenant des polices TrueType/OpenType personnalisées</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;id=chemin&gt;           Mapper l'ID de police au fichier de police (ex : "A=arial.ttf")</value>
   </data>
 </root>

@@ -9,7 +9,7 @@ Professional Windows installer for ZPL2PDF with multi-language support.
 The installer provides:
 
 - ✅ **Multi-language interface** (8 languages)
-- ✅ **Automatic file association** (.zpl files)
+- ✅ **Automatic file association** (.zpl and .imp files)
 - ✅ **PATH integration** (optional)
 - ✅ **Language configuration** during installation
 - ✅ **Default folders creation** (watch/output)
@@ -60,7 +60,7 @@ This creates the required files in `build/publish/`.
 3. Select `installer/ZPL2PDF-Setup.iss`
 4. Click "**Build**" → "**Compile**" (or press `F9`)
 5. Wait ~30 seconds
-6. Installer will be created: `installer/ZPL2PDF-Setup-2.0.0.exe`
+6. Installer will be created: `installer/ZPL2PDF-Setup-3.0.0.exe`
 
 ### **Option 2: Command Line**
 
@@ -68,7 +68,7 @@ This creates the required files in `build/publish/`.
 # Using Inno Setup compiler
 & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\ZPL2PDF-Setup.iss
 
-# Output: installer/ZPL2PDF-Setup-2.0.0.exe
+# Output: installer/ZPL2PDF-Setup-3.0.0.exe
 ```
 
 ### **Option 3: Automated Script**
@@ -78,7 +78,7 @@ This creates the required files in `build/publish/`.
 .\installer\build-installer.ps1
 
 # Or with custom version
-.\installer\build-installer.ps1 -Version "2.0.1"
+.\installer\build-installer.ps1 -Version "3.0.0"
 ```
 
 ---
@@ -117,7 +117,7 @@ C:\Program Files\ZPL2PDF\
 ```
 HKEY_CURRENT_USER\Software\ZPL2PDF\
 ├── InstallPath = "C:\Program Files\ZPL2PDF"
-├── Version = "2.0.0"
+├── Version = "3.0.0"
 └── WatchFolder = "...\Documents\ZPL2PDF Auto Converter\watch"
 
 HKEY_CURRENT_USER\Environment\
@@ -177,7 +177,7 @@ This sets the `ZPL2PDF_LANGUAGE` environment variable permanently.
 - ✅ Install application
 - ✅ Create shortcuts
 - ✅ Create default folders
-- ✅ Register .zpl file association
+- ✅ Register .zpl and .imp file associations
 
 ### **Optional Tasks:**
 
@@ -197,7 +197,7 @@ This sets the `ZPL2PDF_LANGUAGE` environment variable permanently.
 Edit `ZPL2PDF-Setup.iss`:
 
 ```pascal
-#define MyAppVersion "2.0.1"  // Change here
+#define MyAppVersion "3.0.0"  // Change here
 ```
 
 ### **Add More Files:**
@@ -291,7 +291,7 @@ After building the installer:
 - [ ] Installation succeeds
 - [ ] Application launches correctly
 - [ ] Language selection works
-- [ ] File association works (.zpl files)
+- [ ] File association works (.zpl and .imp files)
 - [ ] Start Menu shortcuts created
 - [ ] Daemon start/stop works
 - [ ] Uninstallation succeeds

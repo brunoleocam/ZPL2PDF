@@ -1,6 +1,6 @@
 # ZPL2PDF - Conversor ZPL para PDF
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -12,76 +12,122 @@
 
 Uma ferramenta poderosa e multiplataforma que converte arquivos ZPL (Zebra Programming Language) para documentos PDF de alta qualidade. Perfeita para fluxos de trabalho de impressão de etiquetas, geração automatizada de documentos e sistemas empresariais de gerenciamento de etiquetas.
 
-## 🚀 Novidades na v2.0
+---
 
-- **🔄 Modo Daemon**: Monitoramento automático de pastas e conversão em lote
-- **🏗️ Arquitetura Limpa**: Completamente refatorado com princípios SOLID
-- **🌍 Multiplataforma**: Suporte nativo para Windows, Linux e macOS
-- **📐 Dimensões Inteligentes**: Extração automática de dimensões ZPL (`^PW`, `^LL`)
-- **⚡ Alta Performance**: Processamento assíncrono com mecanismos de retry
-- **🔧 Pronto para Empresa**: Gerenciamento de PID, arquivos de configuração e logging
+## 🚀 **Novidades na v3.0.0**
 
-## ✨ Principais Recursos
+### 🎉 Principais Novas Funcionalidades
+- 🎨 **Integração com API Labelary** - Renderização ZPL de alta fidelidade com saída PDF vetorial
+- 🖨️ **Modo Servidor TCP** - Impressora Zebra virtual em porta TCP (padrão: 9101)
+- 🔤 **Fontes Personalizadas** - Carregue fontes TrueType/OpenType com `--fonts-dir` e `--font`
+- 📁 **Suporte Estendido de Arquivos** - Adicionadas extensões `.zpl` e `.imp`
+- 📝 **Nomeação Personalizada** - Defina nome do arquivo de saída via `^FX FileName:` no ZPL
 
-### 🎯 **Modos de Operação Duplos**
-- **Modo Conversão**: Converter arquivos individuais ou strings ZPL
-- **Modo Daemon**: Monitorar pastas e converter arquivos automaticamente
-
-### 📐 **Gerenciamento Inteligente de Dimensões**
-- Extrair dimensões diretamente dos comandos ZPL (`^PW`, `^LL`)
-- Suporte para múltiplas unidades (mm, cm, polegadas, pontos)
-- Fallback automático para padrões sensatos
-- Resolução de dimensões baseada em prioridade
-
-### 🏗️ **Arquitetura Empresarial**
-- Arquitetura Limpa com separação de responsabilidades
-- Injeção de dependência e princípios SOLID
-- Tratamento abrangente de erros e logging
-- Mecanismos de retry para cenários de bloqueio de arquivos
-
-### 🌍 **Suporte Multiplataforma**
-- Windows (x64, x86)
-- Linux (x64, ARM64, ARM)
-- macOS (x64, ARM64)
-- Executáveis autocontidos
-
-## 📦 Instalação
-
-### Windows (Winget)
+### 🔧 Opções de Renderização
 ```bash
-winget install ZPL2PDF
+--renderer offline    # BinaryKits (padrão, funciona offline)
+--renderer labelary   # API Labelary (alta fidelidade, requer internet)
+--renderer auto       # Tenta Labelary, fallback para BinaryKits
 ```
 
-### Linux
+### 🖨️ Servidor TCP (Impressora Virtual)
+```bash
+ZPL2PDF server start --port 9101 -o output/
+ZPL2PDF server status
+ZPL2PDF server stop
+```
+
+### Funcionalidades v2.x (Ainda Disponíveis)
+- 🌍 **Suporte Multi-idioma** - 8 idiomas (EN, PT, ES, FR, DE, IT, JA, ZH)
+- 🔄 **Modo Daemon** - Monitoramento automático de pastas e conversão em lote
+- 🏗️ **Arquitetura Limpa** - Completamente refatorado com princípios SOLID
+- 🌍 **Multiplataforma** - Suporte nativo para Windows, Linux e macOS
+- 📐 **Dimensões Inteligentes** - Extração automática de dimensões ZPL (`^PW`, `^LL`)
+- ⚡ **Alta Performance** - Processamento assíncrono com mecanismos de retry
+- 🐳 **Suporte Docker** - Alpine Linux otimizado (470MB)
+- 📦 **Instalador Profissional** - Instalador Windows com configuração multi-idioma
+
+---
+
+## ✨ **Principais Recursos**
+
+### 🎯 **Três Modos de Operação**
+
+#### **Modo Conversão** - Converter arquivos individuais
+```bash
+ZPL2PDF -i etiqueta.txt -o pasta_saida/ -n minha_etiqueta.pdf
+```
+
+#### **Modo Daemon** - Monitoramento automático de pastas
+```bash
+ZPL2PDF start -l "C:\Etiquetas"
+```
+
+#### **Modo Servidor TCP** - Impressora virtual
+```bash
+ZPL2PDF server start --port 9101 -o pasta_saida/
+```
+
+### 📐 **Gerenciamento Inteligente de Dimensões**
+
+- ✅ Extrair dimensões dos comandos ZPL (`^PW`, `^LL`)
+- ✅ Suporte para múltiplas unidades (mm, cm, polegadas, pontos)
+- ✅ Fallback automático para padrões sensatos
+- ✅ Resolução de dimensões baseada em prioridade
+
+### 🌍 **Interface Multi-idioma**
+
+Defina seu idioma preferido:
+```bash
+# Temporário (sessão atual)
+ZPL2PDF --language pt-BR status
+
+# Permanente (todas as sessões)
+ZPL2PDF --set-language pt-BR
+
+# Verificar configuração
+ZPL2PDF --show-language
+```
+
+**Idiomas Suportados:**
+- 🇺🇸 English (en-US)
+- 🇧🇷 Português (pt-BR)
+- 🇪🇸 Español (es-ES)
+- 🇫🇷 Français (fr-FR)
+- 🇩🇪 Deutsch (de-DE)
+- 🇮🇹 Italiano (it-IT)
+- 🇯🇵 日本語 (ja-JP)
+- 🇨🇳 中文 (zh-CN)
+
+---
+
+## 📦 **Instalação**
+
+### **Windows**
+
+#### Opção 1: WinGet (Recomendado)
+```powershell
+winget install brunoleocam.ZPL2PDF
+```
+
+#### Opção 2: Instalador
+1. Baixe [ZPL2PDF-Setup-3.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+2. Execute o instalador
+3. Escolha seu idioma durante a instalação
+4. Pronto! ✅
+
+### **Linux**
 
 #### Ubuntu/Debian (pacote .deb)
 ```bash
 # Baixar pacote .deb das releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.0/ZPL2PDF-v3.0.0-linux-amd64.deb
 
 # Instalar pacote
-sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.0.0-linux-amd64.deb
 
 # Corrigir dependências se necessário
 sudo apt-get install -f
-
-# Verificar instalação
-zpl2pdf --help
-```
-
-#### Fedora/CentOS/RHEL (.tar.gz)
-```bash
-# Baixar tarball das releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
-
-# Extrair para o sistema
-sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
-
-# Tornar executável
-sudo chmod +x /usr/bin/ZPL2PDF
-
-# Criar link simbólico
-sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
 
 # Verificar instalação
 zpl2pdf --help
@@ -93,267 +139,196 @@ docker pull brunoleocam/zpl2pdf:latest
 docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:latest
 ```
 
-### Instalação Manual
-Baixe a versão mais recente para sua plataforma na página [Releases](https://github.com/brunoleocam/ZPL2PDF/releases).
+---
 
-## 🚀 Início Rápido
+## 🚀 **Início Rápido**
 
-### Conversão Básica
+### **Converter um Arquivo**
 ```bash
-# Converter um arquivo único
-ZPL2PDF.exe -i etiqueta.txt -o pasta_saida -n minha_etiqueta.pdf
-
-# Converter com dimensões personalizadas
-ZPL2PDF.exe -i etiqueta.txt -o pasta_saida -w 10 -h 5 -u cm
-
-# Converter string ZPL diretamente
-ZPL2PDF.exe -z "^XA^FO50,50^A0N,50,50^FDHello World^FS^XZ" -o pasta_saida
+ZPL2PDF -i etiqueta.txt -o pasta_saida -n minha_etiqueta.pdf
 ```
 
-### Modo Daemon (Conversão Automática)
+### **Converter com Dimensões Personalizadas**
 ```bash
-# Iniciar daemon com configurações padrão
-ZPL2PDF.exe start
+ZPL2PDF -i etiqueta.txt -o pasta_saida -w 10 -h 5 -u cm
+```
 
-# Iniciar com pasta e dimensões personalizadas
-ZPL2PDF.exe start -l "C:\Etiquetas" -w 7.5 -h 15 -u in
+### **Converter com Labelary (Alta Fidelidade)**
+```bash
+ZPL2PDF -i etiqueta.txt -o pasta_saida --renderer labelary
+```
 
-# Verificar status do daemon
-ZPL2PDF.exe status
+### **Iniciar Modo Daemon (Conversão Automática)**
+```bash
+# Iniciar com configurações padrão
+ZPL2PDF start
+
+# Iniciar com pasta personalizada
+ZPL2PDF start -l "C:\Etiquetas" -w 7.5 -h 15 -u in
+
+# Verificar status
+ZPL2PDF status
 
 # Parar daemon
-ZPL2PDF.exe stop
+ZPL2PDF stop
 ```
 
-## 📖 Guia de Uso
+---
 
-### Modo Conversão
+## 📖 **Guia de Uso**
 
-Converter arquivos ZPL individuais ou strings para PDF:
+### **Parâmetros do Modo Conversão**
 
 ```bash
-ZPL2PDF.exe -i <arquivo_entrada> -o <pasta_saida> [opções]
-ZPL2PDF.exe -z <conteudo_zpl> -o <pasta_saida> [opções]
+ZPL2PDF -i <arquivo_entrada> -o <pasta_saida> [opções]
+ZPL2PDF -z <conteudo_zpl> -o <pasta_saida> [opções]
 ```
 
-**Parâmetros:**
-- `-i <arquivo>`: Arquivo ZPL de entrada (.txt ou .prn)
-- `-z <conteudo>`: Conteúdo ZPL como string
-- `-o <pasta>`: Pasta de saída para PDF
-- `-n <nome>`: Nome do arquivo PDF de saída (opcional)
-- `-w <largura>`: Largura da etiqueta
-- `-h <altura>`: Altura da etiqueta
-- `-u <unidade>`: Unidade (mm, cm, in)
-- `-d <dpi>`: Densidade de impressão (203, 300, etc.)
+| Parâmetro | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `-i <arquivo>` | Arquivo ZPL de entrada (.txt, .prn, .zpl, .imp) | `-i etiqueta.zpl` |
+| `-z <conteudo>` | Conteúdo ZPL como string | `-z "^XA...^XZ"` |
+| `-o <pasta>` | Pasta de saída para PDF | `-o C:\Saida` |
+| `-n <nome>` | Nome do arquivo PDF de saída (opcional) | `-n resultado.pdf` |
+| `-w <largura>` | Largura da etiqueta | `-w 10` |
+| `-h <altura>` | Altura da etiqueta | `-h 5` |
+| `-u <unidade>` | Unidade (mm, cm, in) | `-u cm` |
+| `-d <dpi>` | Densidade de impressão (padrão: 203) | `-d 300` |
+| `--renderer` | Motor de renderização (offline/labelary/auto) | `--renderer labelary` |
+| `--fonts-dir` | Diretório de fontes personalizadas | `--fonts-dir C:\Fontes` |
+| `--font` | Mapear fonte específica | `--font "A=arial.ttf"` |
 
-### Modo Daemon
-
-Monitorar pastas e converter arquivos automaticamente:
+### **Comandos do Modo Daemon**
 
 ```bash
-ZPL2PDF.exe start [opções]    # Iniciar daemon
-ZPL2PDF.exe stop              # Parar daemon
-ZPL2PDF.exe status            # Verificar status
+ZPL2PDF start [opções]    # Iniciar daemon em background
+ZPL2PDF stop              # Parar daemon
+ZPL2PDF status            # Verificar status do daemon
+ZPL2PDF run [opções]      # Executar daemon em foreground (teste)
 ```
 
-**Opções do Daemon:**
-- `-l <pasta>`: Pasta para monitorar (padrão: Documents/ZPL2PDF Auto Converter)
-- `-w <largura>`: Largura fixa para todas as conversões
-- `-h <altura>`: Altura fixa para todas as conversões
-- `-u <unidade>`: Unidade de medida
-- `-d <dpi>`: Densidade de impressão
+### **Comandos do Servidor TCP**
 
-## 🏗️ Arquitetura
-
-O ZPL2PDF segue os princípios da Arquitetura Limpa com separação clara de responsabilidades:
-
-```
-src/
-├── Application/          # Casos de Uso e Serviços
-│   ├── Services/         # Serviços de lógica de negócio
-│   └── Interfaces/       # Contratos de serviços
-├── Domain/              # Entidades e regras de negócio
-│   ├── ValueObjects/    # Objetos de dados imutáveis
-│   └── Services/        # Interfaces de domínio
-├── Infrastructure/      # Preocupações externas
-│   ├── FileSystem/      # Operações de arquivo
-│   ├── Rendering/       # Geração de PDF
-│   └── Processing/      # Gerenciamento de filas
-└── Presentation/        # CLI e interface do usuário
-    ├── Program.cs       # Ponto de entrada
-    └── Handlers/        # Manipuladores de modo
-```
-
-## 🔧 Configuração
-
-### Arquivo de Configuração (`zpl2pdf.json`)
-```json
-{
-  "defaultWatchFolder": "C:\\Users\\usuario\\Documents\\ZPL2PDF Auto Converter",
-  "labelWidth": 7.5,
-  "labelHeight": 15,
-  "unit": "in",
-  "dpi": 203,
-  "logLevel": "Info",
-  "retryDelay": 2000,
-  "maxRetries": 3
-}
-```
-
-### Variáveis de Ambiente
-- `ZPL2PDF_LANGUAGE`: Definir idioma da aplicação
-- `ZPL2PDF_LOG_LEVEL`: Definir nível de logging
-- `ZPL2PDF_CONFIG_PATH`: Caminho personalizado do arquivo de configuração
-
-## 📐 Suporte ZPL
-
-### Comandos Suportados
-- `^XA` / `^XZ`: Início/fim da etiqueta
-- `^PW<largura>`: Largura de impressão em pontos
-- `^LL<comprimento>`: Comprimento da etiqueta em pontos
-- Todos os comandos ZPL padrão de texto, gráficos e códigos de barras
-
-### Extração de Dimensões
-A ferramenta extrai automaticamente as dimensões dos comandos ZPL:
-- `^PW<largura>` → Largura da etiqueta
-- `^LL<comprimento>` → Altura da etiqueta
-- Converte pontos para milímetros: `mm = (pontos / 203) * 25.4`
-
-### Lógica de Prioridade
-1. **Comandos ZPL**: Extrair de `^PW` e `^LL`
-2. **Parâmetros Explícitos**: Usar valores `-w` e `-h`
-3. **Valores Padrão**: Fallback para 100mm × 150mm
-
-## 🐳 Suporte Docker
-
-### Executar com Docker
 ```bash
-# Construir imagem
-docker build -t zpl2pdf .
+ZPL2PDF server start [opções]    # Iniciar servidor TCP (impressora virtual)
+ZPL2PDF server stop              # Parar servidor TCP
+ZPL2PDF server status            # Verificar status do servidor TCP
+```
+
+| Opção | Descrição | Padrão |
+|-------|-----------|--------|
+| `--port <porta>` | Porta TCP para escutar | `9101` |
+| `-o <pasta>` | Pasta de saída para PDFs | `Documents/ZPL2PDF TCP Output` |
+| `--foreground` | Executar em foreground (não background) | Background |
+| `--renderer` | Motor de renderização | `offline` |
+
+---
+
+## 🎨 **Motores de Renderização**
+
+### **Offline (BinaryKits)** - Padrão
+```bash
+ZPL2PDF -i etiqueta.txt -o saida/ --renderer offline
+```
+- ✅ Funciona sem internet
+- ✅ Processamento rápido
+- ⚠️ Alguns comandos ZPL podem renderizar diferente
+
+### **Labelary (API)** - Alta Fidelidade
+```bash
+ZPL2PDF -i etiqueta.txt -o saida/ --renderer labelary
+```
+- ✅ Emulação exata de impressora Zebra
+- ✅ Saída PDF vetorial (arquivos menores)
+- ✅ Batching automático para 50+ etiquetas
+- ⚠️ Requer conexão com internet
+
+### **Auto (Fallback)**
+```bash
+ZPL2PDF -i etiqueta.txt -o saida/ --renderer auto
+```
+- ✅ Tenta Labelary primeiro
+- ✅ Fallback para BinaryKits se offline
+
+---
+
+## 📐 **Suporte ZPL**
+
+### **Comandos Suportados**
+
+- ✅ `^XA` / `^XZ` - Início/fim da etiqueta
+- ✅ `^PW<largura>` - Largura de impressão em pontos
+- ✅ `^LL<comprimento>` - Comprimento da etiqueta em pontos
+- ✅ `^FX FileName:` - Nome personalizado do arquivo de saída
+- ✅ `^FX !FileName:` - Nome forçado do arquivo (sobrescreve `-n`)
+- ✅ Todos os comandos ZPL padrão de texto, gráficos e códigos de barras
+
+### **Extração de Dimensões**
+
+O ZPL2PDF extrai automaticamente as dimensões:
+
+```zpl
+^XA
+^PW800        ← Largura: 800 pontos
+^LL1200       ← Altura: 1200 pontos
+^FO50,50^A0N,50,50^FDOlá^FS
+^XZ
+```
+
+**Conversão:** `mm = (pontos / 203) * 25.4`
+
+---
+
+## 🐳 **Uso com Docker**
+
+### **Início Rápido com Docker**
+
+```bash
+# Baixar imagem
+docker pull brunoleocam/zpl2pdf:latest
 
 # Executar modo daemon
-docker run -d -v /caminho/para/etiquetas:/app/watch zpl2pdf start
-
-# Executar conversão
-docker run -v /caminho/entrada:/app/input -v /caminho/saida:/app/output zpl2pdf -i /app/input/etiqueta.txt -o /app/output
+docker run -d \
+  --name zpl2pdf \
+  -v ./watch:/app/watch \
+  -v ./output:/app/output \
+  -e ZPL2PDF_LANGUAGE=pt-BR \
+  brunoleocam/zpl2pdf:latest
 ```
 
-### Docker Compose
-```yaml
-version: '3.8'
-services:
-  zpl2pdf:
-    build: .
-    volumes:
-      - ./etiquetas:/app/watch
-      - ./saida:/app/output
-    command: start -l /app/watch -o /app/output
-```
+📘 **Guia Completo Docker:** [docs/DOCKER_GUIDE.md](../DOCKER_GUIDE.md)
 
-## 🧪 Testes
+---
 
-### Executar Testes
-```bash
-# Testes unitários
-dotnet test tests/ZPL2PDF.Unit/
+## 📚 **Documentação**
 
-# Testes de integração
-dotnet test tests/ZPL2PDF.Integration/
+- 📖 [Documentação Completa](../README.md)
+- 🌍 [Configuração Multi-idioma](../LANGUAGE_CONFIGURATION.md)
+- 🐳 [Guia Docker](../DOCKER_GUIDE.md)
+- 🛠️ [Guia de Contribuição](../../CONTRIBUTING.md)
+- 📋 [Changelog](../../CHANGELOG.md)
 
-# Todos os testes com cobertura
-dotnet test --collect:"XPlat Code Coverage"
-```
+---
 
-### Cobertura de Testes
-- **Testes Unitários**: Meta de 90%+ de cobertura
-- **Testes de Integração**: Fluxos de trabalho end-to-end
-- **Multiplataforma**: Windows, Linux, macOS
+## 🤝 **Contribuindo**
 
-## 🤝 Contribuindo
+Aceitamos contribuições! Consulte [CONTRIBUTING.md](../../CONTRIBUTING.md) para detalhes.
 
-Aceitamos contribuições! Consulte nosso [Guia de Contribuição](CONTRIBUTING.md) para detalhes.
+---
 
-### Configuração de Desenvolvimento
-```bash
-# Clonar repositório
-git clone https://github.com/brunoleocam/ZPL2PDF.git
-cd ZPL2PDF
+## 📄 **Licença**
 
-# Restaurar dependências
-dotnet restore
+Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](../../LICENSE) para detalhes.
 
-# Construir solução
-dotnet build
+---
 
-# Executar testes
-dotnet test
-```
+## 🙏 **Agradecimentos**
 
-### Processo de Pull Request
-1. Fazer fork do repositório
-2. Criar uma branch de feature
-3. Fazer suas alterações
-4. Adicionar testes para nova funcionalidade
-5. Garantir que todos os testes passem
-6. Enviar um pull request
-
-## 📊 Performance
-
-### Benchmarks
-- **Etiqueta Única**: ~50ms tempo de conversão
-- **Processamento em Lote**: 100+ etiquetas/minuto
-- **Uso de Memória**: <50MB típico
-- **Tamanho do Arquivo**: ~100KB por PDF de etiqueta
-
-### Recursos de Otimização
-- Processamento assíncrono com concorrência configurável
-- Mecanismos de retry para arquivos bloqueados
-- Processamento de imagem eficiente em memória
-- Geração de PDF otimizada
-
-## 🐛 Solução de Problemas
-
-### Problemas Comuns
-
-**Erro de Arquivo Bloqueado**
-```
-Erro: Arquivo em uso, aguardando: etiqueta.txt
-```
-- **Solução**: O arquivo está sendo escrito. Aguarde o processo completar.
-
-**Conteúdo ZPL Inválido**
-```
-Erro: Nenhuma etiqueta ZPL encontrada no arquivo
-```
-- **Solução**: Certifique-se de que o arquivo contém comandos ZPL válidos (`^XA...^XZ`).
-
-**Permissão Negada**
-```
-Erro: Acesso ao caminho foi negado
-```
-- **Solução**: Execute com permissões apropriadas ou verifique o acesso à pasta.
-
-### Modo Debug
-```bash
-# Habilitar logging verboso
-ZPL2PDF.exe -i etiqueta.txt -o saida --log-level Debug
-```
-
-## 📄 Licença
-
-Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para detalhes.
-
-## 🙏 Agradecimentos
+Construído com bibliotecas open-source incríveis:
 
 - [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) - Parsing e renderização ZPL
 - [PdfSharpCore](https://github.com/empira/PdfSharpCore) - Geração de PDF
 - [SkiaSharp](https://github.com/mono/SkiaSharp) - Gráficos multiplataforma
-
-## 📞 Suporte
-
-- **Documentação**: [Wiki](https://github.com/brunoleocam/ZPL2PDF/wiki)
-- **Problemas**: [GitHub Issues](https://github.com/brunoleocam/ZPL2PDF/issues)
-- **Discussões**: [GitHub Discussions](https://github.com/brunoleocam/ZPL2PDF/discussions)
 
 ---
 

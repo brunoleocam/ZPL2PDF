@@ -7,6 +7,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.0] - 2025-12-18
+
+### 🎉 Major Release - Labelary Integration & TCP Server
+
+This is a **major release** with new rendering engines, TCP server mode, and custom font support.
+
+### ✨ Added
+
+#### Multiple Rendering Engines
+- **Labelary API Integration**: High-fidelity ZPL rendering via Labelary API with direct PDF output
+- **Renderer Selection**: `--renderer` parameter with options: `offline` (BinaryKits), `labelary` (API), `auto` (fallback)
+- **Direct PDF Generation**: Labelary mode generates vector PDFs directly from API (smaller, higher quality)
+- **Batch Processing**: Automatic batching for 50+ labels with PDF merging
+- **Smart Fallback**: Auto mode tries Labelary first, falls back to BinaryKits if offline
+
+#### TCP Server Mode (Virtual Printer)
+- **Virtual Zebra Printer**: Acts as a TCP printer on configurable port (default: 9101)
+- **Server Commands**: `server start`, `server stop`, `server status`
+- **Foreground Mode**: `--foreground` option for debugging
+- **Independent Operation**: Runs independently from daemon mode (both can run simultaneously)
+- **Custom Output**: Configure output directory with `-o` parameter
+
+#### Custom Font Support
+- **Font Directory**: `--fonts-dir` to load all fonts from a directory
+- **Individual Font Mapping**: `--font "A=path/to/font.ttf"` for specific font IDs
+- **Multiple Mappings**: Support for multiple `--font` parameters
+- **TrueType/OpenType**: Support for `.ttf` and `.otf` font files
+
+#### Extended File Support
+- **New Extensions**: Added support for `.zpl` and `.imp` file extensions
+- **Consistent Handling**: All extensions (`.txt`, `.prn`, `.zpl`, `.imp`) treated equally
+
+#### Custom Output File Naming
+- **ZPL Comment Naming**: `^FX FileName: MyLabel` sets output filename
+- **Forced Naming**: `^FX !FileName: MyLabel` overrides `-n` parameter
+- **Priority System**: `^FX !FileName:` > `-n` parameter > `^FX FileName:` > input filename
+
+### 🔧 Improved
+
+- **Help System**: Updated `-help` with all new options in 8 languages
+- **Documentation**: New `LABELARY_API.md` and `ROADMAP.md` documentation
+- **Test Coverage**: Comprehensive manual test suite with 20 test cases
+- **Error Messages**: Better error handling for API failures and network issues
+
+### 📦 Technical Details
+
+- **Files Added**:
+  - `src/Infrastructure/Rendering/LabelaryRenderer.cs` - Labelary API integration
+  - `src/Infrastructure/Rendering/RendererFactory.cs` - Renderer selection logic
+  - `src/Infrastructure/Rendering/FallbackRenderer.cs` - Auto mode with fallback
+  - `src/Infrastructure/TcpServer/TcpPrinterServer.cs` - TCP server implementation
+  - `src/Infrastructure/TcpServer/TcpServerManager.cs` - Server lifecycle management
+  - `src/Presentation/TcpServerModeHandler.cs` - TCP server command handler
+  - `docs/LABELARY_API.md` - Labelary API documentation
+  - `docs/ROADMAP.md` - Future development roadmap
+  - `docs/MANUAL_TESTES_V3.md` - Manual test guide
+
+- **Files Modified**:
+  - `src/Shared/LabelFileReader.cs` - Extended file extensions, forced filename support
+  - `src/Application/Services/ConversionService.cs` - Renderer integration
+  - `src/Presentation/HelpDisplay.cs` - New help sections
+  - `src/Shared/Localization/ResourceKeys.cs` - New localization keys
+  - All `Resources/Messages.*.resx` files - New translations
+
+### 🔄 Changed
+
+- **PDF Generation**: Labelary mode generates smaller, vector-based PDFs
+- **Rendering Pipeline**: Modular renderer architecture with factory pattern
+- **Help Display**: Reorganized with TCP Server and Advanced Options sections
+
+---
+
 ## [2.0.1] - 2025-12-16
 
 ### 🐛 Fixed
