@@ -15,7 +15,7 @@
 ; =============================================================================
 
 #define MyAppName "ZPL2PDF"
-#define MyAppVersion "2.0.1"
+#define MyAppVersion "3.0.0"
 #define MyAppPublisher "Bruno Campos"
 #define MyAppURL "https://github.com/brunoleocam/ZPL2PDF"
 #define MyAppExeName "ZPL2PDF.exe"
@@ -154,6 +154,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Registry]
 ; File Associations
 Root: HKA; Subkey: "Software\Classes\.zpl"; ValueType: string; ValueName: ""; ValueData: "ZPLFile"; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\.imp"; ValueType: string; ValueName: ""; ValueData: "ZPLFile"; Flags: uninsdeletevalue
 Root: HKA; Subkey: "Software\Classes\ZPLFile"; ValueType: string; ValueName: ""; ValueData: "ZPL Label File"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\ZPLFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
 Root: HKA; Subkey: "Software\Classes\ZPLFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""-i"" ""%1"""

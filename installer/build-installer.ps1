@@ -2,11 +2,11 @@
 # ZPL2PDF - Build Windows Installer
 # =============================================================================
 # This script automates the Inno Setup installer compilation
-# Usage: .\installer\build-installer.ps1 [-Version "2.0.0"]
+# Usage: .\installer\build-installer.ps1 [-Version "3.0.0"]
 # =============================================================================
 
 param(
-    [string]$Version = "2.0.0",
+    [string]$Version = "3.0.0",
     [string]$InnoSetupPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 )
 

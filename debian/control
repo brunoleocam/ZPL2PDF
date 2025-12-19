@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Bruno Leonardo Campos <brunoleocam@gmail.com>
 Build-Depends: debhelper (>= 11), dotnet-sdk-9.0
-Standards-Version: 4.1.3
+Standards-Version: 3.0.0
 Homepage: https://github.com/brunoleocam/ZPL2PDF
 Vcs-Git: https://github.com/brunoleocam/ZPL2PDF.git
 Vcs-Browser: https://github.com/brunoleocam/ZPL2PDF

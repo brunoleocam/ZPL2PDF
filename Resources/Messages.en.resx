@@ -155,7 +155,7 @@
     <value>You can also pass daemon options directly: ZPL2PDF.exe -l "folder" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;input_file_path&gt;       Path to the input .txt or .prn file</value>
+    <value>  -i &lt;input_file_path&gt;       Path to the input file (.txt, .prn, .zpl, or .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;zpl_content&gt;           ZPL content as a string</value>
@@ -315,5 +315,62 @@
   </data>
   <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
     <value>Priority: 1) --language param, 2) Environment variable, 3) Config file, 4) System detection</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>TCP SERVER MODE:</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Usage: ZPL2PDF.exe server start [options] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_SERVER_COMMANDS" xml:space="preserve">
+    <value>Server Commands:</value>
+  </data>
+  <data name="HELP_CMD_SERVER_START" xml:space="preserve">
+    <value>  server start              Start TCP server (virtual printer)</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STOP" xml:space="preserve">
+    <value>  server stop               Stop TCP server</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STATUS" xml:space="preserve">
+    <value>  server status             Check TCP server status</value>
+  </data>
+  <data name="HELP_OPT_SERVER_PORT" xml:space="preserve">
+    <value>  --port &lt;port&gt;              TCP port to listen on (default: 9101)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_OUTPUT" xml:space="preserve">
+    <value>  -o &lt;output_folder&gt;         Output folder for PDFs (default: Documents/ZPL2PDF TCP Output)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_FOREGROUND" xml:space="preserve">
+    <value>  --foreground              Run in foreground (for debugging)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Rendering engine: offline, labelary, or auto (default: offline)</value>
+  </data>
+  <data name="TCP_SERVER_STARTED_SUCCESS" xml:space="preserve">
+    <value>TCP server started successfully! Port: {0}, PID: {1}</value>
+  </data>
+  <data name="TCP_SERVER_STOPPED_SUCCESS" xml:space="preserve">
+    <value>TCP server stopped successfully!</value>
+  </data>
+  <data name="TCP_SERVER_ALREADY_RUNNING" xml:space="preserve">
+    <value>TCP server is already running!</value>
+  </data>
+  <data name="TCP_SERVER_NOT_RUNNING" xml:space="preserve">
+    <value>TCP server is not running!</value>
+  </data>
+  <data name="TCP_SERVER_STATUS_RUNNING" xml:space="preserve">
+    <value>TCP server is running! Port: {0}, PID: {1}</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Rendering engine: offline (BinaryKits), labelary (API), or auto (fallback)</value>
+  </data>
+  <data name="HELP_OPT_RENDERER_DAEMON" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Rendering engine for all conversions (offline, labelary, or auto)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;directory&gt;    Directory containing custom TrueType/OpenType fonts</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;id=path&gt;           Map font ID to font file (e.g., "A=arial.ttf")</value>
   </data>
 </root>

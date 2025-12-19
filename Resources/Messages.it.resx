@@ -155,7 +155,7 @@
     <value>Puoi anche passare le opzioni del demone direttamente: ZPL2PDF.exe -l "cartella" -w 10 -h 5</value>
   </data>
   <data name="HELP_PARAM_INPUT_FILE" xml:space="preserve">
-    <value>  -i &lt;percorso_file_input&gt;       Percorso al file .txt o .prn di input</value>
+    <value>  -i &lt;percorso_file_input&gt;       Percorso al file di input (.txt, .prn, .zpl o .imp)</value>
   </data>
   <data name="HELP_PARAM_ZPL_CONTENT" xml:space="preserve">
     <value>  -z &lt;contenuto_zpl&gt;           Contenuto ZPL come stringa</value>
@@ -264,5 +264,110 @@
   </data>
   <data name="HELP_LANGUAGE_PARAM" xml:space="preserve">
     <value>  --language &lt;lingua&gt;           Lingua dell'interfaccia (es: pt-BR, en-US, es-ES)</value>
+  </data>
+  <data name="HELP_SET_LANGUAGE" xml:space="preserve">
+    <value>  --set-language &lt;lingua&gt;       Imposta la lingua in modo permanente (imposta la variabile d'ambiente)</value>
+  </data>
+  <data name="HELP_RESET_LANGUAGE" xml:space="preserve">
+    <value>  --reset-language               Reimposta alla lingua predefinita del sistema</value>
+  </data>
+  <data name="HELP_SHOW_LANGUAGE" xml:space="preserve">
+    <value>  --show-language                Mostra la configurazione della lingua corrente</value>
+  </data>
+  <data name="INVALID_LANGUAGE_CODE" xml:space="preserve">
+    <value>Codice lingua non valido: {0}</value>
+  </data>
+  <data name="SUPPORTED_LANGUAGES_LIST" xml:space="preserve">
+    <value>Lingue supportate:</value>
+  </data>
+  <data name="LANGUAGE_SET_SUCCESS" xml:space="preserve">
+    <value>Lingua impostata su: {0}</value>
+  </data>
+  <data name="LANGUAGE_RESET_SUCCESS" xml:space="preserve">
+    <value>Configurazione della lingua reimpostata al predefinito del sistema</value>
+  </data>
+  <data name="RESTART_REQUIRED" xml:space="preserve">
+    <value>Si prega di riavviare il terminale/prompt dei comandi per rendere effettive le modifiche.</value>
+  </data>
+  <data name="ERROR_SETTING_LANGUAGE" xml:space="preserve">
+    <value>Errore nell'impostazione della lingua: {0}</value>
+  </data>
+  <data name="ERROR_RESETTING_LANGUAGE" xml:space="preserve">
+    <value>Errore nel ripristino della lingua: {0}</value>
+  </data>
+  <data name="CURRENT_LANGUAGE_CONFIG" xml:space="preserve">
+    <value>Configurazione della lingua corrente:</value>
+  </data>
+  <data name="ENV_VAR_LANGUAGE" xml:space="preserve">
+    <value>Variabile d'ambiente: {0}</value>
+  </data>
+  <data name="ENV_VAR_NOT_SET" xml:space="preserve">
+    <value>Variabile d'ambiente: Non impostata</value>
+  </data>
+  <data name="CURRENT_LANGUAGE" xml:space="preserve">
+    <value>Lingua corrente: {0}</value>
+  </data>
+  <data name="SYSTEM_LANGUAGE" xml:space="preserve">
+    <value>Lingua del sistema: {0}</value>
+  </data>
+  <data name="LANGUAGE_PRIORITY_ORDER" xml:space="preserve">
+    <value>Priorità: 1) Parametro --language, 2) Variabile d'ambiente, 3) File config, 4) Rilevamento del sistema</value>
+  </data>
+  <data name="HELP_TCP_SERVER_MODE" xml:space="preserve">
+    <value>MODO SERVER TCP:</value>
+  </data>
+  <data name="HELP_TCP_SERVER_USAGE" xml:space="preserve">
+    <value>Uso: ZPL2PDF.exe server start [opzioni] | stop | status</value>
+  </data>
+  <data name="HELP_TCP_SERVER_COMMANDS" xml:space="preserve">
+    <value>Comandi del server:</value>
+  </data>
+  <data name="HELP_CMD_SERVER_START" xml:space="preserve">
+    <value>  server start              Avvia server TCP (stampante virtuale)</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STOP" xml:space="preserve">
+    <value>  server stop               Ferma server TCP</value>
+  </data>
+  <data name="HELP_CMD_SERVER_STATUS" xml:space="preserve">
+    <value>  server status             Verifica stato del server TCP</value>
+  </data>
+  <data name="HELP_OPT_SERVER_PORT" xml:space="preserve">
+    <value>  --port &lt;porta&gt;              Porta TCP su cui ascoltare (predefinito: 9101)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_OUTPUT" xml:space="preserve">
+    <value>  -o &lt;cartella_output&gt;         Cartella di output per PDF (predefinito: Documents/ZPL2PDF TCP Output)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_FOREGROUND" xml:space="preserve">
+    <value>  --foreground              Esegui in primo piano (per debug)</value>
+  </data>
+  <data name="HELP_OPT_SERVER_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Motore di rendering: offline, labelary o auto (predefinito: offline)</value>
+  </data>
+  <data name="TCP_SERVER_STARTED_SUCCESS" xml:space="preserve">
+    <value>Server TCP avviato con successo! Porta: {0}, PID: {1}</value>
+  </data>
+  <data name="TCP_SERVER_STOPPED_SUCCESS" xml:space="preserve">
+    <value>Server TCP fermato con successo!</value>
+  </data>
+  <data name="TCP_SERVER_ALREADY_RUNNING" xml:space="preserve">
+    <value>Il server TCP è già in esecuzione!</value>
+  </data>
+  <data name="TCP_SERVER_NOT_RUNNING" xml:space="preserve">
+    <value>Il server TCP non è in esecuzione!</value>
+  </data>
+  <data name="TCP_SERVER_STATUS_RUNNING" xml:space="preserve">
+    <value>Il server TCP è in esecuzione! Porta: {0}, PID: {1}</value>
+  </data>
+  <data name="HELP_PARAM_RENDERER" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Motore di rendering: offline (BinaryKits), labelary (API) o auto (fallback)</value>
+  </data>
+  <data name="HELP_OPT_RENDERER_DAEMON" xml:space="preserve">
+    <value>  --renderer &lt;engine&gt;        Motore di rendering per tutte le conversioni (offline, labelary o auto)</value>
+  </data>
+  <data name="HELP_PARAM_FONTS_DIR" xml:space="preserve">
+    <value>  --fonts-dir &lt;directory&gt;    Directory contenente font TrueType/OpenType personalizzati</value>
+  </data>
+  <data name="HELP_PARAM_FONT" xml:space="preserve">
+    <value>  --font &lt;id=percorso&gt;           Mappa ID font al file font (es: "A=arial.ttf")</value>
   </data>
 </root>

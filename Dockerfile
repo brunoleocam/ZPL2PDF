@@ -101,4 +101,4 @@ CMD ["/app/ZPL2PDF", "run", "-l", "/app/watch"]
 # Metadata
 LABEL maintainer="brunoleocam" \
       description="ZPL2PDF - Alpine Linux (Ultra Lightweight)" \
-      version="2.0.0-alpine"
+      version="3.0.0-alpine"

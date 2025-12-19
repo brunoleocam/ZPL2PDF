@@ -117,5 +117,30 @@ namespace ZPL2PDF.Shared.Localization
         public const string CURRENT_LANGUAGE = "CURRENT_LANGUAGE";
         public const string SYSTEM_LANGUAGE = "SYSTEM_LANGUAGE";
         public const string LANGUAGE_PRIORITY_ORDER = "LANGUAGE_PRIORITY_ORDER";
+        
+        // TCP Server mode
+        public const string HELP_TCP_SERVER_MODE = "HELP_TCP_SERVER_MODE";
+        public const string HELP_TCP_SERVER_USAGE = "HELP_TCP_SERVER_USAGE";
+        public const string HELP_TCP_SERVER_COMMANDS = "HELP_TCP_SERVER_COMMANDS";
+        public const string HELP_CMD_SERVER_START = "HELP_CMD_SERVER_START";
+        public const string HELP_CMD_SERVER_STOP = "HELP_CMD_SERVER_STOP";
+        public const string HELP_CMD_SERVER_STATUS = "HELP_CMD_SERVER_STATUS";
+        public const string HELP_OPT_SERVER_PORT = "HELP_OPT_SERVER_PORT";
+        public const string HELP_OPT_SERVER_OUTPUT = "HELP_OPT_SERVER_OUTPUT";
+        public const string HELP_OPT_SERVER_FOREGROUND = "HELP_OPT_SERVER_FOREGROUND";
+        public const string HELP_OPT_SERVER_RENDERER = "HELP_OPT_SERVER_RENDERER";
+        public const string TCP_SERVER_STARTED_SUCCESS = "TCP_SERVER_STARTED_SUCCESS";
+        public const string TCP_SERVER_STOPPED_SUCCESS = "TCP_SERVER_STOPPED_SUCCESS";
+        public const string TCP_SERVER_ALREADY_RUNNING = "TCP_SERVER_ALREADY_RUNNING";
+        public const string TCP_SERVER_NOT_RUNNING = "TCP_SERVER_NOT_RUNNING";
+        public const string TCP_SERVER_STATUS_RUNNING = "TCP_SERVER_STATUS_RUNNING";
+        
+        // Renderer options
+        public const string HELP_PARAM_RENDERER = "HELP_PARAM_RENDERER";
+        public const string HELP_OPT_RENDERER_DAEMON = "HELP_OPT_RENDERER_DAEMON";
+        
+        // Custom fonts
+        public const string HELP_PARAM_FONTS_DIR = "HELP_PARAM_FONTS_DIR";
+        public const string HELP_PARAM_FONT = "HELP_PARAM_FONT";
     }
 }

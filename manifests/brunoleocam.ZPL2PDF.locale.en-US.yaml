@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
 
 PackageIdentifier: brunoleocam.ZPL2PDF
-PackageVersion: 2.0.1
+PackageVersion: 3.0.0
 PackageLocale: en-US
 Publisher: Bruno Campos
 PublisherUrl: https://github.com/brunoleocam
@@ -14,12 +14,15 @@ License: MIT
 LicenseUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
 Copyright: Copyright (c) 2025 Bruno Campos
 CopyrightUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
-ShortDescription: Convert ZPL files to PDF with multi-language support and daemon mode
+ShortDescription: Convert ZPL files to PDF with Labelary API, TCP server mode, and multi-language support
 Description: |-
   ZPL2PDF is a powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents.
   
   Key Features:
-  • Dual Operation Modes - Conversion mode for individual files and daemon mode for automatic folder monitoring
+  • Multiple Rendering Engines - Offline (BinaryKits), Labelary API (high-fidelity), and Auto (fallback)
+  • TCP Server Mode - Virtual Zebra printer on TCP port for application integration
+  • Custom Font Support - Load TrueType/OpenType fonts for branded labels
+  • Three Operation Modes - Conversion, daemon (auto-monitor), and TCP server (virtual printer)
   • Multi-language Support - 8 languages (EN, PT, ES, FR, DE, IT, JA, ZH)
   • Intelligent Dimension Handling - Automatic extraction from ZPL commands (^PW, ^LL)
   • Cross-Platform - Native support for Windows, Linux, and macOS
@@ -32,6 +35,7 @@ Description: |-
   • Automated document generation
   • Enterprise label management systems
   • ERP integration
+  • Virtual printer integration
   • Batch processing
 Moniker: zpl2pdf
 Tags:
@@ -46,22 +50,37 @@ Tags:
 - zebra
 - zpl
 ReleaseNotes: |-
-  What's New in v2.0.1:
+  What's New in v3.0.0:
   
-  🐛 Bug Fixes
+  🎉 Major Release - Labelary Integration & TCP Server
   
-  Docker/Linux CLI Mode:
-  • Fixed font rendering issues in Alpine Linux Docker images
-  • Added fontconfig, ttf-dejavu, ttf-liberation, and font-noto packages
-  • Resolved "asset null" errors when running in CLI mode (non-daemon)
+  🎨 Labelary API Integration:
+  • High-fidelity ZPL rendering with exact Zebra printer emulation
+  • Vector PDF output (smaller, higher quality files)
+  • Automatic batching for 50+ labels with PDF merging
+  • Smart fallback: tries Labelary first, falls back to BinaryKits if offline
   
-  ZPL ^FN Tag Rendering:
-  • Fixed issue where text fields using ^FN (Field Number) followed by ^FD (Field Data) were not rendered
-  • Added ZPL preprocessing to handle unsupported ^FN commands
-  • ^FD content is now correctly displayed in generated PDFs
+  🖨️ TCP Server Mode (Virtual Printer):
+  • Acts as a TCP printer on configurable port (default: 9101)
+  • Perfect for integration with applications that send ZPL directly to printers
+  • Runs independently from daemon mode (both can run simultaneously)
+  • Background operation with foreground debug mode
+  
+  🔤 Custom Font Support:
+  • Load TrueType/OpenType fonts from directory or map specific font IDs
+  • Support for multiple font mappings
+  • Perfect for branded label designs
+  
+  📁 Extended File Support:
+  • Added support for .zpl and .imp file extensions
+  • All extensions (.txt, .prn, .zpl, .imp) now supported
+  
+  📝 Custom Output File Naming:
+  • Control output PDF filenames directly from ZPL code
+  • Use ^FX FileName: MyLabel in ZPL for custom naming
   
   For detailed changes, see: https://github.com/brunoleocam/ZPL2PDF/blob/main/CHANGELOG.md
-ReleaseNotesUrl: https://github.com/brunoleocam/ZPL2PDF/releases/tag/v2.0.1
+ReleaseNotesUrl: https://github.com/brunoleocam/ZPL2PDF/releases/tag/v3.0.0
 Documentations:
 - DocumentLabel: Documentation
   DocumentUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/docs/README.md

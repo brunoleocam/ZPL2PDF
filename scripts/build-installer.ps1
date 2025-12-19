@@ -2,8 +2,10 @@
 # This script builds the Windows installer using Inno Setup
 
 param(
+    [Parameter(Mandatory=$true)]
+    [string]$Version,
+    
     [string]$InnoSetupPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
-    [string]$Version = "2.0.0",
     [string]$Configuration = "Release",
     [switch]$Help = $false
 )
@@ -87,7 +89,7 @@ if (-not (Test-Path $ExePath)) {
 Write-ColorOutput "Executable found: $ExePath" $SuccessColor
 
 # Check if Inno Setup script exists
-$InnoScriptPath = "install\ZPL2PDF.iss"
+$InnoScriptPath = "installer\ZPL2PDF-Setup.iss"
 if (-not (Test-Path $InnoScriptPath)) {
     Write-ColorOutput "Inno Setup script not found: $InnoScriptPath" $ErrorColor
     exit 1
@@ -95,7 +97,7 @@ if (-not (Test-Path $InnoScriptPath)) {
 Write-ColorOutput "Inno Setup script found: $InnoScriptPath" $SuccessColor
 
 # Create output directory
-$OutputDir = "install\output"
+$OutputDir = "installer\Output"
 if (-not (Test-Path $OutputDir)) {
     New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
     Write-ColorOutput "Created output directory: $OutputDir" $InfoColor
@@ -119,6 +121,15 @@ if ($exitCode -eq 0) {
         $InstallerSize = [math]::Round($InstallerFile.Length / 1MB, 2)
         Write-ColorOutput "Installer created: $($InstallerFile.Name) ($InstallerSize MB)" $SuccessColor
         Write-ColorOutput "Location: $($InstallerFile.FullName)" $InfoColor
+        
+        # Copy to Assets directory
+        $AssetsDir = "Assets"
+        if (-not (Test-Path $AssetsDir)) {
+            New-Item -ItemType Directory -Path $AssetsDir -Force | Out-Null
+        }
+        $AssetsInstallerPath = Join-Path $AssetsDir "ZPL2PDF-Setup-$Version.exe"
+        Copy-Item $InstallerFile.FullName -Destination $AssetsInstallerPath -Force
+        Write-ColorOutput "Copied to Assets: $AssetsInstallerPath" $SuccessColor
         
         # Test installer
         Write-ColorOutput "Testing installer..." $InfoColor

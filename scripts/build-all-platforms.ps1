@@ -2,11 +2,14 @@
 # This script builds ZPL2PDF for all supported platforms
 
 param(
+    [Parameter(Mandatory=$true)]
+    [string]$Version,
+    
     [Parameter(Mandatory=$false)]
     [switch]$SkipTests = $false,
     
     [Parameter(Mandatory=$false)]
-    [string]$OutputDir = "build/publish"
+    [string]$OutputDir = "Assets"
 )
 
 # Set error action preference
@@ -33,7 +36,7 @@ function Write-ErrorMsg {
 }
 
 Write-Host "============================================" -ForegroundColor Blue
-Write-Host "  ZPL2PDF - Build All Platforms v2.0.1    " -ForegroundColor Blue
+Write-Host "  ZPL2PDF - Build All Platforms v$Version" -ForegroundColor Blue
 Write-Host "============================================" -ForegroundColor Blue
 Write-Host ""
 
@@ -122,7 +125,7 @@ foreach ($platform in $platforms) {
                 Write-Success "Built successfully! Size: $([math]::Round($fileSize, 2)) MB"
                 
                 # Create archive
-                $archiveName = "ZPL2PDF-v2.0.1-$runtime"
+                $archiveName = "ZPL2PDF-v$Version-$runtime"
                 if ($archiveType -eq "zip") {
                     Compress-Archive -Path "$platformDir/*" -DestinationPath "$OutputDir/$archiveName.zip" -Force
                     Write-Info "   Archive: $archiveName.zip"

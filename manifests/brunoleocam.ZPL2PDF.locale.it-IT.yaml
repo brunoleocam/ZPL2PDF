@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.6.0.schema.json
 
 PackageIdentifier: brunoleocam.ZPL2PDF
-PackageVersion: 2.0.1
+PackageVersion: 3.0.0
 PackageLocale: it-IT
 Publisher: Bruno Campos
 PublisherUrl: https://github.com/brunoleocam
@@ -14,12 +14,15 @@ License: MIT
 LicenseUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
 Copyright: Copyright (c) 2025 Bruno Campos
 CopyrightUrl: https://github.com/brunoleocam/ZPL2PDF/blob/main/LICENSE
-ShortDescription: Converti file ZPL in PDF con supporto multi-lingua e modalità daemon
+ShortDescription: Converti file ZPL in PDF con API Labelary, modalità server TCP e supporto multi-lingua
 Description: |-
   ZPL2PDF è un potente strumento da riga di comando multipiattaforma che converte file ZPL (Zebra Programming Language) in documenti PDF di alta qualità.
   
   Caratteristiche Principali:
-  • Modalità di Funzionamento Doppie - Modalità conversione per file singoli e modalità daemon per monitoraggio automatico cartelle
+  • Motori di Rendering Multipli - Offline (BinaryKits), API Labelary (alta fedeltà) e Auto (fallback)
+  • Modalità Server TCP - Stampante Zebra virtuale su porta TCP per integrazione con applicazioni
+  • Supporto Font Personalizzati - Carica font TrueType/OpenType per etichette personalizzate
+  • Tre Modalità di Funzionamento - Conversione, daemon (monitoraggio automatico) e server TCP (stampante virtuale)
   • Supporto Multi-lingua - 8 lingue (EN, PT, ES, FR, DE, IT, JA, ZH)
   • Gestione Intelligente delle Dimensioni - Estrazione automatica dai comandi ZPL (^PW, ^LL)
   • Multipiattaforma - Supporto nativo per Windows, Linux e macOS
@@ -32,6 +35,7 @@ Description: |-
   • Generazione automatizzata di documenti
   • Sistemi aziendali di gestione etichette
   • Integrazione ERP
+  • Integrazione stampante virtuale
   • Elaborazione batch
 Tags:
 - cli
