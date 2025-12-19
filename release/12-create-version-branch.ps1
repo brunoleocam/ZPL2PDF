@@ -77,19 +77,17 @@ if ($existingBranch) {
     Write-Success "Branch created: $branchName"
 }
 
-# Add all changes
-git add .
+# Check for release notes file and read it for PR description
+$releaseNotesPath = Join-Path $ProjectRoot "RELEASE_NOTES_V3.0.0.md"
+$prBody = ""
+$prTitle = "Release v$Version"
 
-# Make commit
-$commitMessage = "chore: release v$Version"
-git commit -m $commitMessage
-
-# Push branch
-git push origin $branchName --set-upstream
-
-# Create Pull Request using GitHub CLI
-if (Get-Command gh -ErrorAction SilentlyContinue) {
-    $prTitle = "Release v$Version"
+if (Test-Path $releaseNotesPath) {
+    Write-Info "Reading release notes from RELEASE_NOTES_V3.0.0.md..."
+    $prBody = Get-Content $releaseNotesPath -Raw -Encoding UTF8
+    Write-Info "Release notes loaded for PR description"
+} else {
+    # Fallback to default description
     $prBody = @"
 ## Release v$Version
 
@@ -111,12 +109,35 @@ This PR contains all changes for release v$Version.
 
 **Waiting for approval to merge to main.**
 "@
-    
+}
+
+# Add all changes except RELEASE_NOTES_V3.0.0.md
+Write-Info "Staging changes (excluding RELEASE_NOTES_V3.0.0.md)..."
+git add .
+# Remove RELEASE_NOTES_V3.0.0.md from staging if it was added
+git reset HEAD RELEASE_NOTES_V3.0.0.md 2>$null
+
+# Make commit
+$commitMessage = "chore: release v$Version"
+git commit -m $commitMessage
+
+# Push branch
+git push origin $branchName --set-upstream --force
+
+# Create Pull Request using GitHub CLI
+if (Get-Command gh -ErrorAction SilentlyContinue) {
     gh pr create --title $prTitle --body $prBody --base main --head $branchName
     Write-Success "Pull Request created!"
 } else {
     Write-Warning "GitHub CLI not found. Create PR manually:"
     Write-Info "https://github.com/brunoleocam/ZPL2PDF/compare/main...$branchName"
+}
+
+# Delete RELEASE_NOTES_V3.0.0.md after PR is created
+if (Test-Path $releaseNotesPath) {
+    Write-Info "Deleting RELEASE_NOTES_V3.0.0.md..."
+    Remove-Item $releaseNotesPath -Force
+    Write-Success "RELEASE_NOTES_V3.0.0.md deleted"
 }
 
 Write-Success "Version branch created and PR submitted!"

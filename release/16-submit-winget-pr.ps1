@@ -21,6 +21,9 @@ $WinGetRepo = "microsoft/winget-pkgs"
 $WinGetFork = "$RepoOwner/winget-pkgs"
 $PackageId = "brunoleocam.ZPL2PDF"
 
+# Load checkpoint utilities
+. (Join-Path $ScriptDir "_checkpoint-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[16] $Message" -ForegroundColor Yellow
@@ -89,7 +92,13 @@ try {
     
     # Sync with upstream
     Write-Info "Syncing with upstream..."
-    git remote add upstream "https://github.com/$WinGetRepo.git" 2>$null
+    $upstreamExists = git remote | Select-String -Pattern "^upstream$"
+    if (-not $upstreamExists) {
+        git remote add upstream "https://github.com/$WinGetRepo.git"
+    } else {
+        Write-Info "Upstream remote already exists, updating..."
+        git remote set-url upstream "https://github.com/$WinGetRepo.git"
+    }
     git fetch upstream master --depth=1
     git reset --hard upstream/master
     
@@ -122,6 +131,9 @@ try {
     
     Write-Success "PR submitted to WinGet!"
     Write-Info "Track at: https://github.com/$WinGetRepo/pulls"
+    
+    # Save checkpoint
+    Mark-StepCompleted -Version $Version -ProjectRoot $ProjectRoot -StepNumber 16
     
 } catch {
     Write-Warning "Failed to submit PR: $_"

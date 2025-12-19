@@ -18,6 +18,9 @@ $ProjectRoot = Split-Path -Parent $ScriptDir
 $RepoOwner = "brunoleocam"
 $GhcrImage = "ghcr.io/brunoleocam/zpl2pdf"
 
+# Load checkpoint utilities
+. (Join-Path $ScriptDir "_checkpoint-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[15] $Message" -ForegroundColor Yellow
@@ -114,4 +117,7 @@ foreach ($tag in $tags) {
 
 Write-Success "Images published to GHCR!"
 Write-Info "URL: https://github.com/$RepoOwner?tab=packages&package_name=zpl2pdf"
+
+# Save checkpoint
+Mark-StepCompleted -Version $Version -ProjectRoot $ProjectRoot -StepNumber 15
 

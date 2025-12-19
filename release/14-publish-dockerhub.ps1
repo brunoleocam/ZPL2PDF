@@ -16,6 +16,9 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $ScriptDir
 
+# Load checkpoint utilities
+. (Join-Path $ScriptDir "_checkpoint-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[14] $Message" -ForegroundColor Yellow
@@ -85,4 +88,7 @@ foreach ($tag in $tags) {
 
 Write-Success "Images published to Docker Hub!"
 Write-Info "URL: https://hub.docker.com/r/$dockerImage/tags"
+
+# Save checkpoint
+Mark-StepCompleted -Version $Version -ProjectRoot $ProjectRoot -StepNumber 14
 
