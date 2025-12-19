@@ -34,45 +34,57 @@ if (-not $RpmOnly) {
     
     # Create Dockerfile for .deb build
     $debDockerfile = @"
-FROM ubuntu:22.04
+FROM mcr.microsoft.com/dotnet/sdk:9.0
 
-# Install dependencies
+ARG VERSION=3.0.0
+
+# Install dependencies for .deb package creation
 RUN apt-get update && apt-get install -y \
     dpkg-dev \
     debhelper \
     build-essential \
-    wget \
-    ca-certificates \
     gzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install .NET SDK
-RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
-    chmod +x dotnet-install.sh && \
-    ./dotnet-install.sh --channel 9.0 && \
-    ln -s ~/.dotnet/dotnet /usr/bin/dotnet
-
 WORKDIR /build
 
-# Copy only necessary files
+# Copy project file first for better caching
 COPY ZPL2PDF.csproj .
 COPY Resources/ ./Resources/
+
+# Restore dependencies
+RUN dotnet restore ZPL2PDF.csproj
+
+# Copy source code
 COPY src/ ./src/
 COPY README.md LICENSE CHANGELOG.md ./
 COPY debian/ ./debian/
 
 # Build application
-RUN dotnet publish -c Release -r linux-x64 --self-contained true -o /app/publish
+RUN dotnet publish ZPL2PDF.csproj \
+    -c Release \
+    -r linux-x64 \
+    --self-contained true \
+    -o /app/publish \
+    -p:PublishSingleFile=true \
+    -p:PublishTrimmed=false
 
 # Create .deb package structure
 RUN mkdir -p /deb/DEBIAN /deb/usr/bin /deb/usr/share/doc/zpl2pdf /deb/usr/share/man/man1 && \
     cp /app/publish/ZPL2PDF /deb/usr/bin/ && \
     chmod +x /deb/usr/bin/ZPL2PDF && \
     cp README.md LICENSE CHANGELOG.md /deb/usr/share/doc/zpl2pdf/ && \
-    echo 'Package: zpl2pdf\nVersion: 2.0.1\nSection: utils\nPriority: optional\nArchitecture: amd64\nDepends: libgdiplus, libc6-dev\nMaintainer: Bruno Leonardo Campos <brunoleocam@gmail.com>\nDescription: ZPL to PDF Converter' > /deb/DEBIAN/control && \
-    dpkg-deb --build /deb /build/ZPL2PDF-v2.0.1-linux-amd64.deb
+    echo "Package: zpl2pdf" > /deb/DEBIAN/control && \
+    echo "Version: $VERSION" >> /deb/DEBIAN/control && \
+    echo "Section: utils" >> /deb/DEBIAN/control && \
+    echo "Priority: optional" >> /deb/DEBIAN/control && \
+    echo "Architecture: amd64" >> /deb/DEBIAN/control && \
+    echo "Depends: libgdiplus, libc6-dev" >> /deb/DEBIAN/control && \
+    echo "Maintainer: Bruno Leonardo Campos <brunoleocam@gmail.com>" >> /deb/DEBIAN/control && \
+    echo "Description: ZPL to PDF Converter" >> /deb/DEBIAN/control && \
+    dpkg-deb --build /deb /build/ZPL2PDF-v$VERSION-linux-amd64.deb
 
-CMD ["sh", "-c", "cp /build/ZPL2PDF-v2.0.1-linux-amd64.deb /output/ && echo 'Package created successfully'"]
+CMD ["sh", "-c", "cp /build/ZPL2PDF-v$VERSION-linux-amd64.deb /output/ && echo 'Package created successfully'"]
 "@
 
     $debDockerfile | Out-File -FilePath "Dockerfile.deb" -Encoding UTF8
@@ -93,7 +105,7 @@ build/
     # Build Docker image
     Write-Host "[*] Building Docker image for .deb..." -ForegroundColor Cyan
     Copy-Item ".dockerignore.temp" ".dockerignore" -Force
-    docker build -f Dockerfile.deb -t zpl2pdf-deb-builder .
+    docker build -f Dockerfile.deb --build-arg VERSION=$Version -t zpl2pdf-deb-builder .
     Remove-Item ".dockerignore.temp" -Force -ErrorAction SilentlyContinue
     
     # Run container to build package
@@ -120,52 +132,55 @@ if (-not $DebOnly) {
     Write-Host ""
     
     # Create Dockerfile for .rpm build
+    # Note: Using Debian-based .NET SDK image and creating tarball instead of true RPM
+    # True RPM would require Fedora/CentOS base image
     $rpmDockerfile = @"
-FROM fedora:39
+FROM mcr.microsoft.com/dotnet/sdk:9.0
+
+ARG VERSION=3.0.0
 
 # Install dependencies
-RUN dnf install -y \
-    rpm-build \
-    rpmdevtools \
-    wget \
-    ca-certificates \
+RUN apt-get update && apt-get install -y \
     gzip \
-    icu \
-    libicu \
-    && dnf clean all
-
-# Install .NET SDK
-RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
-    chmod +x dotnet-install.sh && \
-    ./dotnet-install.sh --channel 9.0 && \
-    ln -s ~/.dotnet/dotnet /usr/bin/dotnet
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build
 
-# Copy only necessary files
+# Copy project file first for better caching
 COPY ZPL2PDF.csproj .
 COPY Resources/ ./Resources/
+
+# Restore dependencies
+RUN dotnet restore ZPL2PDF.csproj
+
+# Copy source code
 COPY src/ ./src/
 COPY README.md LICENSE CHANGELOG.md ./
 
 # Build application
-RUN dotnet publish -c Release -r linux-x64 --self-contained true -o /app/publish
+RUN dotnet publish ZPL2PDF.csproj \
+    -c Release \
+    -r linux-x64 \
+    --self-contained true \
+    -o /app/publish \
+    -p:PublishSingleFile=true \
+    -p:PublishTrimmed=false
 
 # Create RPM structure using simple tar method
 RUN mkdir -p /rpm/usr/bin /rpm/usr/share/doc/zpl2pdf /rpm/usr/share/man/man1 && \
     cp /app/publish/ZPL2PDF /rpm/usr/bin/ && \
     chmod +x /rpm/usr/bin/ZPL2PDF && \
     cp README.md LICENSE CHANGELOG.md /rpm/usr/share/doc/zpl2pdf/ && \
-    cd /rpm && tar czf /build/ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz usr/
+    cd /rpm && tar czf /build/ZPL2PDF-v$VERSION-linux-x64-rpm.tar.gz usr/
 
-CMD ["sh", "-c", "cp /build/ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz /output/ && echo 'Package created successfully'"]
+CMD ["sh", "-c", "cp /build/ZPL2PDF-v$VERSION-linux-x64-rpm.tar.gz /output/ && echo 'Package created successfully'"]
 "@
 
     $rpmDockerfile | Out-File -FilePath "Dockerfile.rpm" -Encoding UTF8
     
     # Build Docker image
     Write-Host "[*] Building Docker image for .rpm..." -ForegroundColor Cyan
-    docker build -f Dockerfile.rpm -t zpl2pdf-rpm-builder .
+    docker build -f Dockerfile.rpm --build-arg VERSION=$Version -t zpl2pdf-rpm-builder .
     
     # Run container to build package
     Write-Host "[*] Running build in container..." -ForegroundColor Cyan
