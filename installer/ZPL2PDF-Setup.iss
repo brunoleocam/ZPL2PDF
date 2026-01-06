@@ -15,7 +15,7 @@
 ; =============================================================================
 
 #define MyAppName "ZPL2PDF"
-#define MyAppVersion "3.0.0"
+#define MyAppVersion "3.0.1"
 #define MyAppPublisher "Bruno Campos"
 #define MyAppURL "https://github.com/brunoleocam/ZPL2PDF"
 #define MyAppExeName "ZPL2PDF.exe"

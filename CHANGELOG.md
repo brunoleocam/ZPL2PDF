@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.1] - 2026-01-06
+
+### 🐛 Fixed
+
+- **Issue #39**: Fixed processing of multiple graphics with the same name
+  - Implemented sequential processing of ZPL graphics maintaining state in memory (like a physical printer)
+  - `^IDR` (delete graphic) commands are now ignored and do not generate blank pages
+  - `~DGR` graphics with the same name are correctly replaced and used in subsequent labels
+  - Resolves issue where all labels were identical to the first one in Shopee shipping label files
+
+### 🔧 Improved
+
+- Added input validation in public methods (`ArgumentNullException`)
+- Compiled regex for better performance in `IsCleanupCommandOnly`
+- Added protection against infinite loops in sequential processing
+- Improved exception handling in `ConversionModeHandler`
+- Removed unused methods in `LabelRenderer`
+- **Help Display**: Added missing TCP Server, Renderer, and Fonts sections to help output (all languages)
+
+### 📦 Technical Details
+
+- **Files Modified**:
+  - `src/Shared/LabelFileReader.cs` - Sequential graphic processing implementation
+  - `src/Infrastructure/Rendering/LabelRenderer.cs` - Code cleanup and validations
+  - `src/Presentation/ConversionModeHandler.cs` - Improved exception handling
+  - `src/Presentation/HelpDisplay.cs` - Added TCP Server, Renderer, and Fonts help sections
+
+---
+
 ## [3.0.0] - 2025-12-18
 
 ### 🎉 Major Release - Labelary Integration & TCP Server

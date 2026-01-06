@@ -22,12 +22,21 @@ namespace ZPL2PDF
             if (string.IsNullOrWhiteSpace(zplContent))
                 return dimensions;
 
-            // Split into individual labels (^XA...^XZ)
-            var labels = SplitLabels(zplContent);
+            // Use LabelFileReader.SplitLabels to ensure consistency and filter cleanup commands
+            var labels = LabelFileReader.SplitLabels(zplContent);
             
             foreach (var label in labels)
             {
-                var labelDimensions = ExtractDimensionsFromLabel(label);
+                // Extract dimensions from the label content (without graphics prepended)
+                // Remove graphics that may have been prepended by SplitLabels
+                string labelContent = label;
+                int firstXAPos = label.IndexOf("^XA", StringComparison.OrdinalIgnoreCase);
+                if (firstXAPos > 0)
+                {
+                    labelContent = label.Substring(firstXAPos);
+                }
+                
+                var labelDimensions = ExtractDimensionsFromLabel(labelContent);
                 dimensions.Add(labelDimensions);
             }
 
