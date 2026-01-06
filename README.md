@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.0.1-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -13,6 +13,23 @@
 A powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents. Perfect for label printing workflows, automated document generation, and enterprise label management systems.
 
 ![ZPL2PDF Demo](docs/Image/example_converted.png)
+
+---
+
+## 🚀 **What's New in v3.0.1**
+
+### 🐛 Bug Fixes
+- **Fixed Issue #39**: Sequential graphic processing for multiple graphics with same name
+  - ZPL files with multiple `~DGR` graphics now process correctly
+  - Each label uses the correct graphic based on sequential state
+  - `^IDR` cleanup commands no longer generate blank pages
+  - Resolves issue where all labels were identical in Shopee shipping label files
+
+### 🔧 Improvements
+- Added input validation in public methods
+- Improved exception handling
+- Performance optimizations with compiled regex
+- Code cleanup and removal of unused methods
 
 ---
 

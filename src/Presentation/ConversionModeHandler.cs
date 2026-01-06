@@ -31,28 +31,46 @@ namespace ZPL2PDF
         /// <param name="argumentProcessor">The argument processor with conversion configuration</param>
         public void HandleConversion(ArgumentProcessor argumentProcessor)
         {
-            // Read file content
-            string fileContent;
-            if (!string.IsNullOrEmpty(argumentProcessor.InputFilePath))
+            try
             {
-                fileContent = LabelFileReader.ReadFile(argumentProcessor.InputFilePath);
+                // Read file content
+                string fileContent;
+                if (!string.IsNullOrEmpty(argumentProcessor.InputFilePath))
+                {
+                    fileContent = LabelFileReader.ReadFile(argumentProcessor.InputFilePath);
+                }
+                else
+                {
+                    fileContent = argumentProcessor.ZplContent;
+                }
+
+                // Convert using the conversion service
+                var imageDataList = _conversionService.Convert(
+                    fileContent,
+                    argumentProcessor.Width,
+                    argumentProcessor.Height,
+                    argumentProcessor.Unit,
+                    argumentProcessor.Dpi
+                );
+
+                // Process the generated images
+                ProcessImages(imageDataList, argumentProcessor);
             }
-            else
+            catch (FileNotFoundException ex)
             {
-                fileContent = argumentProcessor.ZplContent;
+                Console.WriteLine($"Error: File not found - {ex.Message}");
+                throw;
             }
-
-            // Convert using the conversion service
-            var imageDataList = _conversionService.Convert(
-                fileContent,
-                argumentProcessor.Width,
-                argumentProcessor.Height,
-                argumentProcessor.Unit,
-                argumentProcessor.Dpi
-            );
-
-            // Process the generated images
-            ProcessImages(imageDataList, argumentProcessor);
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Error: Invalid argument - {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during conversion: {ex.Message}");
+                throw;
+            }
         }
 
         /// <summary>

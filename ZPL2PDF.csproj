@@ -5,14 +5,14 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <DocumentationFile>bin\Debug\net9.0\ZPL2PDF.xml</DocumentationFile>
-    <!-- Configurações para self-contained builds -->
+    <!-- Configuraï¿½ï¿½es para self-contained builds -->
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishReadyToRun>true</PublishReadyToRun>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <!-- Otimizações de build -->
+    <!-- Otimizaï¿½ï¿½es de build -->
     <PublishTrimmed>false</PublishTrimmed>
     <PublishAot>false</PublishAot>
   </PropertyGroup>

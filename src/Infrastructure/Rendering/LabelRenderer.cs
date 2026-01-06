@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using BinaryKits.Zpl.Label;
 using BinaryKits.Zpl.Viewer;
 using BinaryKits.Zpl.Viewer.ElementDrawers;
@@ -94,7 +95,12 @@ namespace ZPL2PDF {
         /// </summary>
         /// <param name="labels">List of ZPL labels.</param>
         /// <returns>List of images in byte arrays.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when labels is null.</exception>
         public List<byte[]> RenderLabels(List<string> labels) {
+            if (labels == null) {
+                throw new ArgumentNullException(nameof(labels));
+            }
+
             var images = new List<byte[]>();
             
             // Convert DPI to DPMM for the drawer
@@ -102,24 +108,36 @@ namespace ZPL2PDF {
             
             for (int i = 0; i < labels.Count; i++) {
                 var labelText = labels[i];
-                var analyzeInfo = _analyzer.Analyze(labelText);
-                foreach (var labelInfo in analyzeInfo.LabelInfos) {
-                    // Use DPMM for Draw (BinaryKits library expects DPMM)
-                    byte[] imageData = _drawer.Draw(labelInfo.ZplElements, _labelWidthMm, _labelHeightMm, dpmm);
-                    images.Add(imageData);
+                
+                // Create a fresh PrinterStorage and Analyzer for each label to avoid state pollution
+                // This ensures that graphics from one label don't affect another
+                var printerStorage = new PrinterStorage();
+                var analyzer = new ZplAnalyzer(printerStorage);
+                
+                // Process the complete label (graphics + label together)
+                // The ZplAnalyzer will process graphics first and load them into PrinterStorage
+                // Then it will process the label which can reference those graphics
+                var analyzeInfo = analyzer.Analyze(labelText);
+                
+                // Process all LabelInfos - the ZplAnalyzer should only generate one per ^XA...^XZ
+                if (analyzeInfo.LabelInfos != null) {
+                    foreach (var labelInfo in analyzeInfo.LabelInfos) {
+                        // Create a fresh drawer for this label to use the correct PrinterStorage
+                        var drawerOptions = new DrawerOptions {
+                            RenderFormat = SKEncodedImageFormat.Png,
+                            RenderQuality = 100,
+                            PdfOutput = false,
+                            OpaqueBackground = false
+                        };
+                        var drawer = new ZplElementDrawer(printerStorage, drawerOptions);
+                        
+                        // Use DPMM for Draw (BinaryKits library expects DPMM)
+                        byte[] imageData = drawer.Draw(labelInfo.ZplElements, _labelWidthMm, _labelHeightMm, dpmm);
+                        images.Add(imageData);
+                    }
                 }
             }
             return images;
-        }
-
-        /// <summary>
-        /// Saves the image data to a file.
-        /// </summary>
-        /// <param name="imageData">Image data in byte array.</param>
-        /// <param name="filePath">Path to save the image file.</param>
-        private void SaveImageToFile(byte[] imageData, string filePath) {
-            File.WriteAllBytes(filePath, imageData);
-            //Console.WriteLine($"Image saved to {filePath}");
         }
     }
 }

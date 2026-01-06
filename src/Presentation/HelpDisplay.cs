@@ -51,6 +51,21 @@ namespace ZPL2PDF
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_RESET_LANGUAGE));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_SHOW_LANGUAGE));
             Console.WriteLine();
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_SERVER_MODE));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_SERVER_USAGE));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_TCP_SERVER_COMMANDS));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_CMD_SERVER_START));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_CMD_SERVER_STOP));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_CMD_SERVER_STATUS));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_SERVER_PORT));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_SERVER_OUTPUT));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_SERVER_FOREGROUND));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_SERVER_RENDERER));
+            Console.WriteLine();
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_RENDERER));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_FONTS_DIR));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_FONT));
+            Console.WriteLine();
             Console.WriteLine($"  -help                      {LocalizationManager.GetString(ResourceKeys.HELP_SHOW_HELP_MESSAGE)}");
         }
     }
