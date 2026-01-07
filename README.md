@@ -687,6 +687,18 @@ Built with amazing open-source libraries:
 
 ---
 
+## 💝 **Support the Project**
+
+If ZPL2PDF helps you, consider supporting its development:
+
+- ☕ [Buy Me a Coffee](https://buymeacoffee.com/brunoleocam)
+- 🎗️ [Patreon](https://patreon.com/brunoleocam)
+- 💖 [GitHub Sponsors](https://github.com/sponsors/brunoleocam)
+
+Your support helps maintain and improve ZPL2PDF for everyone!
+
+---
+
 ## 🌟 **Star History**
 
 If ZPL2PDF helps you, please ⭐ star the repository!
