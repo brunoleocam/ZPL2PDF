@@ -35,6 +35,7 @@ Documentation for end-users:
 - 🌍 [Multi-Language Configuration](guides/LANGUAGE_CONFIGURATION.md) - Set up your preferred language
 - 📦 [Windows Installer Guide](guides/INNO_SETUP_GUIDE.md) - Professional Windows installation
 - 📦 [Linux Packages Guide](guides/LINUX_PACKAGES.md) - Install on Linux (DEB, RPM)
+- 🔌 [REST API Guide](guides/API_GUIDE.md) - REST API usage and examples
 
 ### Advanced Topics
 - ⚙️ [Configuration Reference](../zpl2pdf.json.example) - All configuration options
@@ -75,6 +76,7 @@ Documentation for contributors and developers:
 | **Convert a ZPL file** | [Quick Start](../README.md#quick-start) |
 | **Set up auto-conversion** | [Daemon Mode Guide](../README.md#daemon-mode) |
 | **Use Docker** | [Docker Guide](guides/DOCKER_GUIDE.md) |
+| **Use REST API** | [REST API Guide](guides/API_GUIDE.md) |
 | **Change language** | [Language Configuration](guides/LANGUAGE_CONFIGURATION.md) |
 | **Build from source** | [Development Setup](../CONTRIBUTING.md#development-setup) |
 | **Contribute code** | [Contributing Guide](../CONTRIBUTING.md) |
@@ -99,7 +101,8 @@ docs/
 │   ├── DOCKER_TESTING.md          (Cross-platform testing with Docker)
 │   ├── INNO_SETUP_GUIDE.md        (Windows installer guide)
 │   ├── LANGUAGE_CONFIGURATION.md  (Multi-language setup)
-│   └── LINUX_PACKAGES.md          (Linux package installation)
+│   ├── LINUX_PACKAGES.md          (Linux package installation)
+│   └── API_GUIDE.md               (REST API usage and examples)
 ├── development/                   (Developer docs - for contributors)
 │   ├── CI_CD_WORKFLOW.md          (CI/CD automation workflow)
 │   ├── GIT_WORKFLOW_GUIDE.md      (Git workflow and branching)
