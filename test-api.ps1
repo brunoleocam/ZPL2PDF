@@ -20,7 +20,7 @@ Write-Host ""
 Write-Host "Step 2: Starting API server on port 5000..." -ForegroundColor Yellow
 $job = Start-Job -ScriptBlock {
     Set-Location $using:PWD
-    dotnet run -- --api --port 5000
+    dotnet run -- --api --host localhost --port 5000
 }
 Start-Sleep -Seconds 3
 

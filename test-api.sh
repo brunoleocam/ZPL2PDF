@@ -20,7 +20,7 @@ echo ""
 
 # Step 2: Start API server in background
 echo "Step 2: Starting API server on port 5000..."
-dotnet run -- --api --port 5000 &
+dotnet run -- --api --host localhost --port 5000 &
 API_PID=$!
 sleep 3
 

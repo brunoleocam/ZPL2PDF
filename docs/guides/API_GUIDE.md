@@ -11,21 +11,33 @@ The ZPL2PDF REST API provides a simple HTTP interface to convert ZPL (Zebra Prog
 ### Basic Usage
 
 ```bash
-# Start API server on default port (5000)
+# Start API server on default host and port (0.0.0.0:5000)
 ZPL2PDF --api
 
 # Start API server on custom port
 ZPL2PDF --api --port 8080
 
+# Start API server on custom host (localhost only)
+ZPL2PDF --api --host localhost
+
+# Start API server with custom host and port
+ZPL2PDF --api --host 0.0.0.0 --port 8080
+
 # Alternative: Use --web flag
-ZPL2PDF --web --port 5000
+ZPL2PDF --web --host 0.0.0.0 --port 5000
 ```
+
+**Host Options:**
+- `0.0.0.0` - Listen on all interfaces (default, Docker-friendly)
+- `localhost` - Listen only on local machine
+- `127.0.0.1` - Listen only on loopback interface
+- Specific IP - Listen on specific network interface
 
 The API server will start and display:
 ```
-ZPL2PDF API is starting on port 5000
-API endpoint: http://localhost:5000/api/convert
-Health check: http://localhost:5000/api/health
+ZPL2PDF API is starting on 0.0.0.0:5000
+API endpoint: http://0.0.0.0:5000/api/convert
+Health check: http://0.0.0.0:5000/api/health
 Press Ctrl+C to stop the API server
 ```
 

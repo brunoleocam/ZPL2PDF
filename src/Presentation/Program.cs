@@ -129,14 +129,19 @@ namespace ZPL2PDF
         /// </summary>
         static async Task StartApiMode(string[] args)
         {
-            // Parse port from arguments (--port 5000)
+            // Parse host and port from arguments
+            string host = "0.0.0.0";  // Default: listen on all interfaces (Docker-friendly)
             int port = 5000;
+            
             for (int i = 0; i < args.Length; i++)
             {
-                if (args[i] == "--port" && i + 1 < args.Length && int.TryParse(args[i + 1], out int parsedPort))
+                if (args[i] == "--host" && i + 1 < args.Length)
+                {
+                    host = args[i + 1];
+                }
+                else if (args[i] == "--port" && i + 1 < args.Length && int.TryParse(args[i + 1], out int parsedPort))
                 {
                     port = parsedPort;
-                    break;
                 }
             }
 
@@ -287,12 +292,12 @@ namespace ZPL2PDF
             // Health check endpoint
             app.MapGet("/api/health", () => new { status = "ok", service = "ZPL2PDF API" });
 
-            Console.WriteLine($"ZPL2PDF API is starting on port {port}");
-            Console.WriteLine($"API endpoint: http://localhost:{port}/api/convert");
-            Console.WriteLine($"Health check: http://localhost:{port}/api/health");
+            Console.WriteLine($"ZPL2PDF API is starting on {host}:{port}");
+            Console.WriteLine($"API endpoint: http://{host}:{port}/api/convert");
+            Console.WriteLine($"Health check: http://{host}:{port}/api/health");
             Console.WriteLine("Press Ctrl+C to stop the API server");
 
-            await app.RunAsync($"http://localhost:{port}");
+            await app.RunAsync($"http://{host}:{port}");
         }
     }
 }
