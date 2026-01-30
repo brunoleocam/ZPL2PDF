@@ -1,6 +1,15 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using ZPL2PDF.Shared.Localization;
+using ZPL2PDF.Presentation.Api.Models;
+using ZPL2PDF.Application.Services;
 
 namespace ZPL2PDF
 {
@@ -87,6 +96,13 @@ namespace ZPL2PDF
                     LocalizationManager.InitializeWithConfig(config.Language);
                 }
 
+                // Check for API mode
+                if (args.Length > 0 && (args[0] == "--api" || args[0] == "--web"))
+                {
+                    await StartApiMode(args);
+                    return;
+                }
+
                 var argumentProcessor = new ArgumentProcessor();
                 argumentProcessor.ProcessArguments(args);
 
@@ -106,6 +122,182 @@ namespace ZPL2PDF
             {
                 Console.Error.WriteLine(LocalizationManager.GetString(ResourceKeys.CONVERSION_ERROR, ex.Message));
             }
+        }
+
+        /// <summary>
+        /// Starts the API mode with Minimal API endpoints
+        /// </summary>
+        static async Task StartApiMode(string[] args)
+        {
+            // Parse host and port from arguments
+            string host = "0.0.0.0";  // Default: listen on all interfaces (Docker-friendly)
+            int port = 5000;
+            
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "--host" && i + 1 < args.Length)
+                {
+                    host = args[i + 1];
+                }
+                else if (args[i] == "--port" && i + 1 < args.Length && int.TryParse(args[i + 1], out int parsedPort))
+                {
+                    port = parsedPort;
+                }
+            }
+
+            var builder = WebApplication.CreateBuilder(args);
+            
+            // Add CORS services
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
+            var app = builder.Build();
+
+            // Enable CORS
+            app.UseCors();
+
+            // Convert endpoint
+            app.MapPost("/api/convert", async (HttpContext context) =>
+            {
+                try
+                {
+                    // Read and deserialize request
+                    var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+                    var request = JsonSerializer.Deserialize<ConvertRequest>(requestBody, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    // Validate request
+                    if (request == null || 
+                        (string.IsNullOrWhiteSpace(request.Zpl) && 
+                         (request.ZplArray == null || request.ZplArray.Count == 0 || request.ZplArray.All(string.IsNullOrWhiteSpace))))
+                    {
+                        var errorResponse = new ConvertResponse
+                        {
+                            Success = false,
+                            Message = "ZPL content is required (use 'zpl' or 'zplArray' field)"
+                        };
+                        context.Response.StatusCode = 400;
+                        await context.Response.WriteAsJsonAsync(errorResponse);
+                        return;
+                    }
+
+                    // Validate format
+                    var format = (request.Format ?? "pdf").ToLowerInvariant();
+                    if (format != "pdf" && format != "png")
+                    {
+                        var errorResponse = new ConvertResponse
+                        {
+                            Success = false,
+                            Message = "Format must be 'pdf' or 'png'"
+                        };
+                        context.Response.StatusCode = 400;
+                        await context.Response.WriteAsJsonAsync(errorResponse);
+                        return;
+                    }
+
+                    // Prepare conversion parameters
+                    var width = request.Width ?? 0;
+                    var height = request.Height ?? 0;
+                    var unit = request.Unit ?? "mm";
+                    var dpi = request.Dpi ?? 203;
+
+                    // Convert ZPL(s)
+                    var conversionService = new ConversionService();
+                    var imageDataList = new List<byte[]>();
+
+                    if (!string.IsNullOrWhiteSpace(request.Zpl))
+                    {
+                        // Single ZPL string (can contain multiple labels)
+                        imageDataList = conversionService.Convert(request.Zpl, width, height, unit, dpi);
+                    }
+                    else if (request.ZplArray != null && request.ZplArray.Count > 0)
+                    {
+                        // Multiple ZPL strings - convert each and combine
+                        foreach (var zpl in request.ZplArray)
+                        {
+                            if (!string.IsNullOrWhiteSpace(zpl))
+                            {
+                                var images = conversionService.Convert(zpl, width, height, unit, dpi);
+                                imageDataList.AddRange(images);
+                            }
+                        }
+                    }
+
+                    if (imageDataList == null || imageDataList.Count == 0)
+                    {
+                        var errorResponse = new ConvertResponse
+                        {
+                            Success = false,
+                            Message = "No images generated from ZPL content"
+                        };
+                        context.Response.StatusCode = 400;
+                        await context.Response.WriteAsJsonAsync(errorResponse);
+                        return;
+                    }
+
+                    // Generate response based on format
+                    var response = new ConvertResponse
+                    {
+                        Success = true,
+                        Format = format,
+                        Pages = imageDataList.Count,
+                        Message = "Conversion successful"
+                    };
+
+                    if (format == "pdf")
+                    {
+                        // Generate PDF from images
+                        var pdfBytes = PdfGenerator.GeneratePdfToBytes(imageDataList);
+                        response.Pdf = Convert.ToBase64String(pdfBytes);
+                    }
+                    else // png
+                    {
+                        // Convert images to base64
+                        if (imageDataList.Count == 1)
+                        {
+                            // Single image
+                            response.Image = Convert.ToBase64String(imageDataList[0]);
+                        }
+                        else
+                        {
+                            // Multiple images
+                            response.Images = imageDataList.Select(img => Convert.ToBase64String(img)).ToList();
+                        }
+                    }
+
+                    context.Response.StatusCode = 200;
+                    await context.Response.WriteAsJsonAsync(response);
+                }
+                catch (Exception ex)
+                {
+                    var errorResponse = new ConvertResponse
+                    {
+                        Success = false,
+                        Message = $"Conversion error: {ex.Message}"
+                    };
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsJsonAsync(errorResponse);
+                }
+            });
+
+            // Health check endpoint
+            app.MapGet("/api/health", () => new { status = "ok", service = "ZPL2PDF API" });
+
+            Console.WriteLine($"ZPL2PDF API is starting on {host}:{port}");
+            Console.WriteLine($"API endpoint: http://{host}:{port}/api/convert");
+            Console.WriteLine($"Health check: http://{host}:{port}/api/health");
+            Console.WriteLine("Press Ctrl+C to stop the API server");
+
+            await app.RunAsync($"http://{host}:{port}");
         }
     }
 }
