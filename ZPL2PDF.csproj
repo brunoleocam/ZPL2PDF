@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BinaryKits.Zpl.Label" Version="3.2.1" />
     <PackageReference Include="BinaryKits.Zpl.Protocol" Version="1.0.1" />
     <PackageReference Include="BinaryKits.Zpl.Viewer" Version="1.2.1" />

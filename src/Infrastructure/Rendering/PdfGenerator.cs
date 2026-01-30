@@ -37,5 +37,33 @@ namespace ZPL2PDF {
                 document.Save(outputPdf);
             }
         }
+
+        /// <summary>
+        /// Generates a PDF with one image per page and returns it as a byte array.
+        /// </summary>
+        /// <param name="imageDataList">List of image data in byte arrays.</param>
+        /// <returns>PDF file as byte array.</returns>
+        public static byte[] GeneratePdfToBytes(List<byte[]> imageDataList) {
+            using (var document = new PdfDocument()) {
+                foreach (var imageData in imageDataList) {
+                    using (var image = XImage.FromStream(() => new MemoryStream(imageData))) {
+                        // Create a new page with the same dimensions as the image
+                        var page = document.AddPage();
+                        page.Width = image.PixelWidth;
+                        page.Height = image.PixelHeight;
+
+                        using (var graphics = XGraphics.FromPdfPage(page)) {
+                            // Draw the image with the correct dimensions
+                            graphics.DrawImage(image, 0, 0, image.PixelWidth, image.PixelHeight);
+                        }
+                    }
+                }
+                
+                using (var stream = new MemoryStream()) {
+                    document.Save(stream);
+                    return stream.ToArray();
+                }
+            }
+        }
     }
 }
