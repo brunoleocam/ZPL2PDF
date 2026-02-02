@@ -11,11 +11,23 @@ namespace ZPL2PDF
         private readonly string _pidFilePath;
 
         /// <summary>
-        /// Initializes a new instance of the PidManager
+        /// Initializes a new instance of the PidManager (default PID file: zpl2pdf.pid).
         /// </summary>
         public PidManager()
         {
-            _pidFilePath = GetPidFilePath();
+            _pidFilePath = GetPidFilePath("zpl2pdf.pid");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the PidManager with a custom PID file name
+        /// (e.g. "zpl2pdf-tcp.pid" for the TCP server).
+        /// </summary>
+        /// <param name="pidFileName">PID file name (e.g. "zpl2pdf-tcp.pid").</param>
+        public PidManager(string pidFileName)
+        {
+            if (string.IsNullOrWhiteSpace(pidFileName))
+                throw new ArgumentNullException(nameof(pidFileName));
+            _pidFilePath = GetPidFilePath(pidFileName);
         }
 
         /// <summary>
@@ -100,21 +112,20 @@ namespace ZPL2PDF
         }
 
         /// <summary>
-        /// Gets the PID file path based on the operating system
+        /// Gets the PID file path based on the operating system and file name.
         /// </summary>
+        /// <param name="fileName">PID file name (e.g. "zpl2pdf.pid" or "zpl2pdf-tcp.pid").</param>
         /// <returns>PID file path</returns>
-        private string GetPidFilePath()
+        private static string GetPidFilePath(string fileName)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                // Windows: %TEMP%\zpl2pdf.pid
                 var tempPath = Path.GetTempPath();
-                return Path.Combine(tempPath, "zpl2pdf.pid");
+                return Path.Combine(tempPath, fileName);
             }
             else
             {
-                // Linux: /var/run/zpl2pdf.pid
-                return "/var/run/zpl2pdf.pid";
+                return Path.Combine("/var/run", fileName);
             }
         }
     }

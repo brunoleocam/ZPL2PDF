@@ -34,6 +34,9 @@ winget-submission/
 *.zip
 *.tar.gz
 
+# Unpacked build outputs in Assets (large binaries; use .zip/.tar.gz for release)
+Assets/
+
 # EditorConfig gerado
 *.editorconfig
 
@@ -61,3 +64,16 @@ test-*/
 
 # Release checkpoints
 .release-checkpoint-*.json
+
+# Lista de tarefas local (não versionar)
+TAREFAS-LOCAL.md
+
+# Docs internos / pesquisa (não publicar no GitHub)
+docs/release-notes-v3.0.0.md
+docs/ROADMAP.md
+docs/zebra-fonts-research.md
+docs/LABELARY_API.md
+
+# Saída de testes (TCP, conversão manual)
+tcp-output/
+TESTES-MANUAIS-*.md

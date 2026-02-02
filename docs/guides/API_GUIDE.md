@@ -544,6 +544,15 @@ The API includes CORS support for development. For production deployments, confi
 - Check if ZPL content generates any labels
 - Verify ZPL is not empty or whitespace only
 
+## Testing the API
+
+From the project root you can run the API test scripts to verify health, PDF/PNG conversion, and error handling:
+
+- **Windows:** `.\scripts\api\test-api.ps1`
+- **Linux/macOS:** `./scripts/api/test-api.sh`
+
+See [scripts/README.md](../../scripts/README.md#-api-test-scripts-api-) for details.
+
 ## Related Documentation
 
 - [Main README](../README.md) - General ZPL2PDF documentation

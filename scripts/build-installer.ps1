@@ -131,14 +131,22 @@ if ($exitCode -eq 0) {
         Copy-Item $InstallerFile.FullName -Destination $AssetsInstallerPath -Force
         Write-ColorOutput "Copied to Assets: $AssetsInstallerPath" $SuccessColor
         
-        # Test installer
+        # Append installer hash to Assets\SHA256SUMS.txt (same as other releases)
+        Write-ColorOutput "Calculating SHA256..." $InfoColor
+        $hash = (Get-FileHash $InstallerFile.FullName -Algorithm SHA256).Hash
+        Write-ColorOutput "SHA256: $hash" $SuccessColor
+        $sha256SumsPath = Join-Path $AssetsDir "SHA256SUMS.txt"
+        $installerLine = "$hash  ZPL2PDF-Setup-$Version.exe"
+        Add-Content -Path $sha256SumsPath -Value $installerLine -Encoding ASCII
+        Write-ColorOutput "Added to $sha256SumsPath" $SuccessColor
+        
+        # Test installer (silent run; use Start-Process so /SILENT etc. are not parsed by PowerShell)
         Write-ColorOutput "Testing installer..." $InfoColor
-        $TestCommand = "`"$($InstallerFile.FullName)`" /SILENT /NORESTART /SUPPRESSMSGBOXES /LOG"
-        $testResult = Invoke-Expression $TestCommand
-        if ($LASTEXITCODE -eq 0) {
+        $psi = Start-Process -FilePath $InstallerFile.FullName -ArgumentList "/SILENT", "/NORESTART", "/SUPPRESSMSGBOXES", "/LOG" -Wait -PassThru
+        if ($psi.ExitCode -eq 0) {
             Write-ColorOutput "Installer test passed!" $SuccessColor
         } else {
-            Write-ColorOutput "Installer test failed!" $WarningColor
+            Write-ColorOutput "Installer test failed! (ExitCode: $($psi.ExitCode))" $WarningColor
         }
     } else {
         Write-ColorOutput "Installer file not found in output directory!" $WarningColor

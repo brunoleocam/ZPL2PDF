@@ -132,6 +132,72 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         }
 
         [Fact]
+        public void ProcessArguments_WithServerStartArgs_SetsServerModeAndProperties()
+        {
+            // Arrange
+            var processor = new ArgumentProcessor();
+            var args = new[] { "server", "start", "--port", "9101", "-o", _testDirectory };
+
+            // Act
+            processor.ProcessArguments(args);
+
+            // Assert
+            processor.Mode.Should().Be(OperationMode.Server);
+            processor.ServerCommand.Should().Be("start");
+            processor.ServerPort.Should().Be(9101);
+            processor.ServerOutputFolder.Should().Be(_testDirectory);
+            processor.ServerForeground.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ProcessArguments_WithServerStartAndForeground_SetsServerForeground()
+        {
+            // Arrange
+            var processor = new ArgumentProcessor();
+            var args = new[] { "server", "start", "--port", "9102", "-o", _testDirectory, "--foreground" };
+
+            // Act
+            processor.ProcessArguments(args);
+
+            // Assert
+            processor.Mode.Should().Be(OperationMode.Server);
+            processor.ServerCommand.Should().Be("start");
+            processor.ServerPort.Should().Be(9102);
+            processor.ServerOutputFolder.Should().Be(_testDirectory);
+            processor.ServerForeground.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ProcessArguments_WithServerStop_SetsServerMode()
+        {
+            // Arrange
+            var processor = new ArgumentProcessor();
+            var args = new[] { "server", "stop" };
+
+            // Act
+            processor.ProcessArguments(args);
+
+            // Assert
+            processor.Mode.Should().Be(OperationMode.Server);
+            processor.ServerCommand.Should().Be("stop");
+        }
+
+        [Fact]
+        public void ProcessArguments_WithServerStatus_SetsServerMode()
+        {
+            // Arrange
+            var processor = new ArgumentProcessor();
+            var args = new[] { "server", "status" };
+
+            // Act
+            processor.ProcessArguments(args);
+
+            // Assert
+            processor.Mode.Should().Be(OperationMode.Server);
+            processor.ServerCommand.Should().Be("status");
+        }
+
+        [Fact]
         public void ProcessArguments_WithZplContentArgs_SetsConversionMode()
         {
             // Arrange

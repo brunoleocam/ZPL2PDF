@@ -10,7 +10,7 @@ namespace ZPL2PDF.Shared.Constants
     {
         #region Application Information
         public const string APPLICATION_NAME = "ZPL2PDF";
-        public const string APPLICATION_VERSION = "3.0.0";
+        public const string APPLICATION_VERSION = "3.0.2";
         public const string APPLICATION_DESCRIPTION = "ZPL to PDF Converter";
         #endregion
 
