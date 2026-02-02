@@ -21,7 +21,11 @@ namespace ZPL2PDF
         /// <summary>
         /// Help mode - shows help message and exits.
         /// </summary>
-        Help
+        Help,
+        /// <summary>
+        /// TCP Server mode - virtual printer listening on a TCP port.
+        /// </summary>
+        Server
     }
 
     /// <summary>
@@ -59,6 +63,26 @@ namespace ZPL2PDF
         /// Gets the listen folder path for daemon mode.
         /// </summary>
         public string ListenFolderPath { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the TCP server subcommand (start, stop, status).
+        /// </summary>
+        public string ServerCommand { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the TCP port for server mode (default 9101).
+        /// </summary>
+        public int ServerPort { get; private set; } = 9101;
+
+        /// <summary>
+        /// Gets the output folder for TCP server mode.
+        /// </summary>
+        public string ServerOutputFolder { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Gets whether TCP server runs in foreground (true) or background (false).
+        /// </summary>
+        public bool ServerForeground { get; private set; } = false;
 
         /// <summary>
         /// Gets or sets the input file path.
@@ -127,6 +151,7 @@ namespace ZPL2PDF
             // Detect operation mode
             Mode = _modeDetector.DetectMode(args);
             DaemonCommand = _modeDetector.ExtractDaemonCommand(args);
+            ServerCommand = _modeDetector.ExtractServerCommand(args);
 
             // If it's help mode, show help and exit
             if (Mode == OperationMode.Help)
@@ -143,6 +168,10 @@ namespace ZPL2PDF
             else if (Mode == OperationMode.Daemon)
             {
                 ProcessDaemonMode(args);
+            }
+            else if (Mode == OperationMode.Server)
+            {
+                ProcessServerMode(args);
             }
         }
 
@@ -237,6 +266,33 @@ namespace ZPL2PDF
                 Environment.Exit(1);
             }
         }
+        }
+
+        /// <summary>
+        /// Processes TCP server mode arguments
+        /// </summary>
+        private void ProcessServerMode(string[] args)
+        {
+            // Parse from index 2 (skip "server" and subcommand start/stop/status)
+            int startIndex = args.Length >= 2 ? 2 : args.Length;
+            var serverArgs = _argumentParser.ParseServerMode(args, startIndex);
+
+            ServerPort = serverArgs.Port;
+            ServerOutputFolder = serverArgs.OutputFolder;
+            ServerForeground = serverArgs.Foreground;
+
+            if (ServerCommand == "start")
+            {
+                if (ServerPort < 1 || ServerPort > 65535)
+                {
+                    Console.WriteLine("Error: Port must be between 1 and 65535");
+                    Environment.Exit(1);
+                }
+                if (string.IsNullOrWhiteSpace(ServerOutputFolder))
+                {
+                    ServerOutputFolder = _argumentParser.GetDefaultTcpOutputFolder();
+                }
+            }
         }
 
         /// <summary>

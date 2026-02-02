@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 # Stage 1: Build
 # -----------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:10.0.101 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.102 AS build
 
 # Set working directory
 WORKDIR /src
@@ -101,4 +101,4 @@ CMD ["/app/ZPL2PDF", "run", "-l", "/app/watch"]
 # Metadata
 LABEL maintainer="brunoleocam" \
       description="ZPL2PDF - Alpine Linux (Ultra Lightweight)" \
-      version="3.0.0-alpine"
+      version="3.0.2-alpine"

@@ -16,7 +16,7 @@ build/publish/
 *.publish/
 *.PublishOutputs*.txt
 
-# DLLs, executáveis, pdbs, etc.
+# DLLs, executables, pdbs, etc.
 *.dll
 *.exe
 *.pdb
@@ -34,21 +34,24 @@ winget-submission/
 *.zip
 *.tar.gz
 
-# EditorConfig gerado
+# Assets: files to attach to the GitHub release manually (do not version)
+Assets/
+
+# Generated EditorConfig
 *.editorconfig
 
-# Arquivos de dependências e configuração gerados
+# Generated dependency and config files
 *.deps.json
 *.runtimeconfig.json
 
-# Arquivos de recursos
+# Resource files
 *.resources.dll
 
-# Outros arquivos temporários
+# Other temporary files
 *.tmp
 *.bak
 
-# Pastas de sistema
+# System files
 Thumbs.db
 Desktop.ini
 
@@ -61,3 +64,16 @@ test-*/
 
 # Release checkpoints
 .release-checkpoint-*.json
+
+# Local task list (do not version)
+TAREFAS-LOCAL.md
+
+# Internal/research docs (do not publish to GitHub)
+docs/release-notes-v3.0.0.md
+docs/ROADMAP.md
+docs/zebra-fonts-research.md
+docs/LABELARY_API.md
+
+# Test output (TCP, manual conversion)
+tcp-output/
+TESTES-MANUAIS-*.md

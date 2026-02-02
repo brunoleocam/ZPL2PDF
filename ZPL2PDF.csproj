@@ -5,7 +5,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <DocumentationFile>bin\Debug\net9.0\ZPL2PDF.xml</DocumentationFile>
     <!-- Configura��es para self-contained builds -->
     <PublishSingleFile>true</PublishSingleFile>
@@ -16,6 +16,10 @@
     <PublishTrimmed>false</PublishTrimmed>
     <PublishAot>false</PublishAot>
   </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BinaryKits.Zpl.Label" Version="3.2.1" />

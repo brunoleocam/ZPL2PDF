@@ -182,6 +182,54 @@ namespace ZPL2PDF
         }
 
         /// <summary>
+        /// Gets the default output folder for TCP server mode
+        /// </summary>
+        /// <returns>Default TCP server output folder path</returns>
+        public string GetDefaultTcpOutputFolder()
+        {
+            var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            return Path.Combine(documentsPath, "ZPL2PDF TCP Output");
+        }
+
+        /// <summary>
+        /// Parses TCP server mode arguments (--port, -o, --foreground).
+        /// </summary>
+        /// <param name="args">Command line arguments</param>
+        /// <param name="startIndex">Starting index (skip "server" and subcommand)</param>
+        /// <returns>Parsed server arguments</returns>
+        public ServerArguments ParseServerMode(string[] args, int startIndex)
+        {
+            var result = new ServerArguments { Port = 9101 };
+
+            for (int i = startIndex; i < args.Length; i++)
+            {
+                string arg = args[i];
+
+                if (arg.Equals("--port", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length && int.TryParse(args[i + 1], out int port))
+                {
+                    result.Port = port;
+                    i++;
+                }
+                else if (arg.Equals("-o", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                {
+                    result.OutputFolder = args[i + 1];
+                    i++;
+                }
+                else if (arg.Equals("--foreground", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Foreground = true;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(result.OutputFolder))
+            {
+                result.OutputFolder = GetDefaultTcpOutputFolder();
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Processes the output file name to ensure it has .pdf extension
         /// </summary>
         /// <param name="fileName">Input file name</param>
@@ -224,5 +272,15 @@ namespace ZPL2PDF
         public double Height { get; set; } = 0;
         public string Unit { get; set; } = "mm";
         public int Dpi { get; set; } = 203;
+    }
+
+    /// <summary>
+    /// Represents parsed TCP server mode arguments
+    /// </summary>
+    public class ServerArguments
+    {
+        public int Port { get; set; } = 9101;
+        public string OutputFolder { get; set; } = string.Empty;
+        public bool Foreground { get; set; } = false;
     }
 }

@@ -1,0 +1,15 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/brunoleocam/ZPL2PDF/discussions
+    about: Ask questions, share ideas, and engage with the community
+  - name: 📖 Documentation
+    url: https://github.com/brunoleocam/ZPL2PDF/tree/main/docs
+    about: Check our documentation for guides and examples
+  - name: 🐛 Bug Reports
+    url: https://github.com/brunoleocam/ZPL2PDF/issues/new?template=bug_report.md
+    about: Report a bug or unexpected behavior
+  - name: 💡 Feature Requests
+    url: https://github.com/brunoleocam/ZPL2PDF/issues/new?template=feature_request.md
+    about: Suggest a new feature or improvement
+

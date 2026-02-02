@@ -200,6 +200,127 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             result.Should().Be(OperationMode.Help);
         }
 
+        [Fact]
+        public void DetectMode_WithServerArg_ReturnsServer()
+        {
+            // Arrange
+            var args = new[] { "server" };
+
+            // Act
+            var result = _modeDetector.DetectMode(args);
+
+            // Assert
+            result.Should().Be(OperationMode.Server);
+        }
+
+        [Fact]
+        public void DetectMode_WithServerStart_ReturnsServer()
+        {
+            // Arrange
+            var args = new[] { "server", "start" };
+
+            // Act
+            var result = _modeDetector.DetectMode(args);
+
+            // Assert
+            result.Should().Be(OperationMode.Server);
+        }
+
+        [Fact]
+        public void DetectMode_WithServerCaseInsensitive_ReturnsServer()
+        {
+            // Arrange
+            var args = new[] { "SERVER", "START" };
+
+            // Act
+            var result = _modeDetector.DetectMode(args);
+
+            // Assert
+            result.Should().Be(OperationMode.Server);
+        }
+
+        #endregion
+
+        #region ExtractServerCommand Tests
+
+        [Fact]
+        public void ExtractServerCommand_WithServerStart_ReturnsStart()
+        {
+            // Arrange
+            var args = new[] { "server", "start" };
+
+            // Act
+            var result = _modeDetector.ExtractServerCommand(args);
+
+            // Assert
+            result.Should().Be("start");
+        }
+
+        [Fact]
+        public void ExtractServerCommand_WithServerStop_ReturnsStop()
+        {
+            // Arrange
+            var args = new[] { "server", "stop" };
+
+            // Act
+            var result = _modeDetector.ExtractServerCommand(args);
+
+            // Assert
+            result.Should().Be("stop");
+        }
+
+        [Fact]
+        public void ExtractServerCommand_WithServerStatus_ReturnsStatus()
+        {
+            // Arrange
+            var args = new[] { "server", "status" };
+
+            // Act
+            var result = _modeDetector.ExtractServerCommand(args);
+
+            // Assert
+            result.Should().Be("status");
+        }
+
+        [Fact]
+        public void ExtractServerCommand_WithServerOnly_ReturnsStartAsDefault()
+        {
+            // Arrange
+            var args = new[] { "server" };
+
+            // Act
+            var result = _modeDetector.ExtractServerCommand(args);
+
+            // Assert
+            result.Should().Be("start");
+        }
+
+        [Fact]
+        public void ExtractServerCommand_WithInvalidServerSubcommand_ReturnsStartAsDefault()
+        {
+            // Arrange
+            var args = new[] { "server", "invalid" };
+
+            // Act
+            var result = _modeDetector.ExtractServerCommand(args);
+
+            // Assert
+            result.Should().Be("start");
+        }
+
+        [Fact]
+        public void ExtractServerCommand_WithNonServerArgs_ReturnsStart()
+        {
+            // Arrange
+            var args = new[] { "start" };
+
+            // Act
+            var result = _modeDetector.ExtractServerCommand(args);
+
+            // Assert
+            result.Should().Be("start");
+        }
+
         #endregion
 
         #region ExtractDaemonCommand Tests

@@ -7,6 +7,19 @@ This directory contains automation scripts for building, packaging, and releasin
 
 ---
 
+## 🌐 API test scripts (`api/`)
+
+Scripts to test the REST API locally (health check, PDF/PNG conversion, error handling). Run from **project root**.
+
+| Platform   | Command |
+|-----------|---------|
+| Windows   | `.\scripts\api\test-api.ps1` |
+| Linux/macOS | `./scripts/api/test-api.sh` |
+
+Requires the API server to be free on port 5000. See [API Guide](../docs/guides/API_GUIDE.md).
+
+---
+
 ## 📋 Available Scripts
 
 ### 1️⃣ **`build-all-platforms.ps1` / `build-all-platforms.sh`**

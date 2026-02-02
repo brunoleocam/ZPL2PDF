@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.2] - 2025-01-30
+
+### 🐛 Fixed
+
+- **Issue #45**: Fixed duplicate or blank labels when `^XA` appears inside or after `~DGR:` payload
+  - `^XA` is only ignored when inside the base64 segment (`:Z64:...` up to the next `:`); `^XA` after the checksum on the same line is now recognized as a valid label start
+  - ~DGR line end: when the format includes `:Z64:data:checksum`, the ~DGR command is considered to end after the checksum (not at newline), so labels on the same line as ~DGR are no longer swallowed
+  - Prevents ZPL with embedded graphics (e.g. thermal shipping labels) from producing "No images generated" or extra/blank pages
+
+### ✨ Added
+
+- **Issue #48**: TCP Server mode implemented
+  - `ZPL2PDF server start [--port 9101] [-o output/] [--foreground]` — start virtual printer
+  - `ZPL2PDF server stop` — stop server (uses PID file `zpl2pdf-tcp.pid`)
+  - `ZPL2PDF server status` — show if server is running
+  - Incoming ZPL over TCP is converted to PDF and saved with unique filename
+
+- **REST API (PR #47)**: `--api` / `--web` mode
+  - Endpoints: `POST /api/convert` (ZPL to PDF or PNG), `GET /api/health`
+  - Options: `--host`, `--port` (default 5000)
+
+### 📦 Technical Details
+
+- **Files added**: `TcpServerModeHandler.cs`, `TcpPrinterServer.cs`
+- **Files modified**: `ModeDetector.cs`, `ArgumentProcessor.cs`, `ArgumentParser.cs`, `Program.cs`, `LabelFileReader.cs`, `PidManager.cs` (optional PID file name for TCP server)
+- **WinGet**: For 3.0.2 use the SHA256 of the release installer; do not reuse 3.0.1 hash. Validate hash from URL before submitting to winget-pkgs.
+
+---
+
 ## [3.0.1] - 2026-01-06
 
 ### 🐛 Fixed
