@@ -110,22 +110,33 @@ build/
     docker build -f Dockerfile.deb --build-arg VERSION=$Version -t zpl2pdf-deb-builder .
     Remove-Item ".dockerignore.temp" -Force -ErrorAction SilentlyContinue
     
-    # Run container to build package
-    Write-Host "[*] Running build in container..." -ForegroundColor Cyan
-    docker run --rm -v "${PWD}/${publishDir}:/output" zpl2pdf-deb-builder
-    
-    # Check if package was created
-    $debFile = Get-ChildItem -Path $publishDir -Filter "*.deb" | Select-Object -First 1
-    if ($debFile) {
-        Write-Host "[OK] .deb package created: $($debFile.Name)" -ForegroundColor Green
-        Write-Host "     Size: $([math]::Round($debFile.Length / 1MB, 2)) MB" -ForegroundColor Green
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ERROR] Docker build failed for .deb. Skipping container run." -ForegroundColor Red
+        Remove-Item "Dockerfile.deb" -Force -ErrorAction SilentlyContinue
+        Write-Host ""
     } else {
-        Write-Host "[ERROR] Failed to create .deb package" -ForegroundColor Red
+        # Run container to build package
+        Write-Host "[*] Running build in container..." -ForegroundColor Cyan
+        docker run --rm -v "${PWD}/${publishDir}:/output" zpl2pdf-deb-builder
+        
+        # Check if package was created with expected version
+        $expectedDeb = "ZPL2PDF-v$Version-linux-amd64.deb"
+        $debFile = Get-ChildItem -Path $publishDir -Filter $expectedDeb -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $debFile) {
+            $debFile = Get-ChildItem -Path $publishDir -Filter "*.deb" -ErrorAction SilentlyContinue | Select-Object -First 1
+        }
+        if ($debFile -and $debFile.Name -eq $expectedDeb) {
+            Write-Host "[OK] .deb package created: $($debFile.Name)" -ForegroundColor Green
+            Write-Host "     Size: $([math]::Round($debFile.Length / 1MB, 2)) MB" -ForegroundColor Green
+        } elseif ($debFile) {
+            Write-Host "[WARN] Found .deb but wrong version: $($debFile.Name) (expected $expectedDeb)" -ForegroundColor Yellow
+        } else {
+            Write-Host "[ERROR] Failed to create .deb package" -ForegroundColor Red
+        }
+        
+        Remove-Item "Dockerfile.deb" -Force -ErrorAction SilentlyContinue
+        Write-Host ""
     }
-    
-    # Cleanup
-    Remove-Item "Dockerfile.deb" -Force
-    Write-Host ""
 }
 
 # Build .rpm package
@@ -184,23 +195,34 @@ CMD ["sh", "-c", "cp /build/ZPL2PDF-v$VERSION-linux-x64-rpm.tar.gz /output/ && e
     Write-Host "[*] Building Docker image for .rpm..." -ForegroundColor Cyan
     docker build -f Dockerfile.rpm --build-arg VERSION=$Version -t zpl2pdf-rpm-builder .
     
-    # Run container to build package
-    Write-Host "[*] Running build in container..." -ForegroundColor Cyan
-    docker run --rm -v "${PWD}/${publishDir}:/output" zpl2pdf-rpm-builder
-    
-    # Check if package was created
-    $rpmFile = Get-ChildItem -Path $publishDir -Filter "*rpm.tar.gz" | Select-Object -First 1
-    if ($rpmFile) {
-        Write-Host "[OK] RPM tarball created: $($rpmFile.Name)" -ForegroundColor Green
-        Write-Host "     Size: $([math]::Round($rpmFile.Length / 1MB, 2)) MB" -ForegroundColor Green
-        Write-Host "     Note: This is a tarball. Extract with: tar -xzf $($rpmFile.Name)" -ForegroundColor Yellow
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ERROR] Docker build failed for .rpm. Skipping container run." -ForegroundColor Red
+        Remove-Item "Dockerfile.rpm" -Force -ErrorAction SilentlyContinue
+        Write-Host ""
     } else {
-        Write-Host "[ERROR] Failed to create RPM tarball" -ForegroundColor Red
+        # Run container to build package
+        Write-Host "[*] Running build in container..." -ForegroundColor Cyan
+        docker run --rm -v "${PWD}/${publishDir}:/output" zpl2pdf-rpm-builder
+        
+        # Check if package was created with expected version
+        $expectedRpm = "ZPL2PDF-v$Version-linux-x64-rpm.tar.gz"
+        $rpmFile = Get-ChildItem -Path $publishDir -Filter $expectedRpm -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $rpmFile) {
+            $rpmFile = Get-ChildItem -Path $publishDir -Filter "*rpm.tar.gz" -ErrorAction SilentlyContinue | Select-Object -First 1
+        }
+        if ($rpmFile -and $rpmFile.Name -eq $expectedRpm) {
+            Write-Host "[OK] RPM tarball created: $($rpmFile.Name)" -ForegroundColor Green
+            Write-Host "     Size: $([math]::Round($rpmFile.Length / 1MB, 2)) MB" -ForegroundColor Green
+            Write-Host "     Note: This is a tarball. Extract with: tar -xzf $($rpmFile.Name)" -ForegroundColor Yellow
+        } elseif ($rpmFile) {
+            Write-Host "[WARN] Found rpm tarball but wrong version: $($rpmFile.Name) (expected $expectedRpm)" -ForegroundColor Yellow
+        } else {
+            Write-Host "[ERROR] Failed to create RPM tarball" -ForegroundColor Red
+        }
+        
+        Remove-Item "Dockerfile.rpm" -Force -ErrorAction SilentlyContinue
+        Write-Host ""
     }
-    
-    # Cleanup
-    Remove-Item "Dockerfile.rpm" -Force
-    Write-Host ""
 }
 
 Write-Host "============================================" -ForegroundColor Cyan

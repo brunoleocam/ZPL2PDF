@@ -75,9 +75,9 @@ if ($DryRun) {
 }
 
 try {
-    # Clean temporary directory
+    # Clean temporary directory (ignore errors: may be locked by another process)
     if (Test-Path $tempDir) {
-        Remove-Item $tempDir -Recurse -Force
+        Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
     }
     
     # Clone fork
@@ -140,8 +140,12 @@ try {
     Write-Info "Submit manually at: https://github.com/$WinGetRepo/compare"
 } finally {
     Set-Location $ProjectRoot
-    if (Test-Path $tempDir) {
-        Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+    try {
+        if (Test-Path $tempDir) {
+            Remove-Item $tempDir -Recurse -Force -ErrorAction Stop
+        }
+    } catch {
+        Write-Info "Cleanup skipped (temp folder in use): $tempDir"
     }
 }
 
