@@ -14,6 +14,34 @@
 
 ---
 
+## 🚀 **v3.0.2新功能**
+
+### 🐛 错误修复
+- **Issue #45**：当 `^XA` 出现在 `~DGR:` 的 base64 有效负载内时，修复重复或空白标签 — `^XA` 仅在行首或 `^XZ` 之后被视为标签开始。
+
+### ✨ 新功能
+- **Issue #48 – TCP 服务器**：已实现虚拟 Zebra 打印机模式。使用 `ZPL2PDF server start --port 9101 -o output/`、`server stop` 和 `server status`。
+- **REST API (PR #47)**：运行 `ZPL2PDF --api --host localhost --port 5000` 提供 `POST /api/convert`（ZPL 转 PDF 或 PNG）和 `GET /api/health`。[API 指南](../guides/API_GUIDE.md)。
+
+---
+
+## 🚀 **v3.0.1新功能**
+
+### 🐛 错误修复
+- **Issue #39**：同名多个图形的顺序处理
+  - 包含多个 `~DGR` 图形的 ZPL 文件现已正确处理
+  - 每个标签根据顺序状态使用正确的图形
+  - `^IDR` 清理命令不再生成空白页
+  - 解决 Shopee 运输标签文件中所有标签相同的问题
+
+### 🔧 改进
+- 在公共方法中添加输入验证
+- 改进异常处理
+- 使用编译正则表达式进行性能优化
+- 代码清理和移除未使用方法
+
+---
+
 ## 🚀 **v3.0.0新功能**
 
 ### 🎉 主要新功能

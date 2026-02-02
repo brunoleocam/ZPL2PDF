@@ -62,6 +62,12 @@ namespace ZPL2PDF
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_SERVER_FOREGROUND));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_SERVER_RENDERER));
             Console.WriteLine();
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_API_MODE));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_API_USAGE));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_API));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_API_HOST));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_OPT_API_PORT));
+            Console.WriteLine();
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_RENDERER));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_FONTS_DIR));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_FONT));

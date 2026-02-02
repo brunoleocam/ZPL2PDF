@@ -358,6 +358,21 @@
   <data name="TCP_SERVER_STATUS_RUNNING" xml:space="preserve">
     <value>Le serveur TCP est en cours d'exécution ! Port : {0}, PID : {1}</value>
   </data>
+  <data name="HELP_API_MODE" xml:space="preserve">
+    <value>MODE API REST :</value>
+  </data>
+  <data name="HELP_API_USAGE" xml:space="preserve">
+    <value>Usage : ZPL2PDF --api [options] ou ZPL2PDF --web [options]</value>
+  </data>
+  <data name="HELP_OPT_API" xml:space="preserve">
+    <value>  --api, --web           Démarrer le serveur API REST (POST /api/convert, GET /api/health)</value>
+  </data>
+  <data name="HELP_OPT_API_HOST" xml:space="preserve">
+    <value>  --host &lt;host&gt;         Hôte à écouter (par défaut : 0.0.0.0)</value>
+  </data>
+  <data name="HELP_OPT_API_PORT" xml:space="preserve">
+    <value>  --port &lt;port&gt;         Port (par défaut : 5000)</value>
+  </data>
   <data name="HELP_PARAM_RENDERER" xml:space="preserve">
     <value>  --renderer &lt;engine&gt;        Moteur de rendu : offline (BinaryKits), labelary (API) ou auto (fallback)</value>
   </data>

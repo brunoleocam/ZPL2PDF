@@ -135,6 +135,13 @@ namespace ZPL2PDF.Shared.Localization
         public const string TCP_SERVER_NOT_RUNNING = "TCP_SERVER_NOT_RUNNING";
         public const string TCP_SERVER_STATUS_RUNNING = "TCP_SERVER_STATUS_RUNNING";
         
+        // REST API mode
+        public const string HELP_API_MODE = "HELP_API_MODE";
+        public const string HELP_API_USAGE = "HELP_API_USAGE";
+        public const string HELP_OPT_API = "HELP_OPT_API";
+        public const string HELP_OPT_API_HOST = "HELP_OPT_API_HOST";
+        public const string HELP_OPT_API_PORT = "HELP_OPT_API_PORT";
+        
         // Renderer options
         public const string HELP_PARAM_RENDERER = "HELP_PARAM_RENDERER";
         public const string HELP_OPT_RENDERER_DAEMON = "HELP_OPT_RENDERER_DAEMON";

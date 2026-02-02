@@ -14,6 +14,34 @@ Ein leistungsstarkes, plattformübergreifendes Befehlszeilenwerkzeug, das ZPL-Da
 
 ---
 
+## 🚀 **Neu in v3.0.2**
+
+### 🐛 Fehlerbehebungen
+- **Issue #45**: Doppelte oder leere Etiketten behoben, wenn `^XA` im Base64-Payload von `~DGR:` vorkommt — `^XA` wird nur am Zeilenanfang oder nach `^XZ` als Etikettenanfang gewertet.
+
+### ✨ Neue Funktionen
+- **Issue #48 – TCP-Server**: Virtueller Zebra-Druckermodus implementiert. Nutzen Sie `ZPL2PDF server start --port 9101 -o output/`, `server stop` und `server status`.
+- **REST API (PR #47)**: Führen Sie `ZPL2PDF --api --host localhost --port 5000` aus für `POST /api/convert` (ZPL zu PDF oder PNG) und `GET /api/health`. [API-Anleitung](../guides/API_GUIDE.md).
+
+---
+
+## 🚀 **Neu in v3.0.1**
+
+### 🐛 Fehlerbehebungen
+- **Issue #39**: Sequentielle Grafikverarbeitung für mehrere Grafiken mit gleichem Namen
+  - ZPL-Dateien mit mehreren `~DGR`-Grafiken werden jetzt korrekt verarbeitet
+  - Jede Etikette verwendet die richtige Grafik basierend auf dem sequentiellen Zustand
+  - `^IDR`-Bereinigungsbefehle erzeugen keine leeren Seiten mehr
+  - Behebt das Problem, bei dem alle Etiketten in Shopee-Versandetiketten identisch waren
+
+### 🔧 Verbesserungen
+- Eingabevalidierung in öffentlichen Methoden
+- Verbesserte Ausnahmebehandlung
+- Performance-Optimierungen mit kompiliertem Regex
+- Codebereinigung und Entfernung ungenutzter Methoden
+
+---
+
 ## 🚀 **Neu in v3.0.0**
 
 ### 🎉 Wichtige Neue Funktionen

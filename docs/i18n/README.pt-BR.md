@@ -14,6 +14,34 @@ Uma ferramenta poderosa e multiplataforma que converte arquivos ZPL (Zebra Progr
 
 ---
 
+## 🚀 **Novidades na v3.0.2**
+
+### 🐛 Correções
+- **Issue #45**: Corrigidas etiquetas duplicadas ou em branco quando `^XA` aparece dentro do payload base64 de `~DGR:` — `^XA` agora é tratado como início de etiqueta apenas no início da linha ou após `^XZ`.
+
+### ✨ Novas Funcionalidades
+- **Issue #48 – Servidor TCP**: Modo impressora Zebra virtual implementado. Use `ZPL2PDF server start --port 9101 -o output/`, `server stop` e `server status`.
+- **REST API (PR #47)**: Execute `ZPL2PDF --api --host localhost --port 5000` para `POST /api/convert` (ZPL para PDF ou PNG) e `GET /api/health`. [Guia da API](../guides/API_GUIDE.md).
+
+---
+
+## 🚀 **Novidades na v3.0.1**
+
+### 🐛 Correções
+- **Issue #39**: Processamento sequencial de gráficos para múltiplos gráficos com o mesmo nome
+  - Arquivos ZPL com múltiplos gráficos `~DGR` agora são processados corretamente
+  - Cada etiqueta usa o gráfico correto com base no estado sequencial
+  - Comandos `^IDR` de limpeza não geram mais páginas em branco
+  - Resolve o problema em que todas as etiquetas eram idênticas em arquivos de etiquetas Shopee
+
+### 🔧 Melhorias
+- Validação de entrada em métodos públicos
+- Tratamento de exceções aprimorado
+- Otimizações de performance com regex compilado
+- Limpeza de código e remoção de métodos não utilizados
+
+---
+
 ## 🚀 **Novidades na v3.0.0**
 
 ### 🎉 Principais Novas Funcionalidades

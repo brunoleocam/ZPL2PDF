@@ -721,8 +721,10 @@ If ZPL2PDF helps you, please ⭐ star the repository!
 Thanks to all contributors who have helped make ZPL2PDF better!
 
 <a href="https://github.com/brunoleocam/ZPL2PDF/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF" />
+  <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF&max=30" alt="Contributors" />
 </a>
+
+_Image may be cached; [see full list on GitHub](https://github.com/brunoleocam/ZPL2PDF/graphs/contributors)._
 
 ---
 
