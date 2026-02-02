@@ -14,6 +14,34 @@ Una poderosa herramienta multiplataforma de línea de comandos que convierte arc
 
 ---
 
+## 🚀 **Novedades en v3.0.2**
+
+### 🐛 Correcciones
+- **Issue #45**: Corregidas etiquetas duplicadas o en blanco cuando `^XA` aparece dentro del payload base64 de `~DGR:` — `^XA` ahora se trata como inicio de etiqueta solo al inicio de línea o después de `^XZ`.
+
+### ✨ Nuevas Funcionalidades
+- **Issue #48 – Servidor TCP**: Modo impresora Zebra virtual implementado. Use `ZPL2PDF server start --port 9101 -o output/`, `server stop` y `server status`.
+- **REST API (PR #47)**: Ejecute `ZPL2PDF --api --host localhost --port 5000` para `POST /api/convert` (ZPL a PDF o PNG) y `GET /api/health`. [Guía de la API](../guides/API_GUIDE.md).
+
+---
+
+## 🚀 **Novedades en v3.0.1**
+
+### 🐛 Correcciones
+- **Issue #39**: Procesamiento secuencial de gráficos para múltiples gráficos con el mismo nombre
+  - Los archivos ZPL con múltiples gráficos `~DGR` ahora se procesan correctamente
+  - Cada etiqueta usa el gráfico correcto según el estado secuencial
+  - Los comandos de limpieza `^IDR` ya no generan páginas en blanco
+  - Resuelve el problema donde todas las etiquetas eran idénticas en archivos de etiquetas Shopee
+
+### 🔧 Mejoras
+- Validación de entrada en métodos públicos
+- Mejor manejo de excepciones
+- Optimizaciones de rendimiento con regex compilado
+- Limpieza de código y eliminación de métodos no utilizados
+
+---
+
 ## 🚀 **Novedades en v3.0.0**
 
 ### 🎉 Principales Nuevas Funcionalidades

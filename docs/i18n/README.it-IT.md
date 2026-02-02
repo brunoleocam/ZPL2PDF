@@ -14,6 +14,34 @@ Un potente strumento da riga di comando multipiattaforma che converte file ZPL (
 
 ---
 
+## 🚀 **Novità nella v3.0.2**
+
+### 🐛 Correzioni
+- **Issue #45**: Etichette duplicate o vuote quando `^XA` appare nel payload base64 di `~DGR:` — `^XA` è ora trattato come inizio etichetta solo all'inizio riga o dopo `^XZ`.
+
+### ✨ Nuove Funzionalità
+- **Issue #48 – Server TCP**: Modalità stampante Zebra virtuale implementata. Usare `ZPL2PDF server start --port 9101 -o output/`, `server stop` e `server status`.
+- **REST API (PR #47)**: Eseguire `ZPL2PDF --api --host localhost --port 5000` per `POST /api/convert` (ZPL in PDF o PNG) e `GET /api/health`. [Guida API](../guides/API_GUIDE.md).
+
+---
+
+## 🚀 **Novità nella v3.0.1**
+
+### 🐛 Correzioni
+- **Issue #39**: Elaborazione sequenziale dei grafici per più grafici con lo stesso nome
+  - I file ZPL con più grafici `~DGR` ora vengono elaborati correttamente
+  - Ogni etichetta usa il grafico corretto in base allo stato sequenziale
+  - I comandi di pulizia `^IDR` non generano più pagine vuote
+  - Risolve il problema in cui tutte le etichette erano identiche nei file di etichette Shopee
+
+### 🔧 Miglioramenti
+- Validazione degli input nei metodi pubblici
+- Gestione delle eccezioni migliorata
+- Ottimizzazioni delle prestazioni con regex compilato
+- Pulizia del codice e rimozione dei metodi non utilizzati
+
+---
+
 ## 🚀 **Novità nella v3.0.0**
 
 ### 🎉 Principali Nuove Funzionalità
