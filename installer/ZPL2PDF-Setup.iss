@@ -6,7 +6,7 @@
 ;
 ; Requirements:
 ;   - Inno Setup 6.2.0 or higher (https://jrsoftware.org/isinfo.php)
-;   - Build artifacts in ../build/publish/
+;   - Build artifacts: bin\Release\net9.0\win-x64\publish\ (from scripts\build-installer.ps1)
 ;
 ; Usage:
 ;   1. Build all platforms: .\scripts\build-all-platforms.ps1
@@ -15,7 +15,7 @@
 ; =============================================================================
 
 #define MyAppName "ZPL2PDF"
-#define MyAppVersion "3.0.1"
+#define MyAppVersion "3.0.2"
 #define MyAppPublisher "Bruno Campos"
 #define MyAppURL "https://github.com/brunoleocam/ZPL2PDF"
 #define MyAppExeName "ZPL2PDF.exe"
@@ -108,8 +108,8 @@ Name: "envpath"; Description: "Add to PATH environment variable"; GroupDescripti
 Name: "setlanguage"; Description: "{cm:ConfigureLanguage}"; GroupDescription: "Configuration:"
 
 [Files]
-; Main Application (x64)
-Source: "..\build\publish\win-x64\ZPL2PDF.exe"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
+; Main Application (x64) - path used by scripts\build-installer.ps1 (Release publish)
+Source: "..\bin\Release\net9.0\win-x64\publish\ZPL2PDF.exe"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
 
 ; Configuration Example
 Source: "..\zpl2pdf.json.example"; DestDir: "{app}"; DestName: "zpl2pdf.json.example"; Flags: ignoreversion

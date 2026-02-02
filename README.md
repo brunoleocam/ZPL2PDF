@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-3.0.1-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -13,6 +13,17 @@
 A powerful, cross-platform command-line tool that converts ZPL (Zebra Programming Language) files to high-quality PDF documents. Perfect for label printing workflows, automated document generation, and enterprise label management systems.
 
 ![ZPL2PDF Demo](docs/Image/example_converted.png)
+
+---
+
+## 🚀 **What's New in v3.0.2**
+
+### 🐛 Bug Fixes
+- **Fixed Issue #45**: Duplicate or blank labels when `^XA` appears inside `~DGR:` base64 payload — `^XA` is now treated as label start only at line start or after `^XZ`.
+
+### ✨ New Features
+- **Issue #48 – TCP Server**: Virtual Zebra printer mode is now implemented. Use `ZPL2PDF server start --port 9101 -o output/`, `server stop`, and `server status`.
+- **REST API (PR #47)**: Run `ZPL2PDF --api --host localhost --port 5000` for `POST /api/convert` (ZPL to PDF or PNG) and `GET /api/health`.
 
 ---
 

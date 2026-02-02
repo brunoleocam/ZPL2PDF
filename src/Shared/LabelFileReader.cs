@@ -92,6 +92,12 @@ namespace ZPL2PDF {
                     // No more commands found
                     break;
                 }
+
+                // ^XA inside ~DGR payload (e.g. base64) must not start a label; only ^XA at line start or content start is valid
+                if (!isDgr && !IsValidLabelStart(content, nextPos)) {
+                    currentPos = nextPos + 3;
+                    continue;
+                }
                 
                 // Protection: Ensure we always advance
                 if (nextPos < currentPos) {
@@ -99,25 +105,39 @@ namespace ZPL2PDF {
                 }
                 
                 if (isDgr) {
-                    // Process ~DGR command: ~DGR:filename,size,bytes,:Z64:data
-                    // ~DGR commands can be very long (base64 data), so we need to find the end of the line
-                    int endOfLine = content.IndexOf('\n', nextPos);
-                    if (endOfLine < 0) {
-                        endOfLine = content.IndexOf('\r', nextPos);
+                    // Process ~DGR command: ~DGR:filename,size,bytes,:Z64:data:checksum
+                    // Prefer end after checksum so that ^XA on the same line (after ~DGR) is not swallowed
+                    int endByChecksum = -1;
+                    int z64Idx = content.IndexOf(":Z64:", nextPos, StringComparison.OrdinalIgnoreCase);
+                    if (z64Idx >= 0) {
+                        int colonAfterBase64 = content.IndexOf(':', z64Idx + 5);
+                        if (colonAfterBase64 >= 0) {
+                            int checksumEnd = colonAfterBase64 + 1;
+                            while (checksumEnd < content.Length && IsHexDigit(content[checksumEnd])) checksumEnd++;
+                            endByChecksum = checksumEnd;
+                        }
                     }
-                    if (endOfLine < 0) {
-                        // No line break found, use end of content
+                    int endByNewline = content.IndexOf('\n', nextPos);
+                    if (endByNewline < 0) endByNewline = content.IndexOf('\r', nextPos);
+
+                    int endOfLine;
+                    bool usedChecksumEnd = false;
+                    if (endByChecksum >= 0) {
+                        endOfLine = endByChecksum;
+                        usedChecksumEnd = true;
+                    } else if (endByNewline >= 0) {
+                        endOfLine = endByNewline;
+                    } else {
                         endOfLine = content.Length;
                     }
-                    
-                    // Extract the complete ~DGR line (including the newline character if present)
+
+                    // Extract the complete ~DGR line (include newline only when we ended at newline)
                     int lineLength = endOfLine - nextPos;
-                    if (endOfLine < content.Length && (content[endOfLine] == '\n' || content[endOfLine] == '\r')) {
-                        // Include the newline in the line if it exists
+                    if (!usedChecksumEnd && endOfLine < content.Length && (content[endOfLine] == '\n' || content[endOfLine] == '\r')) {
                         if (endOfLine + 1 < content.Length && content[endOfLine] == '\r' && content[endOfLine + 1] == '\n') {
-                            lineLength += 2; // Include \r\n
+                            lineLength += 2;
                         } else {
-                            lineLength += 1; // Include \n or \r
+                            lineLength += 1;
                         }
                     }
                     
@@ -169,6 +189,42 @@ namespace ZPL2PDF {
             return labels;
         }
         
+        private static bool IsHexDigit(char c) =>
+            (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
+
+        /// <summary>
+        /// Returns true if the position is a valid start of a ZPL label (^XA).
+        /// We reject ^XA only when it appears inside the base64 segment of a ~DGR line
+        /// (between ":Z64:" and the next ":"), so we don't treat "^XA" inside ~DGR base64 as a label start.
+        /// ^XA that appears after the ~DGR payload on the same line (e.g. after :checksum) is valid.
+        /// </summary>
+        private static bool IsValidLabelStart(string content, int xaPosition) {
+            if (xaPosition <= 0) return true;
+            // Find start of current line (last newline before xaPosition)
+            int lineStart = xaPosition - 1;
+            while (lineStart >= 0 && content[lineStart] != '\n' && content[lineStart] != '\r') {
+                lineStart--;
+            }
+            lineStart++; // first char of this line
+            // Only consider ~DGR lines
+            if (lineStart + 5 > content.Length ||
+                string.Compare(content, lineStart, "~DGR:", 0, 5, StringComparison.OrdinalIgnoreCase) != 0) {
+                return true;
+            }
+            // Find the base64 segment: ~DGR:name,size,bytes,:Z64:data:checksum — ^XA is false only inside "data"
+            int z64Index = content.IndexOf(":Z64:", lineStart, StringComparison.OrdinalIgnoreCase);
+            if (z64Index < 0 || z64Index >= xaPosition) {
+                // No :Z64: on this line before ^XA, or ^XA is before :Z64: — treat as valid (e.g. malformed or no base64)
+                return true;
+            }
+            int base64Start = z64Index + 5; // after ":Z64:"
+            int base64End = content.IndexOf(':', base64Start);
+            if (base64End < 0) base64End = content.Length;
+            // ^XA is invalid only when inside the base64 segment
+            if (xaPosition >= base64Start && xaPosition < base64End) return false;
+            return true;
+        }
+
         /// <summary>
         /// Builds a complete label by prepending all graphics currently in memory.
         /// </summary>

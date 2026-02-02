@@ -1,5 +1,8 @@
 # ZPL2PDF API Test Script (PowerShell)
-# This script builds and tests the ZPL2PDF API
+# Run from project root: .\scripts\api\test-api.ps1
+
+$ProjectRoot = (Get-Item $PSScriptRoot).Parent.Parent.FullName
+Set-Location $ProjectRoot
 
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "ZPL2PDF API Build and Test Script" -ForegroundColor Cyan
@@ -10,16 +13,16 @@ Write-Host ""
 Write-Host "Step 1: Building the project..." -ForegroundColor Yellow
 dotnet build
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ Build failed!" -ForegroundColor Red
+    Write-Host "Build failed!" -ForegroundColor Red
     exit 1
 }
-Write-Host "✅ Build successful!" -ForegroundColor Green
+Write-Host "Build successful!" -ForegroundColor Green
 Write-Host ""
 
 # Step 2: Start API server in background
 Write-Host "Step 2: Starting API server on port 5000..." -ForegroundColor Yellow
 $job = Start-Job -ScriptBlock {
-    Set-Location $using:PWD
+    Set-Location $using:ProjectRoot
     dotnet run -- --api --host localhost --port 5000
 }
 Start-Sleep -Seconds 3
@@ -33,21 +36,21 @@ $healthCheck = try {
 }
 
 if (-not $healthCheck) {
-    Write-Host "❌ API server failed to start!" -ForegroundColor Red
+    Write-Host "API server failed to start!" -ForegroundColor Red
     Stop-Job $job
     Remove-Job $job
     exit 1
 }
-Write-Host "✅ API server started" -ForegroundColor Green
+Write-Host "API server started" -ForegroundColor Green
 Write-Host ""
 
 # Step 3: Test health endpoint
 Write-Host "Step 3: Testing health endpoint..." -ForegroundColor Yellow
 try {
     $healthResponse = Invoke-RestMethod -Uri "http://localhost:5000/api/health" -Method Get
-    Write-Host "✅ Health check response: $($healthResponse | ConvertTo-Json)" -ForegroundColor Green
+    Write-Host "Health check response: $($healthResponse | ConvertTo-Json)" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Health check failed!" -ForegroundColor Red
+    Write-Host "Health check failed!" -ForegroundColor Red
     Stop-Job $job
     Remove-Job $job
     exit 1
@@ -68,21 +71,20 @@ try {
         -Body $pdfRequest
 
     if ($pdfResponse.success) {
-        Write-Host "✅ PDF conversion successful!" -ForegroundColor Green
+        Write-Host "PDF conversion successful!" -ForegroundColor Green
         Write-Host "Pages: $($pdfResponse.pages)" -ForegroundColor Cyan
-        
-        # Save PDF
+
         $pdfBytes = [Convert]::FromBase64String($pdfResponse.pdf)
         [System.IO.File]::WriteAllBytes("test_output.pdf", $pdfBytes)
-        Write-Host "✅ PDF saved to test_output.pdf" -ForegroundColor Green
+        Write-Host "PDF saved to test_output.pdf" -ForegroundColor Green
     } else {
-        Write-Host "❌ PDF conversion failed: $($pdfResponse.message)" -ForegroundColor Red
+        Write-Host "PDF conversion failed: $($pdfResponse.message)" -ForegroundColor Red
         Stop-Job $job
         Remove-Job $job
         exit 1
     }
 } catch {
-    Write-Host "❌ PDF conversion request failed: $_" -ForegroundColor Red
+    Write-Host "PDF conversion request failed: $_" -ForegroundColor Red
     Stop-Job $job
     Remove-Job $job
     exit 1
@@ -103,29 +105,28 @@ try {
         -Body $pngRequest
 
     if ($pngResponse.success) {
-        Write-Host "✅ PNG conversion successful!" -ForegroundColor Green
+        Write-Host "PNG conversion successful!" -ForegroundColor Green
         Write-Host "Pages: $($pngResponse.pages)" -ForegroundColor Cyan
-        
-        # Save PNG
+
         if ($pngResponse.image) {
             $pngBytes = [Convert]::FromBase64String($pngResponse.image)
             [System.IO.File]::WriteAllBytes("test_output.png", $pngBytes)
-            Write-Host "✅ PNG saved to test_output.png" -ForegroundColor Green
+            Write-Host "PNG saved to test_output.png" -ForegroundColor Green
         } elseif ($pngResponse.images) {
             for ($i = 0; $i -lt $pngResponse.images.Count; $i++) {
                 $pngBytes = [Convert]::FromBase64String($pngResponse.images[$i])
                 [System.IO.File]::WriteAllBytes("test_output_$($i+1).png", $pngBytes)
             }
-            Write-Host "✅ PNG images saved to test_output_*.png" -ForegroundColor Green
+            Write-Host "PNG images saved to test_output_*.png" -ForegroundColor Green
         }
     } else {
-        Write-Host "❌ PNG conversion failed: $($pngResponse.message)" -ForegroundColor Red
+        Write-Host "PNG conversion failed: $($pngResponse.message)" -ForegroundColor Red
         Stop-Job $job
         Remove-Job $job
         exit 1
     }
 } catch {
-    Write-Host "❌ PNG conversion request failed: $_" -ForegroundColor Red
+    Write-Host "PNG conversion request failed: $_" -ForegroundColor Red
     Stop-Job $job
     Remove-Job $job
     exit 1
@@ -147,14 +148,13 @@ try {
         -ErrorAction Stop
 
     if (-not $errorResponse.success) {
-        Write-Host "✅ Error handling works correctly!" -ForegroundColor Green
+        Write-Host "Error handling works correctly!" -ForegroundColor Green
         Write-Host "Error message: $($errorResponse.message)" -ForegroundColor Cyan
     } else {
-        Write-Host "⚠️  Error handling test inconclusive" -ForegroundColor Yellow
+        Write-Host "Error handling test inconclusive" -ForegroundColor Yellow
     }
 } catch {
-    # Expected to fail with 400 Bad Request
-    Write-Host "✅ Error handling works correctly (400 Bad Request)" -ForegroundColor Green
+    Write-Host "Error handling works correctly (400 Bad Request)" -ForegroundColor Green
 }
 Write-Host ""
 
@@ -162,14 +162,11 @@ Write-Host ""
 Write-Host "Step 7: Stopping API server..." -ForegroundColor Yellow
 Stop-Job $job
 Remove-Job $job
-Write-Host "✅ API server stopped" -ForegroundColor Green
+Write-Host "API server stopped" -ForegroundColor Green
 Write-Host ""
 
 Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "✅ All tests passed!" -ForegroundColor Green
+Write-Host "All tests passed!" -ForegroundColor Green
 Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "Test outputs:" -ForegroundColor Yellow
-Write-Host "  - test_output.pdf (if PDF test succeeded)" -ForegroundColor White
-Write-Host "  - test_output.png (if PNG test succeeded)" -ForegroundColor White
+Write-Host "Test outputs (project root): test_output.pdf, test_output.png" -ForegroundColor Yellow
 Write-Host ""

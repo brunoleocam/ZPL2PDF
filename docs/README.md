@@ -132,6 +132,7 @@ Can't find what you're looking for? Try:
 
 ## 🆕 **Recently Updated**
 
+- 📅 **2025-01-30**: Release 3.0.2 — Issue #45 (labels with ~DGR), Issue #48 (TCP Server), PR #47 (REST API)
 - 📅 **2025-01-07**: Docker Publishing Guide
 - 📅 **2025-01-07**: Multi-language Configuration Guide
 - 📅 **2025-01-07**: CI/CD Workflow Documentation

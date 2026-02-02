@@ -27,6 +27,12 @@ namespace ZPL2PDF
             }
 
             string firstArg = args[0].ToLowerInvariant();
+
+            // Check for TCP Server mode (server start | stop | status)
+            if (firstArg == "server")
+            {
+                return OperationMode.Server;
+            }
             
             // Check for explicit daemon commands
             if (firstArg == "start" || firstArg == "stop" || firstArg == "status" || firstArg == "run")
@@ -93,6 +99,27 @@ namespace ZPL2PDF
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Extracts the TCP server subcommand from arguments (start, stop, status).
+        /// </summary>
+        /// <param name="args">Command line arguments (first element should be "server")</param>
+        /// <returns>Server command: "start", "stop", "status", or "start" as default</returns>
+        public string ExtractServerCommand(string[] args)
+        {
+            if (args.Length < 2 || !args[0].Equals("server", StringComparison.OrdinalIgnoreCase))
+            {
+                return "start";
+            }
+
+            string sub = args[1].ToLowerInvariant();
+            if (sub == "start" || sub == "stop" || sub == "status")
+            {
+                return sub;
+            }
+
+            return "start";
         }
     }
 }

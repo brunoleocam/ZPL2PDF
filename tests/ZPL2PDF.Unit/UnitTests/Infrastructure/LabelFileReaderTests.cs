@@ -83,17 +83,47 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
         [Fact]
         public void SplitLabels_WithGraphicElements_IncludesGraphicElements()
         {
-            // Arrange
+            // Arrange: content before ^XA (e.g. ^PR2) should not prevent label from being found
             var zplContent = "^PR2^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
 
             // Act
             var labels = LabelFileReader.SplitLabels(zplContent);
 
-            // Assert
+            // Assert: we return the ^XA...^XZ label (prepended graphics come from ~DGR only)
             labels.Should().HaveCount(1);
-            labels[0].Should().Contain("^PR2");
             labels[0].Should().Contain("^XA");
             labels[0].Should().Contain("^XZ");
+            labels[0].Should().Contain("Test Label");
+        }
+
+        [Fact]
+        public void SplitLabels_WithFakeXaInsideDgrLine_IgnoresFakeLabelAndFindsRealLabel()
+        {
+            // Arrange: ^XA/^XZ inside ~DGR base64 must not be treated as label (issue #45)
+            var zplContent = "~DGR:DEMO.GRF,100,1,:Z64:abc^XAxyz^XZ\r\n^XA^FO50,50^A0N,50,50^FDReal Label^FS^XZ";
+
+            // Act
+            var labels = LabelFileReader.SplitLabels(zplContent);
+
+            // Assert: only one label (the real ^XA...^XZ after newline); fake ^XA inside ~DGR is ignored
+            labels.Should().HaveCount(1);
+            labels[0].Should().Contain("Real Label");
+            labels[0].Should().Contain("^XA^FO50,50"); // real label content
+        }
+
+        [Fact]
+        public void SplitLabels_WithRealXaAfterDgrPayloadOnSameLine_FindsLabel()
+        {
+            // Arrange: thermal-style — ~DGR and ^XA on same line; ^XA after :checksum is valid (issue #45)
+            var zplContent = "~DGR:DEMO.GRF,10,1,:Z64:ab:XX^XA^FO0,0^A0N,20,20^FDTest^FS^XZ";
+
+            // Act
+            var labels = LabelFileReader.SplitLabels(zplContent);
+
+            // Assert: one label (^XA after payload on same line)
+            labels.Should().HaveCount(1);
+            labels[0].Should().Contain("Test");
+            labels[0].Should().Contain("^XA^FO0,0");
         }
 
         [Theory]

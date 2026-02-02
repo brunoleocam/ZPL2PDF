@@ -112,6 +112,11 @@ namespace ZPL2PDF
                     var daemonHandler = new DaemonModeHandler();
                     await daemonHandler.HandleDaemon(argumentProcessor);
                 }
+                else if (argumentProcessor.Mode == OperationMode.Server)
+                {
+                    var tcpServerHandler = new TcpServerModeHandler();
+                    tcpServerHandler.HandleServer(argumentProcessor);
+                }
                 else
                 {
                     var conversionHandler = new ConversionModeHandler();
