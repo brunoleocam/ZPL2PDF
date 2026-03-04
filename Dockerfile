@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 # Stage 1: Build
 # -----------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:10.0.102 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.103 AS build
 
 # Set working directory
 WORKDIR /src
@@ -22,14 +22,15 @@ RUN dotnet restore ZPL2PDF.csproj
 # Copy source code
 COPY src/ ./src/
 
-# Build and publish for linux-musl (Alpine)
+# Build and publish for linux-musl (Alpine).
+# PublishSingleFile=false avoids MethodNotFound for SixLabors.ImageSharp in container
+# (single-file can bundle mismatched assembly resolution for ImageSharp/ZXing).
 RUN dotnet publish ZPL2PDF.csproj \
     --configuration Release \
     --runtime linux-musl-x64 \
     --self-contained true \
     --output /app/publish \
-    -p:PublishSingleFile=true \
-    -p:IncludeNativeLibrariesForSelfExtract=true \
+    -p:PublishSingleFile=false \
     -p:PublishReadyToRun=true \
     -p:PublishTrimmed=false
 
@@ -70,8 +71,8 @@ RUN addgroup -S zpl2pdf && adduser -S zpl2pdf -G zpl2pdf
 # Set working directory
 WORKDIR /app
 
-# Copy executable
-COPY --from=build /app/publish/ZPL2PDF .
+# Copy entire publish output (executable + DLLs; single-file disabled for Linux)
+COPY --from=build /app/publish/ .
 
 # Create directories and set permissions
 RUN mkdir -p /app/config && \
@@ -101,4 +102,4 @@ CMD ["/app/ZPL2PDF", "run", "-l", "/app/watch"]
 # Metadata
 LABEL maintainer="brunoleocam" \
       description="ZPL2PDF - Alpine Linux (Ultra Lightweight)" \
-      version="3.0.2-alpine"
+      version="3.0.3"

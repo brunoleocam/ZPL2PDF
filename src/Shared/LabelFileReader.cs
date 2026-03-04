@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ZPL2PDF {
@@ -38,7 +39,7 @@ namespace ZPL2PDF {
             if (!File.Exists(filePath)) {
                 throw new FileNotFoundException($"File not found: {filePath}");
             }
-            return File.ReadAllText(filePath);
+            return File.ReadAllText(filePath, Encoding.UTF8);
         }
 
         /// <summary>
@@ -282,21 +283,67 @@ namespace ZPL2PDF {
         /// Currently handles:
         /// - ^FN (Field Number): Removes ^FN tags when followed by ^FD, as BinaryKits.Zpl.Viewer
         ///   doesn't fully support field templates. The ^FD content is preserved for direct rendering.
+        /// - ^FH hex in ^FD: Decodes _XX sequences (UTF-8 bytes) into Unicode so the viewer renders
+        ///   accented characters (ã, ç, ú, etc.) correctly instead of Ã£, Ã§, Ãº.
         /// </summary>
         /// <param name="content">Raw ZPL content.</param>
         /// <returns>Preprocessed ZPL content ready for rendering.</returns>
-        /// <example>
-        /// Input:  ^FO90,12^A0N,20,20^FN6^FDHello World^FS
-        /// Output: ^FO90,12^A0N,20,20^FDHello World^FS
-        /// </example>
         public static string PreprocessZpl(string content) {
             if (string.IsNullOrWhiteSpace(content)) {
                 return content ?? string.Empty;
             }
 
             // Remove ^FN<number> when followed by ^FD
-            // Uses pre-compiled regex with timeout for safety and performance
-            return FieldNumberRegex.Replace(content, string.Empty);
+            string result = FieldNumberRegex.Replace(content, string.Empty);
+
+            // Decode ^FH hex sequences (_XX) in field data as UTF-8 so ã, ç, ú render correctly
+            result = DecodeFhHexInFieldData(result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Replaces _XX hex sequences (from ^FH) in ^FD...^FS blocks with the corresponding UTF-8 character.
+        /// Prevents BinaryKits from interpreting UTF-8 bytes as Latin-1 (e.g. Ã£ instead of ã).
+        /// </summary>
+        private static string DecodeFhHexInFieldData(string zpl) {
+            // Match ^FD ... ^FS (non-greedy, allow newlines). Timeout to avoid ReDoS.
+            var fdFsRegex = new Regex(@"\^FD(.*?)\^FS", RegexOptions.Singleline | RegexOptions.IgnoreCase, TimeSpan.FromSeconds(5));
+            return fdFsRegex.Replace(zpl, match => {
+                string fieldData = match.Groups[1].Value;
+                string decoded = DecodeFhHexSequence(fieldData);
+                return "^FD" + decoded + "^FS";
+            });
+        }
+
+        /// <summary>
+        /// Decodes a string containing _XX (hex byte) sequences into UTF-8 text.
+        /// Consecutive _XX are treated as UTF-8 byte sequence (e.g. _C3_A3 -> ã).
+        /// </summary>
+        private static string DecodeFhHexSequence(string fieldData) {
+            var sb = new StringBuilder(fieldData.Length);
+            int i = 0;
+            while (i < fieldData.Length) {
+                if (i + 3 <= fieldData.Length && fieldData[i] == '_' && IsHexDigit(fieldData[i + 1]) && IsHexDigit(fieldData[i + 2])) {
+                    var bytes = new List<byte>();
+                    while (i + 3 <= fieldData.Length && fieldData[i] == '_' && IsHexDigit(fieldData[i + 1]) && IsHexDigit(fieldData[i + 2])) {
+                        bytes.Add((byte)Convert.ToInt32(fieldData.Substring(i + 1, 2), 16));
+                        i += 3;
+                    }
+                    if (bytes.Count > 0) {
+                        try {
+                            sb.Append(Encoding.UTF8.GetString(bytes.ToArray()));
+                        } catch {
+                            foreach (byte b in bytes)
+                                sb.Append((char)b);
+                        }
+                    }
+                } else {
+                    sb.Append(fieldData[i]);
+                    i++;
+                }
+            }
+            return sb.ToString();
         }
     }
 }

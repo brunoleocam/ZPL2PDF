@@ -44,13 +44,14 @@ namespace ZPL2PDF
                     fileContent = argumentProcessor.ZplContent;
                 }
 
-                // Convert using the conversion service
                 var imageDataList = _conversionService.Convert(
                     fileContent,
                     argumentProcessor.Width,
                     argumentProcessor.Height,
                     argumentProcessor.Unit,
-                    argumentProcessor.Dpi
+                    argumentProcessor.Dpi,
+                    string.IsNullOrWhiteSpace(argumentProcessor.FontsDirectory) ? null : argumentProcessor.FontsDirectory,
+                    argumentProcessor.FontMappings?.Count > 0 ? argumentProcessor.FontMappings : null
                 );
 
                 // Process the generated images

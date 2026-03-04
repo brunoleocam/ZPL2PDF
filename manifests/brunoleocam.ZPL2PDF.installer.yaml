@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
 
 PackageIdentifier: brunoleocam.ZPL2PDF
-PackageVersion: 3.0.2
+PackageVersion: 3.0.3
 InstallerLocale: en-US
 MinimumOSVersion: 10.0.0.0
 InstallerType: inno
@@ -23,11 +23,11 @@ FileExtensions:
 - prn
 - zpl
 - imp
-ReleaseDate: 2026-02-02
+ReleaseDate: 2026-03-04
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.2/ZPL2PDF-Setup-3.0.2.exe
-  InstallerSha256: D3FAD96A75D08DB31C4459CD3A7312D353AC982F18C37425D6AAA4CE5F6C62B8
+  InstallerUrl: https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-Setup-3.0.3.exe
+  InstallerSha256: 99591EA8AAF652422C97D5E9864AEA28978719B2EEB5C98566F5146562728A57
   ProductCode: '{{A7F8C3D2-9E1B-4F6A-8D2C-5E9A3B7C1F4D}_is1'
 ManifestType: installer
 ManifestVersion: 1.6.0

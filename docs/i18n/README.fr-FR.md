@@ -1,4 +1,4 @@
-# ZPL2PDF - Convertisseur ZPL vers PDF
+﻿# ZPL2PDF - Convertisseur ZPL vers PDF
 
 [![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
@@ -14,7 +14,7 @@ Un puissant outil en ligne de commande multiplateforme qui convertit les fichier
 
 ---
 
-## 🚀 **Nouveautés v3.0.2**
+## 🚀 **Nouveautés v3.0.3**
 
 ### 🐛 Corrections
 - **Issue #45** : Étiquettes dupliquées ou vides lorsque `^XA` apparaît dans le payload base64 de `~DGR:` — `^XA` n'est traité comme début d'étiquette qu'en début de ligne ou après `^XZ`.
@@ -25,7 +25,7 @@ Un puissant outil en ligne de commande multiplateforme qui convertit les fichier
 
 ---
 
-## 🚀 **Nouveautés v3.0.1**
+## 🚀 **Nouveautés v3.0.3**
 
 ### 🐛 Corrections
 - **Issue #39** : Traitement séquentiel des graphiques pour plusieurs graphiques de même nom
@@ -42,7 +42,7 @@ Un puissant outil en ligne de commande multiplateforme qui convertit les fichier
 
 ---
 
-## 🚀 **Nouveautés v3.0.0**
+## 🚀 **Nouveautés v3.0.3**
 
 ### 🎉 Principales Nouvelles Fonctionnalités
 - 🎨 **Intégration API Labelary** - Rendu ZPL haute fidélité avec sortie PDF vectorielle
@@ -139,10 +139,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (paquet .deb)
 ```bash
 # Télécharger le paquet .deb
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.0/ZPL2PDF-v3.0.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
 
 # Installer le paquet
-sudo dpkg -i ZPL2PDF-v3.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
 
 # Corriger les dépendances si nécessaire
 sudo apt-get install -f

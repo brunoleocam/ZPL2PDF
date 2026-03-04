@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.3] - 2026-03-03
+
+### 🐛 Fixed
+
+- **Issue #53**: Rendering mismatch and text overlap on Linux (CentOS 9, Alpine) vs Labelary
+  - **BinaryKits.Zpl.Viewer 1.2.1** and **BinaryKits.Zpl.Label 3.2.1** kept for Linux/Docker compatibility (1.3.1/3.3.1 cause "Method not found" for SixLabors.ImageSharp in container due to API change in ImageSharp 3.x)
+  - Removed unused **BinaryKits.Zpl.Protocol** reference (it pulled ImageSharp 2.x and triggered the conflict)
+  - Dockerfile: `PublishSingleFile=false` and copy full publish output so correct assemblies load in Alpine
+  - Documented in [LINUX-RENDERING.md](docs/guides/LINUX-RENDERING.md) and [DOCKER_GUIDE.md](docs/guides/DOCKER_GUIDE.md) (Troubleshooting); workaround is to install fonts in the container (ttf-dejavu, etc.)
+
+- **Encoding (^FH _XX)**: Accented characters (ã, ç, ú) in ZPL field data no longer appear as mojibake (Ã£, Ã§, Ãº) in PDF
+  - Decode ^FH _XX hex sequences inside ^FD...^FS as UTF-8 in `LabelFileReader.PreprocessZpl` (DecodeFhHexInFieldData)
+  - Read ZPL input files with UTF-8 encoding
+
+- **Custom fonts (--fonts-dir / --font)**: Fixed custom TTF/OTF fonts not being applied (e.g. ^AAN, ^ABN)
+  - `--fonts-dir` and `--font "ID=path"` are now parsed and passed through to the offline renderer
+  - FontLoader in LabelRenderer maps ZPL font IDs (0, A, B, …) to provided font files; relative paths are resolved against `--fonts-dir`
+  - When a font file is not found, renderer falls back to default typeface instead of failing
+
+### 📦 Technical Details
+
+- **Files modified**: `LabelRenderer.cs` (CreateDrawerOptions, FontLoader from --fonts-dir/--font), `ZPL2PDF.csproj` (BinaryKits 1.2.1/3.2.1, no Protocol), `Dockerfile` (PublishSingleFile=false, copy full publish), `LabelFileReader.cs` (PreprocessZpl DecodeFhHexInFieldData, ReadFile UTF-8), `ArgumentParser.cs`, `ArgumentProcessor.cs`, `ConversionService.cs`, `ConversionModeHandler.cs`, `IConversionService.cs`
+- **Files added**: `docs/guides/LINUX-RENDERING.md`, `release/docker-test-linux-issue53.ps1`, `tests/.../custom-fonts-test.zpl`, `custom-fonts-test.txt`
+
+---
+
 ## [3.0.2] - 2025-01-30
 
 ### 🐛 Fixed
