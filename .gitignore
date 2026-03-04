@@ -82,8 +82,7 @@ TESTES-MANUAIS-*.md
 # Cursor (local IDE/agent config)
 .cursor/
 # GitHub prompts/skills (not versioned)
-.github/prompts
-.github/skills
+.github/
 # Agent instructions (not versioned)
 AGENTS.md
 # OpenSpec (local change tracking)
