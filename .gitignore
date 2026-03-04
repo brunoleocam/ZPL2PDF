@@ -34,6 +34,9 @@ winget-submission/
 *.zip
 *.tar.gz
 
+# Publish/build outputs (multi-platform builds; do not version)
+Assets/
+
 # Release artifacts (build outputs uploaded to GitHub Release; do not version)
 release/*
 !release/README.md

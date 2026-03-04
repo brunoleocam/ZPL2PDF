@@ -56,7 +56,7 @@ function Generate-ReleaseNotes {
     $changelogPath = Join-Path $ProjectRoot "CHANGELOG.md"
     if (Test-Path $changelogPath) {
         Write-Info "Reading CHANGELOG.md for version $Version..."
-        $changelogContent = Get-Content $changelogPath -Raw
+        $changelogContent = Get-Content $changelogPath -Raw -Encoding UTF8
         
         # Extract the section for this version
         # Pattern: ## [Version] - Date or ## [Version]
@@ -119,7 +119,7 @@ docker pull ghcr.io/brunoleocam/zpl2pdf:$Version
     $readmePath = Join-Path $ProjectRoot "README.md"
     if (Test-Path $readmePath) {
         Write-Info "Reading README.md for additional context..."
-        $readmeContent = Get-Content $readmePath -Raw
+        $readmeContent = Get-Content $readmePath -Raw -Encoding UTF8
         
         # Look for "What's New" section that mentions this version
         $whatsNewPattern = "(?s)##\s*🚀\s*\*\*What's New in v$([regex]::Escape($Version))\*\*(.*?)(?=##|### v\d|$)"
@@ -170,7 +170,7 @@ function Get-PreviousVersion {
         return $null
     }
     
-    $changelogContent = Get-Content $changelogPath -Raw
+    $changelogContent = Get-Content $changelogPath -Raw -Encoding UTF8
     # Find all version entries
     $versionPattern = '##\s*\[(\d+\.\d+\.\d+)\]'
     $versionMatches = [regex]::Matches($changelogContent, $versionPattern)
@@ -229,9 +229,16 @@ if (-not $existingTag) {
     Write-Info "Tag $tagName already exists"
 }
 
-# Check if release already exists
-$null = gh release view $tagName --repo "$RepoOwner/$RepoName" 2>&1
-if ($LASTEXITCODE -eq 0) {
+# Check if release already exists (SilentlyContinue prevents "release not found" from stopping the script)
+$prevErrAction = $ErrorActionPreference
+$ErrorActionPreference = 'SilentlyContinue'
+try {
+    $null = gh release view $tagName --repo "$RepoOwner/$RepoName" 2>$null
+    $releaseExists = ($LASTEXITCODE -eq 0)
+} finally {
+    $ErrorActionPreference = $prevErrAction
+}
+if ($releaseExists) {
     Write-Warning "Release $tagName already exists"
     Write-Info "Skipping release creation"
     exit 0
@@ -247,104 +254,24 @@ if (-not (Test-Path $assetsDir)) {
     Write-Info "Created release directory"
 }
 
-# Generate source code archives
-Write-Step "Generating source code archives..."
-$sourceZip = Join-Path $assetsDir "ZPL2PDF-$Version-source.zip"
-$sourceTarGz = Join-Path $assetsDir "ZPL2PDF-$Version-source.tar.gz"
-
-# Get list of files to exclude from source archives
-$excludePatterns = @(
-    ".git",
-    ".vs",
-    ".vscode",
-    "bin",
-    "obj",
-    "build",
-    "release",
-    "node_modules",
-    "*.user",
-    "*.suo",
-    ".release-checkpoint-*.json"
-)
-
-# Create temporary file list for git archive
-Write-Info "Creating source code ZIP archive..."
-Set-Location $ProjectRoot
-git archive --format=zip --output=$sourceZip --prefix="ZPL2PDF-$Version/" HEAD
-if ($LASTEXITCODE -eq 0) {
-    Write-Success "Source code ZIP created: $(Split-Path $sourceZip -Leaf)"
-} else {
-    Write-Warning "Failed to create source ZIP using git archive, trying alternative method..."
-    # Fallback: use Compress-Archive
-    $tempDir = Join-Path $env:TEMP "zpl2pdf-source-$Version"
-    if (Test-Path $tempDir) {
-        Remove-Item $tempDir -Recurse -Force
-    }
-    New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-    
-    # Copy files excluding patterns
-    Get-ChildItem $ProjectRoot -File | Where-Object {
-        $exclude = $false
-        foreach ($pattern in $excludePatterns) {
-            if ($_.Name -like $pattern) {
-                $exclude = $true
-                break
-            }
-        }
-        -not $exclude
-    } | ForEach-Object {
-        Copy-Item $_.FullName -Destination $tempDir -Force
-    }
-    
-    Get-ChildItem $ProjectRoot -Directory | Where-Object {
-        $exclude = $false
-        foreach ($pattern in $excludePatterns) {
-            if ($_.Name -like $pattern) {
-                $exclude = $true
-                break
-            }
-        }
-        -not $exclude
-    } | ForEach-Object {
-        Copy-Item $_.FullName -Destination $tempDir -Recurse -Force
-    }
-    
-    Compress-Archive -Path "$tempDir\*" -DestinationPath $sourceZip -Force
-    Remove-Item $tempDir -Recurse -Force
-    Write-Success "Source code ZIP created: $(Split-Path $sourceZip -Leaf)"
-}
-
-Write-Info "Creating source code TAR.GZ archive..."
-if (Get-Command tar -ErrorAction SilentlyContinue) {
-    git archive --format=tar.gz --output=$sourceTarGz --prefix="ZPL2PDF-$Version/" HEAD
-    if ($LASTEXITCODE -eq 0) {
-        Write-Success "Source code TAR.GZ created: $(Split-Path $sourceTarGz -Leaf)"
-    } else {
-        Write-Warning "Failed to create source TAR.GZ using git archive"
-    }
-} else {
-    Write-Warning "tar command not available, skipping TAR.GZ archive"
-}
-
-# Collect files for upload (all files should be in release/)
+# Collect files for upload (installer, packages, checksums; no source archives)
 $releaseFiles = @()
 if (Test-Path $assetsDir) {
-    # Get all release files from release/ (including installer, packages, and source code)
-    $releaseFiles = Get-ChildItem $assetsDir -File | Where-Object { 
-        $_.Name -like "*$Version*" -or $_.Name -eq "SHA256SUMS.txt"
+    $releaseFiles = Get-ChildItem $assetsDir -File | Where-Object {
+        ($_.Name -like "*$Version*" -or $_.Name -eq "SHA256SUMS.txt") -and
+        $_.Name -notlike "*-source.zip" -and
+        $_.Name -notlike "*-source.tar.gz"
     }
 }
-
-# Add checksums if it exists
-$checksumsPath = Join-Path $assetsDir "SHA256SUMS.txt"
-if (Test-Path $checksumsPath) {
-    $releaseFiles += Get-Item $checksumsPath
-}
+# Deduplicate by full path (e.g. SHA256SUMS.txt was only added once)
+$releaseFiles = $releaseFiles | Sort-Object -Property FullName -Unique
 
 # Create release (use --notes-file to avoid escaping issues with CHANGELOG content)
 Write-Info "Creating GitHub release..."
 $notesFile = Join-Path $env:TEMP "zpl2pdf-release-notes-$Version.md"
-Set-Content -Path $notesFile -Value $releaseNotes -Encoding UTF8 -NoNewline
+# UTF-8 without BOM so GitHub API displays emojis correctly (no "ðŸ³" mojibake)
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+[System.IO.File]::WriteAllText($notesFile, $releaseNotes, $utf8NoBom)
 
 $ghArgs = @(
     "release", "create", $tagName,
