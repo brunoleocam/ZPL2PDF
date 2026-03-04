@@ -208,7 +208,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $tagName = "v$Version"
-$assetsDir = Join-Path $ProjectRoot "Assets"
+$assetsDir = Join-Path $ProjectRoot "release"
 
 if ($DryRun) {
     Write-Info "[DRY RUN] Would create tag: $tagName"
@@ -241,10 +241,10 @@ if ($LASTEXITCODE -eq 0) {
 Write-Info "Generating release notes from CHANGELOG.md and README.md..."
 $releaseNotes = Generate-ReleaseNotes -Version $Version -ProjectRoot $ProjectRoot
 
-# Ensure Assets directory exists
+# Ensure release directory exists
 if (-not (Test-Path $assetsDir)) {
     New-Item -ItemType Directory -Path $assetsDir -Force | Out-Null
-    Write-Info "Created Assets directory"
+    Write-Info "Created release directory"
 }
 
 # Generate source code archives
@@ -260,7 +260,7 @@ $excludePatterns = @(
     "bin",
     "obj",
     "build",
-    "Assets",
+    "release",
     "node_modules",
     "*.user",
     "*.suo",
@@ -326,10 +326,10 @@ if (Get-Command tar -ErrorAction SilentlyContinue) {
     Write-Warning "tar command not available, skipping TAR.GZ archive"
 }
 
-# Collect files for upload (all files should be in Assets/)
+# Collect files for upload (all files should be in release/)
 $releaseFiles = @()
 if (Test-Path $assetsDir) {
-    # Get all release files from Assets/ (including installer, packages, and source code)
+    # Get all release files from release/ (including installer, packages, and source code)
     $releaseFiles = Get-ChildItem $assetsDir -File | Where-Object { 
         $_.Name -like "*$Version*" -or $_.Name -eq "SHA256SUMS.txt"
     }
@@ -341,29 +341,36 @@ if (Test-Path $checksumsPath) {
     $releaseFiles += Get-Item $checksumsPath
 }
 
-# Create release
+# Create release (use --notes-file to avoid escaping issues with CHANGELOG content)
 Write-Info "Creating GitHub release..."
-$filesArg = ($releaseFiles | ForEach-Object { "`"$($_.FullName)`"" }) -join " "
+$notesFile = Join-Path $env:TEMP "zpl2pdf-release-notes-$Version.md"
+Set-Content -Path $notesFile -Value $releaseNotes -Encoding UTF8 -NoNewline
 
-if ($filesArg) {
-    $ghCmd = "gh release create `"$tagName`" --repo `"$RepoOwner/$RepoName`" --title `"ZPL2PDF v$Version`" --notes `"$releaseNotes`" $filesArg"
-} else {
-    $ghCmd = "gh release create `"$tagName`" --repo `"$RepoOwner/$RepoName`" --title `"ZPL2PDF v$Version`" --notes `"$releaseNotes`""
+$ghArgs = @(
+    "release", "create", $tagName,
+    "--repo", "$RepoOwner/$RepoName",
+    "--title", "ZPL2PDF v$Version",
+    "--notes-file", $notesFile
+)
+foreach ($f in $releaseFiles) {
+    $ghArgs += $f.FullName
 }
+& gh @ghArgs
+$exitCode = $LASTEXITCODE
 
-Invoke-Expression $ghCmd
+# Remove temp notes file
+if (Test-Path $notesFile) { Remove-Item $notesFile -Force }
 
-if ($LASTEXITCODE -eq 0) {
+if ($exitCode -eq 0) {
     Write-Success "GitHub release created!"
     Write-Info "URL: https://github.com/$RepoOwner/$RepoName/releases/tag/$tagName"
-    # Save checkpoint
     Mark-StepCompleted -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -Data @{
         ReleaseUrl = "https://github.com/$RepoOwner/$RepoName/releases/tag/$tagName"
         TagName = $tagName
     }
 } else {
-    Write-Error "Failed to create release"
-    Mark-StepFailed -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -ErrorMessage "Failed to create GitHub release"
+    Write-Error "Failed to create release (exit code: $exitCode). Check 'gh release create --help' and ensure tag v$Version exists and release/ has the files."
+    Mark-StepFailed -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -ErrorMessage "gh release create failed with exit code $exitCode"
     exit 1
 }
 

@@ -44,8 +44,8 @@ if (-not (Test-Path $manifestDir)) {
     exit 1
 }
 
-# Calculate installer SHA256 (check Assets first, then installer/Output as fallback)
-$installerPath = Join-Path $ProjectRoot "Assets\ZPL2PDF-Setup-$Version.exe"
+# Calculate installer SHA256 (check release first, then installer/Output as fallback)
+$installerPath = Join-Path $ProjectRoot "release\ZPL2PDF-Setup-$Version.exe"
 $sha256 = ""
 
 if (-not (Test-Path $installerPath)) {
