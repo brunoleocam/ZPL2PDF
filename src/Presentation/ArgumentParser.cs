@@ -91,6 +91,28 @@ namespace ZPL2PDF
                             i++; // Skip next argument as it's the value
                         }
                         break;
+                    case "--fonts-dir":
+                        if (i + 1 < args.Length)
+                        {
+                            result.FontsDirectory = args[i + 1];
+                            i++;
+                        }
+                        break;
+                    case "--font":
+                        if (i + 1 < args.Length)
+                        {
+                            var pair = args[i + 1];
+                            var eq = pair.IndexOf('=');
+                            if (eq > 0)
+                            {
+                                var id = pair.Substring(0, eq).Trim();
+                                var path = pair.Substring(eq + 1).Trim();
+                                if (!string.IsNullOrEmpty(id))
+                                    result.FontMappings.Add((id, path));
+                            }
+                            i++;
+                        }
+                        break;
                 }
             }
 
@@ -260,6 +282,10 @@ namespace ZPL2PDF
         public double Height { get; set; } = 0;
         public string Unit { get; set; } = "mm";
         public int Dpi { get; set; } = 203;
+        /// <summary>Directory containing TTF/OTF fonts (e.g. for --fonts-dir).</summary>
+        public string FontsDirectory { get; set; } = string.Empty;
+        /// <summary>Font ID to file path (e.g. A=arial.ttf, B=another.ttf).</summary>
+        public List<(string Id, string Path)> FontMappings { get; set; } = new List<(string, string)>();
     }
 
     /// <summary>

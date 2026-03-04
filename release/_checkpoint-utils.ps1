@@ -149,21 +149,32 @@ function Mark-StepCompleted {
         $checkpoint = $checkpointHash
     }
     
+    # Ensure we work with a hashtable (assignable)
+    if ($checkpoint -isnot [hashtable]) {
+        $checkpoint = @{
+            Version = $checkpoint.Version
+            StartedAt = $checkpoint.StartedAt
+            LastUpdated = $checkpoint.LastUpdated
+            CompletedSteps = @($checkpoint.CompletedSteps)
+            FailedSteps = @($checkpoint.FailedSteps)
+            SkippedSteps = @($checkpoint.SkippedSteps)
+            Data = @{}
+        }
+    }
     # Add step to completed (if not already)
-    if ($checkpoint.CompletedSteps -notcontains $StepNumber) {
-        $checkpoint.CompletedSteps += $StepNumber
+    $completed = @($checkpoint.CompletedSteps)
+    if ($completed -notcontains $StepNumber) {
+        $checkpoint.CompletedSteps = $completed + $StepNumber
     }
-    
     # Remove from failed if it's there
-    if ($checkpoint.FailedSteps -contains $StepNumber) {
-        $checkpoint.FailedSteps = $checkpoint.FailedSteps | Where-Object { $_ -ne $StepNumber }
+    $failed = @($checkpoint.FailedSteps)
+    if ($failed -contains $StepNumber) {
+        $checkpoint.FailedSteps = $failed | Where-Object { $_ -ne $StepNumber }
     }
-    
     # Add data if provided
     foreach ($key in $Data.Keys) {
         $checkpoint.Data[$key] = $Data[$key]
     }
-    
     Save-Checkpoint -Version $Version -ProjectRoot $ProjectRoot -Checkpoint $checkpoint
 }
 

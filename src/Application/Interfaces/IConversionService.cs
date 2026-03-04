@@ -15,8 +15,12 @@ namespace ZPL2PDF.Application.Interfaces
         /// <param name="height">Label height</param>
         /// <param name="unit">Unit of measurement</param>
         /// <param name="dpi">Print density in DPI</param>
+        /// <param name="fontsDirectory">Optional directory for TTF/OTF fonts (--fonts-dir)</param>
+        /// <param name="fontMappings">Optional font ID to path mappings (--font "A=path.ttf")</param>
         /// <returns>List of image data for PDF generation</returns>
-        List<byte[]> ConvertWithExplicitDimensions(string zplContent, double width, double height, string unit, int dpi);
+        List<byte[]> ConvertWithExplicitDimensions(string zplContent, double width, double height, string unit, int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null);
 
         /// <summary>
         /// Converts ZPL content to PDF by extracting dimensions from ZPL
@@ -24,8 +28,12 @@ namespace ZPL2PDF.Application.Interfaces
         /// <param name="zplContent">ZPL content to convert</param>
         /// <param name="unit">Unit of measurement for extracted dimensions</param>
         /// <param name="dpi">Print density in DPI</param>
+        /// <param name="fontsDirectory">Optional directory for TTF/OTF fonts</param>
+        /// <param name="fontMappings">Optional font ID to path mappings</param>
         /// <returns>List of image data for PDF generation</returns>
-        List<byte[]> ConvertWithExtractedDimensions(string zplContent, string unit, int dpi);
+        List<byte[]> ConvertWithExtractedDimensions(string zplContent, string unit, int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null);
 
         /// <summary>
         /// Converts ZPL content to PDF using mixed approach (explicit or extracted)
@@ -35,7 +43,11 @@ namespace ZPL2PDF.Application.Interfaces
         /// <param name="explicitHeight">Explicit height (0 to extract from ZPL)</param>
         /// <param name="unit">Unit of measurement</param>
         /// <param name="dpi">Print density in DPI</param>
+        /// <param name="fontsDirectory">Optional directory for TTF/OTF fonts</param>
+        /// <param name="fontMappings">Optional font ID to path mappings</param>
         /// <returns>List of image data for PDF generation</returns>
-        List<byte[]> Convert(string zplContent, double explicitWidth, double explicitHeight, string unit, int dpi);
+        List<byte[]> Convert(string zplContent, double explicitWidth, double explicitHeight, string unit, int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null);
     }
 }

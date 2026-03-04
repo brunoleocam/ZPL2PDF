@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using ZPL2PDF.Shared.Constants;
 using ZPL2PDF.Shared.Localization;
@@ -125,6 +126,16 @@ namespace ZPL2PDF
         public int Dpi { get; set; } = 203;
 
         /// <summary>
+        /// Gets or sets the directory containing custom TTF/OTF fonts (--fonts-dir).
+        /// </summary>
+        public string FontsDirectory { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets font ID to file path mappings (--font "A=path.ttf").
+        /// </summary>
+        public List<(string Id, string Path)> FontMappings { get; set; } = new List<(string, string)>();
+
+        /// <summary>
         /// Processes the command line arguments.
         /// </summary>
         /// <param name="args">Array of command line arguments.</param>
@@ -191,6 +202,8 @@ namespace ZPL2PDF
             Height = conversionArgs.Height;
             Unit = conversionArgs.Unit;
             Dpi = conversionArgs.Dpi;
+            FontsDirectory = conversionArgs.FontsDirectory ?? string.Empty;
+            FontMappings = conversionArgs.FontMappings ?? new List<(string, string)>();
 
             // Validate arguments
             var validation = _validator.ValidateConversionMode(InputFilePath, ZplContent, OutputFolderPath, Width, Height, Unit);
