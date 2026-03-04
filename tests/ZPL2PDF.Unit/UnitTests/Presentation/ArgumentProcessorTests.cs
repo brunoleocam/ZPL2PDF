@@ -404,6 +404,28 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             processor.Unit.Should().Be("mm");
         }
 
+        [Fact]
+        public void ProcessArguments_WithFontsDirAndFont_SetsFontOptions()
+        {
+            // Arrange
+            var processor = new ArgumentProcessor();
+            var testFile = Path.Combine(_testDirectory, "label.txt");
+            File.WriteAllText(testFile, "^XA^FO50,50^AAN,30,30^FDTest^FS^XZ");
+            var args = new[] { "-i", testFile, "-o", _testDirectory, "--fonts-dir", "./fonts", "--font", "A=arial.ttf", "--font", "B=dejavu.ttf" };
+
+            // Act
+            processor.ProcessArguments(args);
+
+            // Assert
+            processor.Mode.Should().Be(OperationMode.Conversion);
+            processor.FontsDirectory.Should().Be("./fonts");
+            processor.FontMappings.Should().HaveCount(2);
+            processor.FontMappings[0].Id.Should().Be("A");
+            processor.FontMappings[0].Path.Should().Be("arial.ttf");
+            processor.FontMappings[1].Id.Should().Be("B");
+            processor.FontMappings[1].Path.Should().Be("dejavu.ttf");
+        }
+
         #endregion
 
         public void Dispose()

@@ -16,7 +16,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.2**
+## 🚀 **What's New in v3.0.3**
 
 ### 🐛 Bug Fixes
 - **Fixed Issue #45**: Duplicate or blank labels when `^XA` appears inside `~DGR:` base64 payload — `^XA` is now treated as label start only at line start or after `^XZ`.
@@ -27,7 +27,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.1**
+## 🚀 **What's New in v3.0.3**
 
 ### 🐛 Bug Fixes
 - **Fixed Issue #39**: Sequential graphic processing for multiple graphics with same name
@@ -44,7 +44,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.0**
+## 🚀 **What's New in v3.0.3**
 
 ### 🎉 Major New Features
 - 🎨 **Labelary API Integration** - High-fidelity ZPL rendering with vector PDF output
@@ -151,10 +151,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v2.0.1-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
@@ -166,10 +166,10 @@ zpl2pdf --help
 #### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v2.0.1-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.0.3-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -192,7 +192,7 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 #### Intel Macs
 ```bash
 # Download
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-osx-x64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-osx-x64.tar.gz -o zpl2pdf.tar.gz
 
 # Extract and run
 tar -xzf zpl2pdf.tar.gz
@@ -201,7 +201,7 @@ tar -xzf zpl2pdf.tar.gz
 
 #### Apple Silicon (M1/M2/M3)
 ```bash
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.1/ZPL2PDF-v2.0.1-osx-arm64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-osx-arm64.tar.gz -o zpl2pdf.tar.gz
 tar -xzf zpl2pdf.tar.gz
 ./ZPL2PDF -help
 ```
@@ -264,6 +264,12 @@ ZPL2PDF -z <zpl_content> -o <output_folder> [options]
 | `--renderer` | Rendering engine (offline/labelary/auto) | `--renderer labelary` |
 | `--fonts-dir` | Custom fonts directory | `--fonts-dir C:\Fonts` |
 | `--font` | Map specific font | `--font "A=arial.ttf"` |
+
+**Custom fonts (offline renderer):** ZPL font IDs (`^A0N`, `^AAN`, `^ABN`, …) are mapped to TTF/OTF files. Use `--font "A=arial.ttf"` to map font A; use multiple `--font` for B, 0, etc. If you set `--fonts-dir ./fonts`, relative paths in `--font` are resolved under that directory (e.g. `--font "A=arial.ttf"` → `./fonts/arial.ttf`). Example:
+
+```bash
+ZPL2PDF -i zpl_teste.txt -o output -n label1.pdf -d 600 -w 10.0 -h 8.0 -u cm --fonts-dir ./fonts --font "A=arial.ttf" --font "B=another.ttf"
+```
 
 ### **Daemon Mode Commands**
 

@@ -58,7 +58,7 @@ Desktop.ini
 # Cursor
 .cursor/
 
-# Test directories
+# Test directories and script output
 test-docker/
 test-*/
 
@@ -77,3 +77,12 @@ docs/LABELARY_API.md
 # Test output (TCP, manual conversion)
 tcp-output/
 TESTES-MANUAIS-*.md
+
+# Cursor (local IDE/agent config)
+.cursor/
+# GitHub prompts/skills (not versioned)
+.github/
+# Agent instructions (not versioned)
+AGENTS.md
+# OpenSpec (local change tracking)
+openspec/
