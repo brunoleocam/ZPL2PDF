@@ -56,7 +56,7 @@ if ($DryRun) {
 # Execute build script
 $params = @{
     Version = $Version
-    OutputDir = "Assets"
+    OutputDir = "release"
 }
 
 if ($SkipTests) {

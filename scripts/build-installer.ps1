@@ -122,20 +122,20 @@ if ($exitCode -eq 0) {
         Write-ColorOutput "Installer created: $($InstallerFile.Name) ($InstallerSize MB)" $SuccessColor
         Write-ColorOutput "Location: $($InstallerFile.FullName)" $InfoColor
         
-        # Copy to Assets directory
-        $AssetsDir = "Assets"
-        if (-not (Test-Path $AssetsDir)) {
-            New-Item -ItemType Directory -Path $AssetsDir -Force | Out-Null
+        # Copy to release directory
+        $ReleaseDir = "release"
+        if (-not (Test-Path $ReleaseDir)) {
+            New-Item -ItemType Directory -Path $ReleaseDir -Force | Out-Null
         }
-        $AssetsInstallerPath = Join-Path $AssetsDir "ZPL2PDF-Setup-$Version.exe"
-        Copy-Item $InstallerFile.FullName -Destination $AssetsInstallerPath -Force
-        Write-ColorOutput "Copied to Assets: $AssetsInstallerPath" $SuccessColor
+        $ReleaseInstallerPath = Join-Path $ReleaseDir "ZPL2PDF-Setup-$Version.exe"
+        Copy-Item $InstallerFile.FullName -Destination $ReleaseInstallerPath -Force
+        Write-ColorOutput "Copied to release: $ReleaseInstallerPath" $SuccessColor
         
-        # Append installer hash to Assets\SHA256SUMS.txt (same as other releases)
+        # Append installer hash to release\SHA256SUMS.txt (same as other releases)
         Write-ColorOutput "Calculating SHA256..." $InfoColor
         $hash = (Get-FileHash $InstallerFile.FullName -Algorithm SHA256).Hash
         Write-ColorOutput "SHA256: $hash" $SuccessColor
-        $sha256SumsPath = Join-Path $AssetsDir "SHA256SUMS.txt"
+        $sha256SumsPath = Join-Path $ReleaseDir "SHA256SUMS.txt"
         $installerLine = "$hash  ZPL2PDF-Setup-$Version.exe"
         Add-Content -Path $sha256SumsPath -Value $installerLine -Encoding ASCII
         Write-ColorOutput "Added to $sha256SumsPath" $SuccessColor
