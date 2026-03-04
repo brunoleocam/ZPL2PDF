@@ -9,7 +9,7 @@ param(
     [switch]$SkipTests = $false,
     
     [Parameter(Mandatory=$false)]
-    [string]$OutputDir = "Assets"
+    [string]$OutputDir = "release"
 )
 
 # Set error action preference

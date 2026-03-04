@@ -34,8 +34,9 @@ winget-submission/
 *.zip
 *.tar.gz
 
-# Assets: files to attach to the GitHub release manually (do not version)
-Assets/
+# Release artifacts (build outputs uploaded to GitHub Release; do not version)
+release/*
+!release/README.md
 
 # Generated EditorConfig
 *.editorconfig
@@ -81,7 +82,8 @@ TESTES-MANUAIS-*.md
 # Cursor (local IDE/agent config)
 .cursor/
 # GitHub prompts/skills (not versioned)
-.github/
+.github/prompts
+.github/skills
 # Agent instructions (not versioned)
 AGENTS.md
 # OpenSpec (local change tracking)

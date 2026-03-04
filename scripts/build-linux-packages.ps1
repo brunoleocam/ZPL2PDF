@@ -24,7 +24,7 @@ try {
 }
 
 # Create output directory
-$publishDir = "Assets"
+$publishDir = "release"
 if (-not (Test-Path $publishDir)) {
     New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
 }
