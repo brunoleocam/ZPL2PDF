@@ -80,7 +80,7 @@
     <value>转换模式:</value>
   </data>
   <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
-    <value>用法: ZPL2PDF.exe -i &lt;输入文件路径&gt; -o &lt;输出文件夹&gt; [-n &lt;输出文件名&gt;] | -z &lt;ZPL内容&gt;</value>
+    <value>用法: ZPL2PDF.exe -i &lt;输入文件路径&gt; (-o &lt;输出文件夹&gt; | --stdout) [选项] | -z &lt;ZPL内容&gt; (-o &lt;输出文件夹&gt; | --stdout) [选项]</value>
   </data>
   <data name="HELP_DAEMON_MODE" xml:space="preserve">
     <value>守护进程模式:</value>
@@ -161,10 +161,13 @@
     <value>  -z &lt;zpl内容&gt;           ZPL内容作为字符串</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
-    <value>  -o &lt;输出文件夹路径&gt;   PDF文件将保存到的文件夹路径</value>
+    <value>  -o &lt;输出文件夹路径&gt;   PDF输出文件夹（除非使用 --stdout 否则必填）</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
-    <value>  -n &lt;输出文件名&gt;      输出PDF文件的名称（可选）</value>
+    <value>  -n &lt;输出文件名&gt;      输出PDF文件名（可选；默认：输入主文件名.pdf，-z 时为带时间戳的名称）</value>
+  </data>
+  <data name="HELP_PARAM_STDOUT" xml:space="preserve">
+    <value>  --stdout                   仅将PDF写入标准输出（二进制；不需要 -o）</value>
   </data>
   <data name="HELP_PARAM_WIDTH" xml:space="preserve">
     <value>  -w &lt;宽度&gt;                 标签的宽度（接受.或,作为小数点分隔符）</value>

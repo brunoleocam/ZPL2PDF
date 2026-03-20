@@ -80,7 +80,7 @@
     <value>変換モード:</value>
   </data>
   <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
-    <value>使用方法: ZPL2PDF.exe -i &lt;入力ファイルパス&gt; -o &lt;出力フォルダ&gt; [-n &lt;出力ファイル名&gt;] | -z &lt;ZPLコンテンツ&gt;</value>
+    <value>使用方法: ZPL2PDF.exe -i &lt;入力ファイルパス&gt; (-o &lt;出力フォルダ&gt; | --stdout) [オプション] | -z &lt;ZPLコンテンツ&gt; (-o &lt;出力フォルダ&gt; | --stdout) [オプション]</value>
   </data>
   <data name="HELP_DAEMON_MODE" xml:space="preserve">
     <value>デーモンモード:</value>
@@ -161,10 +161,13 @@
     <value>  -z &lt;zplコンテンツ&gt;          文字列としてのZPLコンテンツ</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
-    <value>  -o &lt;出力フォルダパス&gt;   PDFファイルが保存されるフォルダへのパス</value>
+    <value>  -o &lt;出力フォルダパス&gt;   PDFの出力フォルダ（--stdout 使用時を除き必須）</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
-    <value>  -n &lt;出力ファイル名&gt;      出力PDFファイルの名前（オプション）</value>
+    <value>  -n &lt;出力ファイル名&gt;      出力PDF名（省略可。既定は入力のベース名.pdf、-z 時はタイムスタンプ付き名）</value>
+  </data>
+  <data name="HELP_PARAM_STDOUT" xml:space="preserve">
+    <value>  --stdout                   PDFを標準出力のみに書き込み（バイナリ。-o 不要）</value>
   </data>
   <data name="HELP_PARAM_WIDTH" xml:space="preserve">
     <value>  -w &lt;幅&gt;                 ラベルの幅（小数点区切り文字として.または,を受け入れ）</value>

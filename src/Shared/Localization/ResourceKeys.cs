@@ -56,6 +56,7 @@ namespace ZPL2PDF.Shared.Localization
         public const string HELP_PARAM_ZPL_CONTENT = "HELP_PARAM_ZPL_CONTENT";
         public const string HELP_PARAM_OUTPUT_FOLDER = "HELP_PARAM_OUTPUT_FOLDER";
         public const string HELP_PARAM_OUTPUT_NAME = "HELP_PARAM_OUTPUT_NAME";
+        public const string HELP_PARAM_STDOUT = "HELP_PARAM_STDOUT";
         public const string HELP_PARAM_WIDTH = "HELP_PARAM_WIDTH";
         public const string HELP_PARAM_HEIGHT = "HELP_PARAM_HEIGHT";
         public const string HELP_PARAM_DENSITY = "HELP_PARAM_DENSITY";

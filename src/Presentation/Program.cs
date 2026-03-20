@@ -106,6 +106,15 @@ namespace ZPL2PDF
                 var argumentProcessor = new ArgumentProcessor();
                 argumentProcessor.ProcessArguments(args);
 
+                if (argumentProcessor.Mode == OperationMode.Help)
+                {
+                    if (argumentProcessor.ExitCode != 0)
+                    {
+                        Environment.Exit(argumentProcessor.ExitCode);
+                    }
+                    return;
+                }
+
                 // Route to appropriate mode
                 if (argumentProcessor.Mode == OperationMode.Daemon)
                 {

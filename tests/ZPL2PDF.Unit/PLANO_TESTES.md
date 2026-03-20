@@ -3,54 +3,80 @@
 ## 🎯 OBJETIVO
 Implementar cobertura completa de testes unitários para todos os Services da aplicação, garantindo qualidade e confiabilidade do código.
 
-## 📊 SITUAÇÃO ATUAL
-- **Testes existentes**: 6 testes (apenas FileValidationService)
-- **Cobertura atual**: ~10%
-- **Cobertura alvo**: ~90%
+## ⏹️ Quando os testes “acabam”?
 
-## 🏗️ ESTRUTURA DE TESTES PROPOSTA
+Em software, **a suíte de testes não tem um fim absoluto**: sempre que houver código novo ou comportamento novo, o ideal é atualizar ou acrescentar testes. Ainda assim, dá para **fechar um ciclo** com critérios objetivos:
+
+| Critério | Situação no ZPL2PDF (referência) |
+|----------|----------------------------------|
+| Caminhos críticos (conversão, CLI, daemon, fila, config/PID) | Cobertos por unitários + integração |
+| Regressão offline (ZPL conhecidos) | `ZplSuite` + testes de infraestrutura |
+| CI verde | `dotnet test` em Unit + Integration |
+| Cobertura | Meta do projeto (~90% em `CONTRIBUTING`) é **diretriz**, não obrigação diária; usar Cobertura para **priorizar** o que falta |
+
+**O que fica opcional / contínuo:** Labelary/rede, golden files binários, ramos `catch` raros, flakiness de filesystem — evoluir só quando houver risco ou bug real.
+
+**Resumo:** o “fim” desta frente é **estabilizar o que já está no plano + alvos de cobertura óbvios**; depois, testes entram no **fluxo normal** de cada feature/bugfix.
+
+## 📊 SITUAÇÃO ATUAL (atualizado)
+- **Projeto de testes unitários**: `tests/ZPL2PDF.Unit/` (não `ZPL2PDF.Tests`).
+- **Testes unitários**: centenas de testes cobrindo Application, Domain, Infrastructure, Presentation, regressão offline (`ZplSuite`), localização, etc. Rodar: `dotnet test tests/ZPL2PDF.Unit/ZPL2PDF.Unit.csproj`.
+- **Testes de integração**: `tests/ZPL2PDF.Integration/`. Rodar: `dotnet test tests/ZPL2PDF.Integration/ZPL2PDF.Integration.csproj`.
+- **Cobertura**: usar coverlet conforme seção de ferramentas; meta ~90% permanece como objetivo.
+
+## 🏗️ ESTRUTURA DE TESTES (implementada)
 
 ```
-tests/ZPL2PDF.Tests/
+tests/ZPL2PDF.Unit/
 ├── UnitTests/
 │   ├── Application/
-│   │   ├── ConversionServiceTests.cs          ✅ IMPLEMENTAR
-│   │   ├── FileValidationServiceTests.cs      ✅ EXISTENTE (6 testes)
-│   │   ├── PathServiceTests.cs                ✅ IMPLEMENTAR
-│   │   └── UnitConversionServiceTests.cs      ✅ IMPLEMENTAR
+│   │   ├── ConversionServiceTests.cs          ✅
+│   │   ├── FileValidationServiceTests.cs      ✅
+│   │   ├── FileValidationBundledTestDataTests.cs ✅ (TestData/TestFiles)
+│   │   ├── PathServiceTests.cs                ✅
+│   │   └── UnitConversionServiceTests.cs      ✅
 │   ├── Domain/
 │   │   ├── ValueObjects/
-│   │   │   ├── ConversionOptionsTests.cs      ✅ IMPLEMENTAR
-│   │   │   ├── FileInfoTests.cs               ✅ IMPLEMENTAR
-│   │   │   ├── LabelDimensionsTests.cs        ✅ IMPLEMENTAR
-│   │   │   └── ProcessingResultTests.cs       ✅ IMPLEMENTAR
+│   │   │   ├── ConversionOptionsTests.cs      ✅
+│   │   │   ├── FileInfoTests.cs               ✅
+│   │   │   ├── LabelDimensionsTests.cs        ✅
+│   │   │   └── ProcessingResultTests.cs       ✅
 │   │   └── Services/
-│   │       └── ZplDimensionExtractorTests.cs  ✅ IMPLEMENTAR
+│   │       └── ZplDimensionExtractorTests.cs  ✅
 │   ├── Infrastructure/
-│   │   ├── DaemonManagerTests.cs              ✅ IMPLEMENTAR
-│   │   ├── FolderMonitorTests.cs              ✅ IMPLEMENTAR
-│   │   └── ProcessingQueueTests.cs            ✅ IMPLEMENTAR
-│   └── Presentation/
-│       ├── ArgumentProcessorTests.cs          ✅ IMPLEMENTAR
-│       ├── ArgumentValidatorTests.cs          ✅ IMPLEMENTAR
-│       └── ModeDetectorTests.cs               ✅ IMPLEMENTAR
-├── IntegrationTests/
-│   ├── ConversionIntegrationTests.cs          ✅ IMPLEMENTAR
-│   ├── DaemonIntegrationTests.cs              ✅ IMPLEMENTAR
-│   └── FileProcessingIntegrationTests.cs      ✅ IMPLEMENTAR
+│   │   ├── ConfigManagerTests.cs              ✅
+│   │   ├── DaemonManagerTests.cs              ✅
+│   │   ├── FolderMonitorTests.cs              ✅
+│   │   ├── PidManagerTests.cs                 ✅
+│   │   ├── ProcessManagerTests.cs             ✅
+│   │   ├── ProcessingQueueTests.cs            ✅
+│   │   ├── LabelRendererTests.cs              ✅
+│   │   └── LabelFileReaderTests.cs            ✅
+│   ├── Presentation/
+│   │   ├── ArgumentProcessorTests.cs          ✅
+│   │   ├── ArgumentParserTests.cs             ✅
+│   │   ├── ArgumentValidatorTests.cs          ✅
+│   │   └── ModeDetectorTests.cs               ✅
+│   ├── Regression/
+│   │   ├── ZplSuiteOfflineFileTests.cs        ✅
+│   │   └── ZplRegressionMatrixTests.cs        ✅
+│   └── Shared/
+│       └── LocalizationManagerTests.cs        ✅
 ├── Mocks/
-│   ├── MockConversionService.cs               ✅ IMPLEMENTAR
-│   ├── MockFileValidationService.cs           ✅ IMPLEMENTAR
-│   └── MockPathService.cs                     ✅ IMPLEMENTAR
+│   ├── MockConversionService.cs               ✅
+│   ├── MockFileValidationService.cs           ✅
+│   └── MockPathService.cs                     ✅
 └── TestData/
-    ├── SampleZplData.cs                       ✅ EXISTENTE
-    ├── TestFiles/                             ✅ IMPLEMENTAR
-    │   ├── valid.txt
-    │   ├── valid.prn
-    │   ├── invalid.doc
-    │   └── empty.txt
-    └── ExpectedResults/                       ✅ IMPLEMENTAR
-        └── expected_pdf_samples/
+    ├── SampleZplData.cs                       ✅
+    ├── ZplSuite/                              ✅ (CopyToOutputDirectory)
+    ├── TestFiles/                             ✅ (valid.txt, valid.prn, empty.txt, invalid.doc)
+    └── ExpectedResults/                       ✅ README (golden files opcionais)
+
+tests/ZPL2PDF.Integration/
+└── IntegrationTests/
+    ├── ConversionIntegrationTests.cs          ✅
+    ├── DaemonIntegrationTests.cs              ✅
+    └── FileProcessingIntegrationTests.cs      ✅
 ```
 
 ## 📝 DETALHAMENTO DOS TESTES
@@ -284,35 +310,16 @@ tests/ZPL2PDF.Tests/
 
 ## 🚀 IMPLEMENTAÇÃO POR FASES
 
-### FASE 1: Application Layer (Prioridade ALTA)
-1. **ConversionServiceTests.cs** - 9 testes
-2. **UnitConversionServiceTests.cs** - 12 testes
-3. **PathServiceTests.cs** - 12 testes
-4. **Melhorar FileValidationServiceTests.cs** - +3 testes
-
-### FASE 2: Domain Layer (Prioridade ALTA)
-1. **ValueObjects Tests** - 20 testes
-2. **ZplDimensionExtractorTests.cs** - 5 testes
-
-### FASE 3: Infrastructure Layer (Prioridade MÉDIA)
-1. **DaemonManagerTests.cs** - 6 testes
-2. **FolderMonitorTests.cs** - 5 testes
-3. **ProcessingQueueTests.cs** - 5 testes
-
-### FASE 4: Presentation Layer (Prioridade MÉDIA)
-1. **ArgumentProcessorTests.cs** - 4 testes
-2. **ArgumentValidatorTests.cs** - 4 testes
-3. **ModeDetectorTests.cs** - 3 testes
-
-### FASE 5: Integration Tests (Prioridade BAIXA)
-1. **ConversionIntegrationTests.cs** - 3 testes
-2. **DaemonIntegrationTests.cs** - 3 testes
-3. **FileProcessingIntegrationTests.cs** - 3 testes
-
-### FASE 6: Mocks e TestData (Prioridade BAIXA)
-1. **Criar Mocks** - 3 arquivos
-2. **Criar TestData** - Arquivos de teste
-3. **Criar ExpectedResults** - Resultados esperados
+### FASE 1: Application Layer — **concluída** (evoluir conforme novas APIs)
+### FASE 2: Domain Layer — **concluída** (inclui `LabelDimensionsTests` + `ZPL2PDF.Domain.ValueObjects.LabelDimensions.GetHashCode` alinhado a `Equals`)
+### FASE 3: Infrastructure Layer — **concluída**
+### FASE 4: Presentation Layer — **concluída** (inclui `ArgumentParserTests`)
+### FASE 5: Integration Tests — **concluída** (`ZPL2PDF.Integration`)
+### FASE 6: Mocks e TestData — **concluída**
+- Mocks em `tests/ZPL2PDF.Unit/Mocks/`
+- `TestData/TestFiles/` + `FileValidationBundledTestDataTests`
+- `TestData/ZplSuite/` + testes de regressão offline
+- `TestData/ExpectedResults/README.md` para golden files opcionais (sem binários obrigatórios no repo)
 
 ## 📊 MÉTRICAS DE SUCESSO
 
@@ -326,13 +333,8 @@ tests/ZPL2PDF.Tests/
 - **Fase 6**: ~95%
 
 ### Quantidade de Testes
-- **Atual**: 6 testes
-- **Fase 1**: +36 testes (42 total)
-- **Fase 2**: +25 testes (67 total)
-- **Fase 3**: +16 testes (83 total)
-- **Fase 4**: +11 testes (94 total)
-- **Fase 5**: +9 testes (103 total)
-- **Fase 6**: +0 testes (103 total)
+- **Totais atuais**: obter com `dotnet test tests/ZPL2PDF.Unit/ZPL2PDF.Unit.csproj` e `dotnet test tests/ZPL2PDF.Integration/ZPL2PDF.Integration.csproj`.
+- As projeções por fase abaixo são do **plano histórico** (quando o projeto tinha ~6 testes).
 
 ## 🛠️ FERRAMENTAS E CONFIGURAÇÕES
 
@@ -375,11 +377,10 @@ tests/ZPL2PDF.Tests/
 
 ## 🎯 PRÓXIMOS PASSOS
 
-1. **Implementar FASE 1** - Application Layer Tests
-2. **Executar testes** e verificar cobertura
-3. **Implementar FASE 2** - Domain Layer Tests
-4. **Continuar sequencialmente** até FASE 6
-5. **Documentar resultados** e métricas finais
+1. **Cobertura**: comando em `CONTRIBUTING.md` (XPlat + Cobertura em `coverage-out/`). **Feito:** `ConfigManagerTests`, `PidManagerTests`, `ProcessManagerTests`, `LabelRendererTests`.
+2. **Próximos alvos típicos** (por relatório Cobertura): ramos catch raros em I/O; opcionalmente mais cenários de `HandleFileEvent` (ficheiro bloqueado, fila nula). **Feito:** testes dedicados a `ProcessExistingFiles` e a `PollForNewFiles` em `FolderMonitorTests`.
+3. **Regressão binária opcional**: baselines em `TestData/ExpectedResults/` (hash ou bytes) quando quiser travar saída PDF/PNG.
+4. **Labelary / rede**: testes separados, fora do caminho crítico offline.
 
 ## 📝 NOTAS IMPORTANTES
 

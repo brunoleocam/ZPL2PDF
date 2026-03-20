@@ -106,6 +106,17 @@ namespace ZPL2PDF
         public string OutputFileName { get; set; } = "output.pdf";
 
         /// <summary>
+        /// Gets whether the conversion output should be written to stdout.
+        /// </summary>
+        public bool StandardOutput { get; set; } = false;
+
+        /// <summary>
+        /// Gets the intended process exit code (handled by Program.Main).
+        /// This class must not terminate the process inside unit tests.
+        /// </summary>
+        public int ExitCode { get; private set; } = 0;
+
+        /// <summary>
         /// Gets or sets the label width.
         /// </summary>
         public double Width { get; set; } = 0;
@@ -150,13 +161,16 @@ namespace ZPL2PDF
                 
                 // Apply default dimensions when no arguments are provided
                 ApplyDefaultDimensions();
+                ExitCode = 0;
                 return;
             }
             
             if (args[0].Equals("-help", StringComparison.OrdinalIgnoreCase))
             {
+                Mode = OperationMode.Help;
+                ExitCode = 0;
                 _helpDisplay.ShowHelp();
-                Environment.Exit(0);
+                return;
             }
 
             // Detect operation mode
@@ -167,8 +181,9 @@ namespace ZPL2PDF
             // If it's help mode, show help and exit
             if (Mode == OperationMode.Help)
             {
+                ExitCode = 0;
                 _helpDisplay.ShowHelp();
-                Environment.Exit(0);
+                return;
             }
 
             // Process based on mode
@@ -198,6 +213,7 @@ namespace ZPL2PDF
             ZplContent = conversionArgs.ZplContent;
             OutputFolderPath = conversionArgs.OutputFolderPath;
             OutputFileName = conversionArgs.OutputFileName;
+            StandardOutput = conversionArgs.StandardOutput;
             Width = conversionArgs.Width;
             Height = conversionArgs.Height;
             Unit = conversionArgs.Unit;
@@ -206,11 +222,21 @@ namespace ZPL2PDF
             FontMappings = conversionArgs.FontMappings ?? new List<(string, string)>();
 
             // Validate arguments
-            var validation = _validator.ValidateConversionMode(InputFilePath, ZplContent, OutputFolderPath, Width, Height, Unit);
+            var validation = _validator.ValidateConversionMode(
+                InputFilePath,
+                ZplContent,
+                OutputFolderPath,
+                Width,
+                Height,
+                Unit,
+                StandardOutput);
             if (!validation.IsValid)
             {
                 Console.WriteLine($"Error: {validation.ErrorMessage}");
-                Environment.Exit(1);
+                Mode = OperationMode.Help;
+                ExitCode = 1;
+                _helpDisplay.ShowHelp();
+                return;
             }
         }
 
@@ -276,7 +302,10 @@ namespace ZPL2PDF
             if (!validation.IsValid)
             {
                 Console.WriteLine($"Error: {validation.ErrorMessage}");
-                Environment.Exit(1);
+                    Mode = OperationMode.Help;
+                    ExitCode = 1;
+                    _helpDisplay.ShowHelp();
+                    return;
             }
         }
         }
@@ -299,7 +328,10 @@ namespace ZPL2PDF
                 if (ServerPort < 1 || ServerPort > 65535)
                 {
                     Console.WriteLine("Error: Port must be between 1 and 65535");
-                    Environment.Exit(1);
+                    Mode = OperationMode.Help;
+                    ExitCode = 1;
+                    _helpDisplay.ShowHelp();
+                    return;
                 }
                 if (string.IsNullOrWhiteSpace(ServerOutputFolder))
                 {

@@ -9,14 +9,15 @@ namespace ZPL2PDF
     /// </summary>
     public class ProcessManager
     {
-        private readonly string _executablePath;
+        private readonly string _processFileName;
+        private readonly string _processArgumentsPrefix;
 
         /// <summary>
         /// Initializes a new instance of the ProcessManager
         /// </summary>
         public ProcessManager()
         {
-            _executablePath = GetExecutablePath();
+            (_processFileName, _processArgumentsPrefix) = GetProcessStartInfo();
         }
 
         /// <summary>
@@ -34,12 +35,16 @@ namespace ZPL2PDF
                 
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = _executablePath,
-                    Arguments = arguments,
+                    FileName = _processFileName,
+                    // When using dotnet + dll, we need to prefix arguments with the dll path.
+                    Arguments = string.IsNullOrWhiteSpace(_processArgumentsPrefix)
+                        ? arguments
+                        : $"{_processArgumentsPrefix} {arguments}",
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
+                    // Avoid stdout/stderr pipe deadlocks when daemon runs in background.
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = false
                 };
 
                 var process = Process.Start(startInfo);
@@ -139,21 +144,91 @@ namespace ZPL2PDF
         }
 
         /// <summary>
-        /// Gets the executable path
+        /// Resolves how to start the ZPL2PDF process.
+        /// Prefer `dotnet ZPL2PDF.dll <args>` when running from test output.
         /// </summary>
-        /// <returns>Executable path</returns>
-        private string GetExecutablePath()
+        /// <returns>Tuple with process start file and argument prefix</returns>
+        private static (string FileName, string ArgumentsPrefix) GetProcessStartInfo()
         {
-            var executablePath = Environment.ProcessPath ?? 
-                Path.Combine(AppContext.BaseDirectory, 
-                    Environment.OSVersion.Platform == PlatformID.Win32NT ? "ZPL2PDF.exe" : "ZPL2PDF");
-            
-            //Console.WriteLine($"DEBUG - Executable path: {executablePath}");
-            //Console.WriteLine($"DEBUG - File exists: {File.Exists(executablePath)}");
-            //Console.WriteLine($"DEBUG - Environment.ProcessPath: {Environment.ProcessPath}");
-            //Console.WriteLine($"DEBUG - AppContext.BaseDirectory: {AppContext.BaseDirectory}");
-            
-            return executablePath;
+            var appBaseDirectory = AppContext.BaseDirectory;
+
+            // Prefer the real built executable from project output.
+            // In `dotnet test`, AppContext.BaseDirectory usually points to the test output folder,
+            // which may not contain the runnable daemon binary (missing hostpolicy bits, etc).
+            var projectRoot = TryGetProjectRoot(appBaseDirectory);
+            if (!string.IsNullOrWhiteSpace(projectRoot))
+            {
+                var candidates = new[]
+                {
+                    // Windows (CI/dev)
+                    Path.Combine(projectRoot, "bin", "Release", "net9.0", "win-x64", "ZPL2PDF.exe"),
+                    Path.Combine(projectRoot, "bin", "Debug", "net9.0", "win-x64", "ZPL2PDF.exe"),
+
+                    // Framework-dependent fallback (if ever produced)
+                    Path.Combine(projectRoot, "bin", "Release", "net9.0", "ZPL2PDF.exe"),
+                    Path.Combine(projectRoot, "bin", "Debug", "net9.0", "ZPL2PDF.exe")
+                };
+
+                foreach (var candidate in candidates)
+                {
+                    if (File.Exists(candidate))
+                    {
+                        return (candidate, string.Empty);
+                    }
+                }
+            }
+
+            // Fallback: start ZPL2PDF.exe next to the app, if present.
+            var processPath = Environment.ProcessPath;
+            if (!string.IsNullOrWhiteSpace(processPath))
+            {
+                var fileName = Path.GetFileName(processPath);
+                if (!string.IsNullOrWhiteSpace(fileName) &&
+                    fileName.StartsWith("ZPL2PDF", StringComparison.OrdinalIgnoreCase) &&
+                    File.Exists(processPath))
+                {
+                    return (processPath, string.Empty);
+                }
+            }
+
+            var executablePath = Path.Combine(appBaseDirectory, "ZPL2PDF.exe");
+            if (File.Exists(executablePath))
+            {
+                return (executablePath, string.Empty);
+            }
+
+            // Last resort (rare): try running the dll via dotnet.
+            var dllPath = Path.Combine(appBaseDirectory, "ZPL2PDF.dll");
+            if (File.Exists(dllPath))
+            {
+                return ("dotnet", $"\"{dllPath}\"");
+            }
+
+            return (executablePath, string.Empty);
+        }
+
+        private static string? TryGetProjectRoot(string startDirectory)
+        {
+            try
+            {
+                var dir = new DirectoryInfo(startDirectory);
+                for (int i = 0; i < 12 && dir != null; i++)
+                {
+                    var candidate = Path.Combine(dir.FullName, "ZPL2PDF.csproj");
+                    if (File.Exists(candidate))
+                    {
+                        return dir.FullName;
+                    }
+
+                    dir = dir.Parent;
+                }
+            }
+            catch
+            {
+                // Ignore and fall back.
+            }
+
+            return null;
         }
     }
 

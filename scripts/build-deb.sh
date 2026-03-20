@@ -3,7 +3,7 @@
 
 set -e
 
-VERSION="2.0.0"
+VERSION="$(cat ZPL2PDF.csproj | grep '<Version>' | sed -E 's%\s*</?[A-Za-z]*>%%g')"
 ARCH="amd64"  # or arm64, armhf
 PROJECT_NAME="zpl2pdf"
 BUILD_DIR="build/deb/${PROJECT_NAME}_${VERSION}_${ARCH}"
@@ -79,8 +79,8 @@ cp CHANGELOG.md "${BUILD_DIR}/usr/share/doc/${PROJECT_NAME}/"
 
 # Create man page
 echo "[*] Creating man page..."
-cat > "${BUILD_DIR}/usr/share/man/man1/zpl2pdf.1" << 'EOF'
-.TH ZPL2PDF 1 "2024" "ZPL2PDF 2.0.0" "User Commands"
+cat > "${BUILD_DIR}/usr/share/man/man1/zpl2pdf.1" << EOF
+.TH ZPL2PDF 1 "2024" "ZPL2PDF ${VERSION}" "User Commands"
 .SH NAME
 zpl2pdf \- ZPL to PDF Converter
 .SH SYNOPSIS

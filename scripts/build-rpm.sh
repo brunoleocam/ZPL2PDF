@@ -3,7 +3,7 @@
 
 set -e
 
-VERSION="2.0.0"
+VERSION="$(cat ZPL2PDF.csproj | grep '<Version>' | sed -E 's%\s*</?[A-Za-z]*>%%g')"
 RELEASE="1"
 ARCH="x86_64"  # or aarch64, armv7hl
 PROJECT_NAME="zpl2pdf"

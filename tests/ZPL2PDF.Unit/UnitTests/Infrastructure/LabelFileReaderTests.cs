@@ -138,5 +138,37 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             // Assert
             labels.Should().HaveCount(expectedCount);
         }
+
+        [Fact]
+        public void PreprocessZpl_WithFhAndUtf8HexInTextField_DecodesToUtf8()
+        {
+            // Arrange
+            // _C3_A3 is UTF-8 for "ã"
+            var zpl = "^XA^FH^FD_C3_A3^FS^XZ";
+
+            // Act
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            // Assert
+            processed.Should().Contain("^FDã^FS");
+        }
+
+        [Fact]
+        public void PreprocessZpl_WithAztecB0_DoesWorkaroundAndDoesNotDecodeBarcodePayload()
+        {
+            // Arrange
+            // Minimal Aztec-like sequence from the reported label.
+            var zpl = "^XA^B0N,4,N,0,N,1^FH^FD[)>_1D03_1D75^FS^XZ";
+
+            // Act
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            // Assert: workaround for viewer typo
+            processed.Should().Contain("^BON");
+
+            // Assert: barcode payload must keep _XX sequences intact
+            processed.Should().Contain("_1D03");
+            processed.Should().Contain("_1D75");
+        }
     }
 }

@@ -9,7 +9,10 @@ param(
     [string]$Version,
     
     [Parameter(Mandatory=$false)]
-    [switch]$DryRun
+    [switch]$DryRun,
+
+    [Parameter(Mandatory=$false)]
+    [switch]$UpdateExistingReleaseNotes
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,6 +20,13 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $ScriptDir
 $RepoOwner = "brunoleocam"
 $RepoName = "ZPL2PDF"
+
+# Emoji literals as codepoints to avoid mojibake due to script file encoding.
+$EmojiBox = [System.Char]::ConvertFromUtf32(0x1F4E6)      # package
+$EmojiDocker = [System.Char]::ConvertFromUtf32(0x1F433)   # whale (docker)
+$EmojiRocket = [System.Char]::ConvertFromUtf32(0x1F680)   # rocket
+$EmojiParty = [System.Char]::ConvertFromUtf32(0x1F389)     # party
+$EmojiBook = [System.Char]::ConvertFromUtf32(0x1F4DA)      # books
 
 # Load checkpoint utilities
 . (Join-Path $ScriptDir "_checkpoint-utils.ps1")
@@ -86,7 +96,7 @@ function Generate-ReleaseNotes {
     
     # Add downloads section
     $releaseNotes += @"
-### 📦 Downloads
+### $EmojiBox Downloads
 
 | Platform | File |
 |----------|------|
@@ -100,14 +110,14 @@ function Generate-ReleaseNotes {
 | macOS Intel | ZPL2PDF-v$Version-osx-x64.tar.gz |
 | macOS Apple Silicon | ZPL2PDF-v$Version-osx-arm64.tar.gz |
 
-### 🐳 Docker
+### $EmojiDocker Docker
 
 ``````bash
 docker pull brunoleocam/zpl2pdf:$Version
 docker pull ghcr.io/brunoleocam/zpl2pdf:$Version
 ``````
 
-### 📚 Documentation
+### $EmojiBook Documentation
 
 - [Full Documentation](https://github.com/$RepoOwner/$RepoName#readme)
 - [Installation Guide](https://github.com/$RepoOwner/$RepoName#-installation)
@@ -122,7 +132,7 @@ docker pull ghcr.io/brunoleocam/zpl2pdf:$Version
         $readmeContent = Get-Content $readmePath -Raw -Encoding UTF8
         
         # Look for "What's New" section that mentions this version
-        $whatsNewPattern = "(?s)##\s*🚀\s*\*\*What's New in v$([regex]::Escape($Version))\*\*(.*?)(?=##|### v\d|$)"
+        $whatsNewPattern = "(?s)##\s*$([regex]::Escape($EmojiRocket))\s*\*\*What's New in v$([regex]::Escape($Version))\*\*(.*?)(?=##|### v\d|$)"
         $match = [regex]::Match($readmeContent, $whatsNewPattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
         
         if ($match.Success) {
@@ -135,7 +145,7 @@ docker pull ghcr.io/brunoleocam/zpl2pdf:$Version
                 Write-Info "Found 'What's New' section for version $Version"
                 $releaseNotes += @"
 
-### 🎉 What's New
+### $EmojiParty What's New
 
 $whatsNewShort
 
@@ -238,7 +248,7 @@ try {
 } finally {
     $ErrorActionPreference = $prevErrAction
 }
-if ($releaseExists) {
+if ($releaseExists -and -not $UpdateExistingReleaseNotes) {
     Write-Warning "Release $tagName already exists"
     Write-Info "Skipping release creation"
     exit 0
@@ -269,35 +279,50 @@ $releaseFiles = $releaseFiles | Sort-Object -Property FullName -Unique
 # Create release (use --notes-file to avoid escaping issues with CHANGELOG content)
 Write-Info "Creating GitHub release..."
 $notesFile = Join-Path $env:TEMP "zpl2pdf-release-notes-$Version.md"
-# UTF-8 without BOM so GitHub API displays emojis correctly (no "ðŸ³" mojibake)
-$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
-[System.IO.File]::WriteAllText($notesFile, $releaseNotes, $utf8NoBom)
+# Use UTF-8 with BOM to avoid mojibake in GitHub release notes
+$utf8WithBom = [System.Text.UTF8Encoding]::new($true)
+[System.IO.File]::WriteAllText($notesFile, $releaseNotes, $utf8WithBom)
 
-$ghArgs = @(
-    "release", "create", $tagName,
-    "--repo", "$RepoOwner/$RepoName",
-    "--title", "ZPL2PDF v$Version",
-    "--notes-file", $notesFile
-)
-foreach ($f in $releaseFiles) {
-    $ghArgs += $f.FullName
+if ($releaseExists) {
+    Write-Info "Release exists; updating notes only..."
+    & gh release edit $tagName --repo "$RepoOwner/$RepoName" --notes-file $notesFile
+    $exitCode = $LASTEXITCODE
+} else {
+    $ghArgs = @(
+        "release", "create", $tagName,
+        "--repo", "$RepoOwner/$RepoName",
+        "--title", "ZPL2PDF v$Version",
+        "--notes-file", $notesFile
+    )
+    foreach ($f in $releaseFiles) {
+        $ghArgs += $f.FullName
+    }
+    & gh @ghArgs
+    $exitCode = $LASTEXITCODE
 }
-& gh @ghArgs
-$exitCode = $LASTEXITCODE
 
 # Remove temp notes file
 if (Test-Path $notesFile) { Remove-Item $notesFile -Force }
 
 if ($exitCode -eq 0) {
-    Write-Success "GitHub release created!"
+    if ($releaseExists) {
+        Write-Success "Release notes updated!"
+    } else {
+        Write-Success "GitHub release created!"
+    }
     Write-Info "URL: https://github.com/$RepoOwner/$RepoName/releases/tag/$tagName"
     Mark-StepCompleted -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -Data @{
         ReleaseUrl = "https://github.com/$RepoOwner/$RepoName/releases/tag/$tagName"
         TagName = $tagName
     }
 } else {
-    Write-Error "Failed to create release (exit code: $exitCode). Check 'gh release create --help' and ensure tag v$Version exists and release/ has the files."
-    Mark-StepFailed -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -ErrorMessage "gh release create failed with exit code $exitCode"
+    if ($releaseExists) {
+        Write-Error "Failed to update release notes (exit code: $exitCode)."
+        Mark-StepFailed -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -ErrorMessage "gh release edit failed with exit code $exitCode"
+    } else {
+        Write-Error "Failed to create release (exit code: $exitCode). Check 'gh release create --help' and ensure tag v$Version exists and release/ has the files."
+        Mark-StepFailed -Version $Version -ProjectRoot $ProjectRoot -StepNumber 13 -ErrorMessage "gh release create failed with exit code $exitCode"
+    }
     exit 1
 }
 

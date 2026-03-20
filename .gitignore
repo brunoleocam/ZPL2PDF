@@ -1,3 +1,4 @@
+/Anexos/
 # Build output
 bin/
 obj/
@@ -81,6 +82,10 @@ docs/LABELARY_API.md
 # Test output (TCP, manual conversion)
 tcp-output/
 TESTES-MANUAIS-*.md
+
+# Code coverage (local)
+coverage-out/
+TestResults/
 
 # Cursor (local IDE/agent config)
 .cursor/

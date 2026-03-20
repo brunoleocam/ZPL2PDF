@@ -87,7 +87,17 @@ namespace ZPL2PDF
                 return;
             }
 
-            // Ensure the output folder exists
+            if (argumentProcessor.StandardOutput)
+            {
+                // Write the PDF bytes to stdout only. Do not write additional console text.
+                byte[] data = PdfGenerator.GeneratePdfToBytes(imageDataList);
+                Stream stdout = Console.OpenStandardOutput();
+                stdout.Write(data, 0, data.Length);
+                stdout.Flush();
+                return;
+            }
+
+            // Ensure the output folder exists (file output mode)
             _pathService.EnsureDirectoryExists(argumentProcessor.OutputFolderPath);
 
             string outputPdf = Path.Combine(argumentProcessor.OutputFolderPath, argumentProcessor.OutputFileName);

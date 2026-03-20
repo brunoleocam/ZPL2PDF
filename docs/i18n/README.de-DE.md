@@ -14,7 +14,7 @@ Ein leistungsstarkes, plattformübergreifendes Befehlszeilenwerkzeug, das ZPL-Da
 
 ---
 
-## 🚀 **Neu in v3.0.3**
+## 🚀 **Neu in v3.1.0**
 
 ### 🐛 Fehlerbehebungen
 - **Issue #45**: Doppelte oder leere Etiketten behoben, wenn `^XA` im Base64-Payload von `~DGR:` vorkommt — `^XA` wird nur am Zeilenanfang oder nach `^XZ` als Etikettenanfang gewertet.
@@ -25,7 +25,7 @@ Ein leistungsstarkes, plattformübergreifendes Befehlszeilenwerkzeug, das ZPL-Da
 
 ---
 
-## 🚀 **Neu in v3.0.3**
+## 🚀 **Neu in v3.1.0**
 
 ### 🐛 Fehlerbehebungen
 - **Issue #39**: Sequentielle Grafikverarbeitung für mehrere Grafiken mit gleichem Namen
@@ -42,7 +42,7 @@ Ein leistungsstarkes, plattformübergreifendes Befehlszeilenwerkzeug, das ZPL-Da
 
 ---
 
-## 🚀 **Neu in v3.0.3**
+## 🚀 **Neu in v3.1.0**
 
 ### 🎉 Wichtige Neue Funktionen
 - 🎨 **Labelary API Integration** - Hochauflösendes ZPL-Rendering mit Vektor-PDF-Ausgabe
@@ -139,10 +139,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb-Paket)
 ```bash
 # .deb-Paket herunterladen
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-linux-amd64.deb
 
 # Paket installieren
-sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.0-linux-amd64.deb
 
 # Abhängigkeiten bei Bedarf beheben
 sudo apt-get install -f
