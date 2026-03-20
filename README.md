@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-3.0.3-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -16,7 +16,19 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.3**
+## 🔜 **CLI & packaging (unreleased / main branch)**
+
+These items are documented in [CHANGELOG.md](CHANGELOG.md) under **Unreleased**:
+
+- **`--stdout`**: write the PDF to standard output (binary). `-o` is not required; no status text is written to stdout.
+- **Default output name (`-n`)**: if omitted, uses the input file base name (e.g. `label.txt` → `label.pdf`); with `-z`, a timestamped `ZPL2PDF_*.pdf` name is used.
+- **Dimensions**: `-u` is required whenever `-w` / `-h` are set, including for `mm`.
+- **Linux package scripts**: `scripts/build-deb.sh` and `scripts/build-rpm.sh` read the version from `ZPL2PDF.csproj`.
+- **Rendering stack**: PDFsharp 6.x and updated BinaryKits packages; Aztec `^B0` is normalized for offline rendering (`^BO`).
+
+---
+
+## 🚀 **What's New in v3.1.0**
 
 ### 🐛 Bug Fixes
 - **Fixed Issue #45**: Duplicate or blank labels when `^XA` appears inside `~DGR:` base64 payload — `^XA` is now treated as label start only at line start or after `^XZ`.
@@ -27,7 +39,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.3**
+## 🚀 **What's New in v3.1.0**
 
 ### 🐛 Bug Fixes
 - **Fixed Issue #39**: Sequential graphic processing for multiple graphics with same name
@@ -44,7 +56,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.3**
+## 🚀 **What's New in v3.1.0**
 
 ### 🎉 Major New Features
 - 🎨 **Labelary API Integration** - High-fidelity ZPL rendering with vector PDF output
@@ -141,7 +153,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### Option 2: Installer
-1. Download [ZPL2PDF-Setup-2.0.1.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+1. Download [ZPL2PDF-Setup.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
 2. Run installer
 3. Choose your language during installation
 4. Done! ✅
@@ -151,10 +163,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.0-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
@@ -166,10 +178,10 @@ zpl2pdf --help
 #### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v3.0.3-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.0-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -192,7 +204,7 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 #### Intel Macs
 ```bash
 # Download
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-osx-x64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-osx-x64.tar.gz -o zpl2pdf.tar.gz
 
 # Extract and run
 tar -xzf zpl2pdf.tar.gz
@@ -201,7 +213,7 @@ tar -xzf zpl2pdf.tar.gz
 
 #### Apple Silicon (M1/M2/M3)
 ```bash
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-osx-arm64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-osx-arm64.tar.gz -o zpl2pdf.tar.gz
 tar -xzf zpl2pdf.tar.gz
 ./ZPL2PDF -help
 ```
@@ -247,16 +259,17 @@ ZPL2PDF stop
 ### **Conversion Mode Parameters**
 
 ```bash
-ZPL2PDF -i <input_file> -o <output_folder> [options]
-ZPL2PDF -z <zpl_content> -o <output_folder> [options]
+ZPL2PDF -i <input_file> (-o <output_folder> | --stdout) [options]
+ZPL2PDF -z <zpl_content> (-o <output_folder> | --stdout) [options]
 ```
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
 | `-i <file>` | Input ZPL file (.txt, .prn, .zpl, .imp) | `-i label.zpl` |
 | `-z <content>` | ZPL content as string | `-z "^XA...^XZ"` |
-| `-o <folder>` | Output folder for PDF | `-o C:\Output` |
-| `-n <name>` | Output PDF filename (optional) | `-n result.pdf` |
+| `-o <folder>` | Output folder for PDF (required unless `--stdout`) | `-o C:\Output` |
+| `--stdout` | Write PDF bytes to stdout only (no file) | `--stdout` |
+| `-n <name>` | Output PDF filename (optional; default: input basename or timestamp for `-z`) | `-n result.pdf` |
 | `-w <width>` | Label width | `-w 10` |
 | `-h <height>` | Label height | `-h 5` |
 | `-u <unit>` | Unit (mm, cm, in) | `-u cm` |
@@ -725,6 +738,8 @@ If ZPL2PDF helps you, please ⭐ star the repository!
 ## 👥 **Contributors**
 
 Thanks to all contributors who have helped make ZPL2PDF better!
+
+Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.0.
 
 <a href="https://github.com/brunoleocam/ZPL2PDF/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF&max=30" alt="Contributors" />

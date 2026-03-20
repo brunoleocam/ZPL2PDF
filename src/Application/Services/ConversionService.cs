@@ -26,11 +26,10 @@ namespace ZPL2PDF.Application.Services
         /// </summary>
         /// <param name="zplContent">Raw ZPL content.</param>
         /// <returns>List of preprocessed labels, or empty list if no valid labels found.</returns>
-        /// <exception cref="ArgumentException">Thrown when zplContent is null or whitespace.</exception>
         private List<string> PrepareLabels(string zplContent)
         {
             if (string.IsNullOrWhiteSpace(zplContent))
-                throw new ArgumentException("ZPL content cannot be null or empty", nameof(zplContent));
+                return new List<string>();
 
             // Preprocess ZPL to handle unsupported commands (e.g., ^FN)
             // This removes ^FN tags that BinaryKits.Zpl.Viewer doesn't fully support

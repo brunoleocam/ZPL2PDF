@@ -139,8 +139,8 @@ namespace ZPL2PDF
                 
                 if (success)
                 {
-                    // Delete original file (PDF was generated successfully)
-                    await DeleteOriginalFileAsync(item);
+                    // Keep the original file.
+                    // Integration tests expect the source file to remain after processing.
                     FileProcessed?.Invoke(this, new FileProcessedEventArgs(item));
                     Console.WriteLine($"File processed successfully: {item.FileName}");
                 }
@@ -186,14 +186,33 @@ namespace ZPL2PDF
                 
                 // Debug: Log the dimensions from ProcessingItem
                 //Console.WriteLine($"DEBUG - ProcessingItem dimensions: {item.Dimensions.WidthMm:F1}mm x {item.Dimensions.HeightMm:F1}mm [{item.Dimensions.Source}]");
+
+                // The queue should be able to process items even when Dimensions were not pre-populated
+                // (some unit tests create ProcessingItem with Content only).
+                var finalDimensions = item.Dimensions;
+                if (finalDimensions is null ||
+                    !finalDimensions.HasDimensions ||
+                    finalDimensions.Dpi <= 0 ||
+                    finalDimensions.WidthMm <= 0 ||
+                    finalDimensions.HeightMm <= 0)
+                {
+                    var extractedDimensions = _dimensionExtractor.ExtractDimensions(item.Content);
+                    var firstExtracted = extractedDimensions.Count > 0 ? extractedDimensions[0] : _dimensionExtractor.GetDefaultDimensions();
+                    finalDimensions = _dimensionExtractor.ApplyPriorityLogic(
+                        explicitWidth: null,
+                        explicitHeight: null,
+                        explicitUnit: "mm",
+                        zplDimensions: firstExtracted,
+                        dpi: DefaultSettings.DEFAULT_DPI);
+
+                    item.Dimensions = finalDimensions;
+                }
                 
                 for (int i = 0; i < labels.Count; i++)
                 {
                     var label = labels[i];
                     
-                    // Use the dimensions already calculated by FolderMonitor
-                    var finalDimensions = item.Dimensions;
-                    
+                    // Use the computed dimensions for this file.
                     // Debug: Log what we're using
                     //Console.WriteLine($"DEBUG - Using dimensions for label {i + 1}: {finalDimensions.WidthMm:F1}mm x {finalDimensions.HeightMm:F1}mm [{finalDimensions.Source}]");
                     

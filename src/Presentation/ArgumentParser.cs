@@ -84,6 +84,9 @@ namespace ZPL2PDF
                             i++; // Skip next argument as it's the value
                         }
                         break;
+                    case "--stdout":
+                        result.StandardOutput = true;
+                        break;
                     case "-d":
                         if (i + 1 < args.Length && int.TryParse(args[i + 1], out int dpi))
                         {
@@ -117,7 +120,7 @@ namespace ZPL2PDF
             }
 
             // Generate output file name if not specified
-            if (string.IsNullOrEmpty(result.OutputFileName) || result.OutputFileName == "output.pdf")
+            if (string.IsNullOrEmpty(result.OutputFileName))
             {
                 if (!string.IsNullOrEmpty(result.InputFilePath))
                 {
@@ -277,11 +280,13 @@ namespace ZPL2PDF
         public string InputFilePath { get; set; } = string.Empty;
         public string ZplContent { get; set; } = string.Empty;
         public string OutputFolderPath { get; set; } = string.Empty;
-        public string OutputFileName { get; set; } = "output.pdf";
+        public string OutputFileName { get; set; } = string.Empty;
         public double Width { get; set; } = 0;
         public double Height { get; set; } = 0;
         public string Unit { get; set; } = "mm";
         public int Dpi { get; set; } = 203;
+        /// <summary>When enabled, the conversion writes PDF bytes to stdout.</summary>
+        public bool StandardOutput { get; set; } = false;
         /// <summary>Directory containing TTF/OTF fonts (e.g. for --fonts-dir).</summary>
         public string FontsDirectory { get; set; } = string.Empty;
         /// <summary>Font ID to file path (e.g. A=arial.ttf, B=another.ttf).</summary>

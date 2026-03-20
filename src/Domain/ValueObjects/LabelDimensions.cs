@@ -225,7 +225,9 @@ namespace ZPL2PDF.Domain.ValueObjects
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(Width, Height, Unit, Dpi);
+            // Align with Equals: unit comparison is ordinal-ignore-case.
+            var unitKey = Unit?.ToLowerInvariant() ?? string.Empty;
+            return HashCode.Combine(Width, Height, unitKey, Dpi);
         }
     }
 }

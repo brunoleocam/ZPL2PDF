@@ -118,6 +118,18 @@ namespace ZPL2PDF
         /// <returns>PID file path</returns>
         private static string GetPidFilePath(string fileName)
         {
+            var configuredPidFolder = Environment.GetEnvironmentVariable("ZPL2PDF_PID_FOLDER");
+            if (!string.IsNullOrWhiteSpace(configuredPidFolder))
+            {
+                // Ensure directory exists to avoid failures saving PID.
+                if (!Directory.Exists(configuredPidFolder))
+                {
+                    Directory.CreateDirectory(configuredPidFolder);
+                }
+
+                return Path.Combine(configuredPidFolder, fileName);
+            }
+
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 var tempPath = Path.GetTempPath();

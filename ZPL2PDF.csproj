@@ -5,7 +5,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>3.0.3</Version>
+    <Version>3.1.0</Version>
     <DocumentationFile>bin\Debug\net9.0\ZPL2PDF.xml</DocumentationFile>
     <!-- Configura��es para self-contained builds -->
     <PublishSingleFile>true</PublishSingleFile>
@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BinaryKits.Zpl.Label" Version="3.2.1" />
-    <PackageReference Include="BinaryKits.Zpl.Viewer" Version="1.2.1" />
-    <PackageReference Include="PdfSharpCore" Version="1.3.65" />
+    <PackageReference Include="BinaryKits.Zpl.Label" Version="3.3.1" />
+    <PackageReference Include="BinaryKits.Zpl.Viewer" Version="1.3.1" />
+    <PackageReference Include="PDFSharp" Version="6.2.4" />
   </ItemGroup>
 
   <PropertyGroup>

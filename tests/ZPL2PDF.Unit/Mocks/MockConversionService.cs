@@ -9,19 +9,38 @@ namespace ZPL2PDF.Tests.Mocks
     /// </summary>
     public class MockConversionService : IConversionService
     {
-        public List<byte[]> ConvertWithExplicitDimensions(string zplContent, double width, double height, string unit, int dpi)
+        public List<byte[]> ConvertWithExplicitDimensions(
+            string zplContent,
+            double width,
+            double height,
+            string unit,
+            int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null)
         {
             // Mock implementation - returns fake PDF data
             return new List<byte[]> { GenerateMockPdfData(zplContent, width, height, unit, dpi) };
         }
 
-        public List<byte[]> ConvertWithExtractedDimensions(string zplContent, string unit, int dpi)
+        public List<byte[]> ConvertWithExtractedDimensions(
+            string zplContent,
+            string unit,
+            int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null)
         {
             // Mock implementation - returns fake PDF data
             return new List<byte[]> { GenerateMockPdfData(zplContent, 100, 150, unit, dpi) };
         }
 
-        public List<byte[]> Convert(string zplContent, double explicitWidth, double explicitHeight, string unit, int dpi)
+        public List<byte[]> Convert(
+            string zplContent,
+            double explicitWidth,
+            double explicitHeight,
+            string unit,
+            int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null)
         {
             // Mock implementation - returns fake PDF data
             return new List<byte[]> { GenerateMockPdfData(zplContent, explicitWidth, explicitHeight, unit, dpi) };

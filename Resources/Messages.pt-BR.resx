@@ -80,7 +80,7 @@
     <value>MODO CONVERSÃO:</value>
   </data>
   <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
-    <value>Uso: ZPL2PDF.exe -i &lt;caminho_arquivo_entrada&gt; -o &lt;pasta_saida&gt; [-n &lt;nome_arquivo_saida&gt;] | -z &lt;conteudo_zpl&gt;</value>
+    <value>Uso: ZPL2PDF.exe -i &lt;caminho_arquivo_entrada&gt; (-o &lt;pasta_saida&gt; | --stdout) [opções] | -z &lt;conteudo_zpl&gt; (-o &lt;pasta_saida&gt; | --stdout) [opções]</value>
   </data>
   <data name="HELP_DAEMON_MODE" xml:space="preserve">
     <value>MODO DAEMON:</value>
@@ -161,10 +161,13 @@
     <value>  -z &lt;conteudo_zpl&gt;           Conteúdo ZPL como string</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
-    <value>  -o &lt;pasta_saida&gt;    Caminho para a pasta onde o arquivo PDF será salvo</value>
+    <value>  -o &lt;pasta_saida&gt;    Pasta de saída do PDF (obrigatória exceto com --stdout)</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
-    <value>  -n &lt;nome_arquivo_saida&gt;      Nome do arquivo PDF de saída (opcional)</value>
+    <value>  -n &lt;nome_arquivo_saida&gt;      Nome do PDF de saída (opcional; padrão: nome base do .txt/.prn + .pdf, ou nome com data/hora com -z)</value>
+  </data>
+  <data name="HELP_PARAM_STDOUT" xml:space="preserve">
+    <value>  --stdout                   Envia o PDF apenas para a saída padrão (binário; -o não obrigatório)</value>
   </data>
   <data name="HELP_PARAM_WIDTH" xml:space="preserve">
     <value>  -w &lt;largura&gt;                 Largura da etiqueta (aceita . ou , como separador decimal)</value>

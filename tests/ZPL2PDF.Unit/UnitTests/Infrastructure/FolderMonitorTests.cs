@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -452,11 +453,82 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             Thread.Sleep(100);
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDModified Label^FS^XZ");
 
-            // Wait a bit for file detection
-            Thread.Sleep(500);
+            // FolderMonitor's backup poll runs every 2s; FileSystemWatcher can be delayed on some systems.
+            var sw = Stopwatch.StartNew();
+            while (fileCount < 1 && sw.Elapsed < TimeSpan.FromSeconds(6))
+            {
+                Thread.Sleep(150);
+            }
 
             // Assert
             fileCount.Should().BeGreaterOrEqualTo(1);
+        }
+
+        /// <summary>
+        /// Covers <see cref="FolderMonitor.StartWatching"/> → <c>ProcessExistingFiles</c> (async) path.
+        /// </summary>
+        [Fact]
+        public void StartWatching_WithExistingZplFile_TriggersFileDetected()
+        {
+            var existingFile = Path.Combine(_testDirectory, "already_present.txt");
+            File.WriteAllText(existingFile, "^XA^FO50,50^A0N,50,50^FDPreloaded^FS^XZ");
+
+            var fixedDimensions = new LabelDimensions { Width = 100, Height = 200, Dpi = 203 };
+            using var folderMonitor = new FolderMonitor(
+                _testDirectory,
+                _processingQueue,
+                _dimensionExtractor,
+                _configManager,
+                fixedDimensions,
+                true);
+
+            var detected = 0;
+            folderMonitor.FileDetected += (_, _) => Interlocked.Increment(ref detected);
+
+            folderMonitor.StartWatching();
+
+            var sw = Stopwatch.StartNew();
+            while (Volatile.Read(ref detected) < 1 && sw.Elapsed < TimeSpan.FromSeconds(12))
+            {
+                Thread.Sleep(100);
+            }
+
+            detected.Should().BeGreaterOrEqualTo(1);
+        }
+
+        /// <summary>
+        /// Covers backup <c>PollForNewFiles</c> (2s interval) when a file appears after the initial scan.
+        /// </summary>
+        [Fact]
+        public void StartWatching_PollingDetectsFileDroppedAfterStart()
+        {
+            var fixedDimensions = new LabelDimensions { Width = 100, Height = 200, Dpi = 203 };
+            using var folderMonitor = new FolderMonitor(
+                _testDirectory,
+                _processingQueue,
+                _dimensionExtractor,
+                _configManager,
+                fixedDimensions,
+                true);
+
+            var detected = 0;
+            folderMonitor.FileDetected += (_, _) => Interlocked.Increment(ref detected);
+
+            folderMonitor.StartWatching();
+
+            // First poll at ~2s sees an empty folder; drop file afterwards so a later poll must pick it up.
+            Thread.Sleep(2500);
+
+            var lateFile = Path.Combine(_testDirectory, "late_drop.txt");
+            File.WriteAllText(lateFile, "^XA^FO50,50^A0N,50,50^FDLate^FS^XZ");
+
+            var sw = Stopwatch.StartNew();
+            while (Volatile.Read(ref detected) < 1 && sw.Elapsed < TimeSpan.FromSeconds(12))
+            {
+                Thread.Sleep(100);
+            }
+
+            detected.Should().BeGreaterOrEqualTo(1);
         }
 
         #endregion
