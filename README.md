@@ -739,6 +739,8 @@ If ZPL2PDF helps you, please ⭐ star the repository!
 
 Thanks to all contributors who have helped make ZPL2PDF better!
 
+Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.0.
+
 <a href="https://github.com/brunoleocam/ZPL2PDF/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF&max=30" alt="Contributors" />
 </a>
