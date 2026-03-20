@@ -16,78 +16,26 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🔜 **CLI & packaging (unreleased / main branch)**
-
-These items are documented in [CHANGELOG.md](CHANGELOG.md) under **Unreleased**:
-
-- **`--stdout`**: write the PDF to standard output (binary). `-o` is not required; no status text is written to stdout.
-- **Default output name (`-n`)**: if omitted, uses the input file base name (e.g. `label.txt` → `label.pdf`); with `-z`, a timestamped `ZPL2PDF_*.pdf` name is used.
-- **Dimensions**: `-u` is required whenever `-w` / `-h` are set, including for `mm`.
-- **Linux package scripts**: `scripts/build-deb.sh` and `scripts/build-rpm.sh` read the version from `ZPL2PDF.csproj`.
-- **Rendering stack**: PDFsharp 6.x and updated BinaryKits packages; Aztec `^B0` is normalized for offline rendering (`^BO`).
-
----
-
 ## 🚀 **What's New in v3.1.0**
 
-### 🐛 Bug Fixes
-- **Fixed Issue #45**: Duplicate or blank labels when `^XA` appears inside `~DGR:` base64 payload — `^XA` is now treated as label start only at line start or after `^XZ`.
+### ✨ Added
 
-### ✨ New Features
-- **Issue #48 – TCP Server**: Virtual Zebra printer mode is now implemented. Use `ZPL2PDF server start --port 9101 -o output/`, `server stop`, and `server status`.
-- **REST API (PR #47)**: Run `ZPL2PDF --api --host localhost --port 5000` for `POST /api/convert` (ZPL to PDF or PNG) and `GET /api/health`.
+- **`--stdout` (conversion mode)**: write the generated PDF to standard output (binary). With `--stdout`, `-o` is not required and no extra text is written to stdout.
 
----
+### 🔧 Changed
 
-## 🚀 **What's New in v3.1.0**
+- **Default output PDF name**: if `-n` is omitted, the PDF name is derived from the input file stem (e.g. `label.txt` → `label.pdf`); for `-z`, a timestamped `ZPL2PDF_*.pdf` name is used (no implicit `output.pdf`).
+- **Linux packages**: `scripts/build-deb.sh` and `scripts/build-rpm.sh` take `VERSION` from `<Version>` in `ZPL2PDF.csproj` instead of a hardcoded value.
+- **Dependencies (offline PDF)**: **BinaryKits.Zpl.Label** 3.3.1, **BinaryKits.Zpl.Viewer** 1.3.1, **PDFsharp** 6.2.4 (replaces PdfSharpCore).
 
-### 🐛 Bug Fixes
-- **Fixed Issue #39**: Sequential graphic processing for multiple graphics with same name
-  - ZPL files with multiple `~DGR` graphics now process correctly
-  - Each label uses the correct graphic based on sequential state
-  - `^IDR` cleanup commands no longer generate blank pages
-  - Resolves issue where all labels were identical in Shopee shipping label files
+### 🐛 Fixed
 
-### 🔧 Improvements
-- Added input validation in public methods
-- Improved exception handling
-- Performance optimizations with compiled regex
-- Code cleanup and removal of unused methods
+- **Dimensions**: `-u` is required whenever `-w` / `-h` are set, including when the unit is `mm` (consistent validation).
+- **Aztec `^B0`**: preprocess maps `^B0` → `^BO` so the offline viewer accepts Aztec barcodes (BinaryKits recognizes `^BO`).
 
----
+### 🙏 Acknowledgements
 
-## 🚀 **What's New in v3.1.0**
-
-### 🎉 Major New Features
-- 🎨 **Labelary API Integration** - High-fidelity ZPL rendering with vector PDF output
-- 🖨️ **TCP Server Mode** - Virtual Zebra printer on TCP port (default: 9101)
-- 🔤 **Custom Fonts** - Load TrueType/OpenType fonts with `--fonts-dir` and `--font`
-- 📁 **Extended File Support** - Added `.zpl` and `.imp` file extensions
-- 📝 **Custom Naming** - Set output filename via `^FX FileName:` in ZPL
-
-### 🔧 Rendering Options
-```bash
---renderer offline    # BinaryKits (default, works offline)
---renderer labelary   # Labelary API (high-fidelity, requires internet)
---renderer auto       # Try Labelary, fallback to BinaryKits
-```
-
-### 🖨️ TCP Server (Virtual Printer)
-```bash
-ZPL2PDF server start --port 9101 -o output/
-ZPL2PDF server status
-ZPL2PDF server stop
-```
-
-### v2.x Features (Still Available)
-- 🌍 **Multi-language Support** - 8 languages (EN, PT, ES, FR, DE, IT, JA, ZH)
-- 🔄 **Daemon Mode** - Automatic folder monitoring and batch conversion
-- 🏗️ **Clean Architecture** - Completely refactored with SOLID principles
-- 🌍 **Cross-Platform** - Native support for Windows, Linux, and macOS
-- 📐 **Smart Dimensions** - Automatic ZPL dimension extraction (`^PW`, `^LL`)
-- ⚡ **High Performance** - Async processing with retry mechanisms
-- 🐳 **Docker Support** - Alpine Linux optimized (470MB)
-- 📦 **Professional Installer** - Windows installer with multi-language setup
+- Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.0.
 
 ---
 
@@ -122,7 +70,7 @@ ZPL2PDF server start --port 9101 -o output/
 Set your preferred language:
 ```bash
 # Temporary (current session)
-ZPL2PDF --language pt-BR status
+ZPL2PDF status --language pt-BR
 
 # Permanent (all sessions)
 ZPL2PDF --set-language pt-BR
@@ -172,7 +120,7 @@ sudo dpkg -i ZPL2PDF-v3.1.0-linux-amd64.deb
 sudo apt-get install -f
 
 # Verify installation
-zpl2pdf --help
+zpl2pdf -help
 ```
 
 #### Fedora/CentOS/RHEL (.tar.gz)
@@ -190,7 +138,7 @@ sudo chmod +x /usr/bin/ZPL2PDF
 sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
 
 # Verify installation
-zpl2pdf --help
+zpl2pdf -help
 ```
 
 #### Docker (All Linux distributions)
@@ -409,7 +357,7 @@ Create a `zpl2pdf.json` file in the application directory:
 ```json
 {
   "language": "en-US",
-  "defaultWatchFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
+  "defaultListenFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
   "labelWidth": 10,
   "labelHeight": 5,
   "unit": "cm",
@@ -427,7 +375,6 @@ See [zpl2pdf.json.example](zpl2pdf.json.example) for full configuration options.
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `ZPL2PDF_LANGUAGE` | Application language | `pt-BR` |
-| `ZPL2PDF_LOG_LEVEL` | Logging level | `Debug` |
 
 📘 **Language Configuration Guide:** [docs/LANGUAGE_CONFIGURATION.md](docs/LANGUAGE_CONFIGURATION.md)
 
@@ -655,8 +602,9 @@ ZPL2PDF/
 ### **Debug Mode**
 
 ```bash
-# Enable verbose logging
-ZPL2PDF -i label.txt -o output/ --log-level Debug
+# Enable verbose logging by setting "logLevel": "Debug" in `zpl2pdf.json`
+# (then re-run your command)
+ZPL2PDF -i label.txt -o output/
 ```
 
 ### **Get Help**
