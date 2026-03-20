@@ -279,9 +279,9 @@ $releaseFiles = $releaseFiles | Sort-Object -Property FullName -Unique
 # Create release (use --notes-file to avoid escaping issues with CHANGELOG content)
 Write-Info "Creating GitHub release..."
 $notesFile = Join-Path $env:TEMP "zpl2pdf-release-notes-$Version.md"
-# Use UTF-8 with BOM to avoid mojibake in GitHub release notes
-$utf8WithBom = [System.Text.UTF8Encoding]::new($true)
-[System.IO.File]::WriteAllText($notesFile, $releaseNotes, $utf8WithBom)
+# UTF-8 without BOM so GitHub API displays emojis correctly (no "ðŸ³" mojibake)
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+[System.IO.File]::WriteAllText($notesFile, $releaseNotes, $utf8NoBom)
 
 if ($releaseExists) {
     Write-Info "Release exists; updating notes only..."
