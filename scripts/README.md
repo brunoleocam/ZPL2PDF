@@ -249,8 +249,8 @@ Requires the API server to be free on port 5000. See [API Guide](../docs/guides/
    - `ZPL2PDF.csproj`
    - `src/Shared/Constants/ApplicationConstants.cs`
    - `winget-manifest.yaml`
-   - `rpm/zpl2pdf.spec`
-   - `debian/control`
+   - `scripts/release/packages/rpm/rpm/zpl2pdf.spec`
+   - `scripts/release/packages/debian/debian/control`
    - `CHANGELOG.md`
 4. ✅ Runs tests
 5. ✅ Builds all platforms (calls `build-all-platforms.*`)

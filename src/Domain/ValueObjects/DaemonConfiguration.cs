@@ -61,7 +61,7 @@ namespace ZPL2PDF.Domain.ValueObjects
         /// <summary>
         /// Gets or sets the file filter pattern
         /// </summary>
-        public string FileFilter { get; set; } = "*.txt;*.prn";
+        public string FileFilter { get; set; } = "*.txt;*.prn;*.zpl;*.imp";
 
         /// <summary>
         /// Gets or sets the language/culture code (e.g., "pt-BR", "en-US", "es-ES")

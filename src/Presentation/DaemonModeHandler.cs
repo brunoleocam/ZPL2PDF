@@ -64,7 +64,12 @@ namespace ZPL2PDF
                 var configManager = new ConfigManager();
                 
                 // Create processing queue
-                var processingQueue = new ProcessingQueue(dimensionExtractor, configManager);
+                var processingQueue = new ProcessingQueue(
+                    dimensionExtractor,
+                    configManager,
+                    maxConcurrentFiles: 1,
+                    customOutputFolder: null,
+                    rendererEngine: argumentProcessor.RendererEngine);
                 
                 // Create fixed dimensions if using fixed dimensions
                 LabelDimensions? fixedDimensions = null;

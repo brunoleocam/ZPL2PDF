@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using ZPL2PDF.Shared.Localization;
+using ZPL2PDF.Shared.Constants;
 using ZPL2PDF.Presentation.Api.Models;
 using ZPL2PDF.Application.Services;
 
@@ -224,37 +225,40 @@ namespace ZPL2PDF
                     var unit = request.Unit ?? "mm";
                     var dpi = request.Dpi ?? 203;
 
+                    // Renderer selection ("offline" | "labelary" | "auto")
+                    if (!TryGetRendererEngine(request.Renderer, out var rendererEngine))
+                    {
+                        await WriteBadRequest(context, "Renderer must be 'offline', 'labelary', or 'auto'");
+                        return;
+                    }
+
                     // Convert ZPL(s)
                     var conversionService = new ConversionService();
-                    var imageDataList = new List<byte[]>();
 
-                    if (!string.IsNullOrWhiteSpace(request.Zpl))
+                    // When format=pdf, try direct PDF via Labelary according to renderer policy.
+                    // In auto mode, failures fall back to PNG pipeline.
+                    if (format == "pdf" && TryConvertDirectPdfResponse(request, conversionService, width, height, unit, dpi, rendererEngine, out var directPdfBytes, out var pages))
                     {
-                        // Single ZPL string (can contain multiple labels)
-                        imageDataList = conversionService.Convert(request.Zpl, width, height, unit, dpi);
-                    }
-                    else if (request.ZplArray != null && request.ZplArray.Count > 0)
-                    {
-                        // Multiple ZPL strings - convert each and combine
-                        foreach (var zpl in request.ZplArray)
+                        var directResponse = new ConvertResponse
                         {
-                            if (!string.IsNullOrWhiteSpace(zpl))
-                            {
-                                var images = conversionService.Convert(zpl, width, height, unit, dpi);
-                                imageDataList.AddRange(images);
-                            }
-                        }
+                            Success = true,
+                            Format = format,
+                            Pdf = Convert.ToBase64String(directPdfBytes!),
+                            Pages = pages,
+                            Message = "Conversion successful"
+                        };
+
+                        context.Response.StatusCode = 200;
+                        await context.Response.WriteAsJsonAsync(directResponse);
+                        return;
                     }
+
+                    // PNG pipeline (also used as fallback for PDF).
+                    var imageDataList = ConvertToImages(request, conversionService, width, height, unit, dpi, rendererEngine);
 
                     if (imageDataList == null || imageDataList.Count == 0)
                     {
-                        var errorResponse = new ConvertResponse
-                        {
-                            Success = false,
-                            Message = "No images generated from ZPL content"
-                        };
-                        context.Response.StatusCode = 400;
-                        await context.Response.WriteAsJsonAsync(errorResponse);
+                        await WriteBadRequest(context, "No images generated from ZPL content");
                         return;
                     }
 
@@ -269,21 +273,17 @@ namespace ZPL2PDF
 
                     if (format == "pdf")
                     {
-                        // Generate PDF from images
                         var pdfBytes = PdfGenerator.GeneratePdfToBytes(imageDataList);
                         response.Pdf = Convert.ToBase64String(pdfBytes);
                     }
                     else // png
                     {
-                        // Convert images to base64
                         if (imageDataList.Count == 1)
                         {
-                            // Single image
                             response.Image = Convert.ToBase64String(imageDataList[0]);
                         }
                         else
                         {
-                            // Multiple images
                             response.Images = imageDataList.Select(img => Convert.ToBase64String(img)).ToList();
                         }
                     }
@@ -312,6 +312,130 @@ namespace ZPL2PDF
             Console.WriteLine("Press Ctrl+C to stop the API server");
 
             await app.RunAsync($"http://{host}:{port}");
+        }
+
+        private static async Task WriteBadRequest(HttpContext context, string message)
+        {
+            var errorResponse = new ConvertResponse
+            {
+                Success = false,
+                Message = message
+            };
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsJsonAsync(errorResponse);
+        }
+
+        private static bool TryGetRendererEngine(string? rendererRaw, out RendererEngine rendererEngine)
+        {
+            var renderer = (rendererRaw ?? "offline").Trim().ToLowerInvariant();
+            rendererEngine = renderer switch
+            {
+                "offline" => RendererEngine.Offline,
+                "labelary" => RendererEngine.Labelary,
+                "auto" => RendererEngine.Auto,
+                _ => RendererEngine.Offline
+            };
+
+            return renderer == "offline" || renderer == "labelary" || renderer == "auto";
+        }
+
+        private static bool TryConvertDirectPdfResponse(
+            ConvertRequest request,
+            ConversionService conversionService,
+            double width,
+            double height,
+            string unit,
+            int dpi,
+            RendererEngine rendererEngine,
+            out byte[]? directPdfBytes,
+            out int pages)
+        {
+            directPdfBytes = null;
+            pages = 0;
+
+            if (!string.IsNullOrWhiteSpace(request.Zpl))
+            {
+                var preprocessed = LabelFileReader.PreprocessZpl(request.Zpl);
+                pages = LabelFileReader.SplitLabels(preprocessed).Count;
+
+                conversionService.TryConvertPdfDirectWithLabelary(
+                    request.Zpl,
+                    width,
+                    height,
+                    unit,
+                    dpi,
+                    rendererEngine,
+                    out directPdfBytes);
+            }
+            else if (request.ZplArray != null && request.ZplArray.Count > 0)
+            {
+                var pdfParts = new List<byte[]>();
+                foreach (var zpl in request.ZplArray)
+                {
+                    if (string.IsNullOrWhiteSpace(zpl))
+                        continue;
+
+                    var preprocessed = LabelFileReader.PreprocessZpl(zpl);
+                    pages += LabelFileReader.SplitLabels(preprocessed).Count;
+
+                    if (!conversionService.TryConvertPdfDirectWithLabelary(
+                        zpl,
+                        width,
+                        height,
+                        unit,
+                        dpi,
+                        rendererEngine,
+                        out var partPdfBytes))
+                    {
+                        pdfParts.Clear();
+                        break;
+                    }
+
+                    pdfParts.Add(partPdfBytes!);
+                }
+
+                if (pdfParts.Count > 0)
+                {
+                    directPdfBytes = pdfParts.Count == 1
+                        ? pdfParts[0]
+                        : PdfGenerator.MergePdfsToBytes(pdfParts);
+                }
+            }
+
+            return directPdfBytes != null;
+        }
+
+        private static List<byte[]> ConvertToImages(
+            ConvertRequest request,
+            ConversionService conversionService,
+            double width,
+            double height,
+            string unit,
+            int dpi,
+            RendererEngine rendererEngine)
+        {
+            var imageDataList = new List<byte[]>();
+
+            if (!string.IsNullOrWhiteSpace(request.Zpl))
+            {
+                return conversionService.Convert(request.Zpl, width, height, unit, dpi, rendererEngine: rendererEngine);
+            }
+
+            if (request.ZplArray == null || request.ZplArray.Count == 0)
+            {
+                return imageDataList;
+            }
+
+            foreach (var zpl in request.ZplArray)
+            {
+                if (string.IsNullOrWhiteSpace(zpl))
+                    continue;
+
+                var images = conversionService.Convert(zpl, width, height, unit, dpi, rendererEngine: rendererEngine);
+                imageDataList.AddRange(images);
+            }
+
+            return imageDataList;
         }
     }
 }

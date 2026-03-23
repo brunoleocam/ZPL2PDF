@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.1.1-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -16,26 +16,23 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.1.0**
-
-### ✨ Added
-
-- **`--stdout` (conversion mode)**: write the generated PDF to standard output (binary). With `--stdout`, `-o` is not required and no extra text is written to stdout.
+## 🚀 **What's New in v3.1.1**
 
 ### 🔧 Changed
 
-- **Default output PDF name**: if `-n` is omitted, the PDF name is derived from the input file stem (e.g. `label.txt` → `label.pdf`); for `-z`, a timestamped `ZPL2PDF_*.pdf` name is used (no implicit `output.pdf`).
-- **Linux packages**: `scripts/build-deb.sh` and `scripts/build-rpm.sh` take `VERSION` from `<Version>` in `ZPL2PDF.csproj` instead of a hardcoded value.
-- **Dependencies (offline PDF)**: **BinaryKits.Zpl.Label** 3.3.1, **BinaryKits.Zpl.Viewer** 1.3.1, **PDFsharp** 6.2.4 (replaces PdfSharpCore).
+- **Release tooling**: Scripts under `release/scripts/`; Linux packaging assets under `scripts/release/packages/` (documentation and contributor paths updated).
+- **Internals**: Single Labelary PDF fallback path in `ConversionService` across CLI, API, TCP server, and daemon; dimension/value-object consolidation and daemon PID handling without reflection.
 
-### 🐛 Fixed
+### 🛠️ Maintenance
 
-- **Dimensions**: `-u` is required whenever `-w` / `-h` are set, including when the unit is `mm` (consistent validation).
-- **Aztec `^B0`**: preprocess maps `^B0` → `^BO` so the offline viewer accepts Aztec barcodes (BinaryKits recognizes `^BO`).
+- **Installer pipeline**: More reliable cleanup in `08-build-installer.ps1`; optional `cleanup-installer-output.ps1` for `installer/Output`.
+- **Docker**: Leaner default build context via `.dockerignore`.
+- **Repo hygiene**: `.github/prompts/` and `.github/skills/` remain untracked; the rest of `.github` (workflows, templates) stays versioned.
 
-### 🙏 Acknowledgements
+### Recent highlights (v3.1.1)
 
-- Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.0.
+- **`--stdout`**, smarter default PDF naming, BinaryKits/PDFsharp bumps, dimension validation fix, Aztec `^B0` → `^BO` preprocessing.
+- Thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for contributions that landed in v3.1.0.
 
 ---
 
@@ -111,10 +108,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v3.1.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
@@ -126,10 +123,10 @@ zpl2pdf -help
 #### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v3.1.0-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.1-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -152,7 +149,7 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 #### Intel Macs
 ```bash
 # Download
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-osx-x64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-osx-x64.tar.gz -o zpl2pdf.tar.gz
 
 # Extract and run
 tar -xzf zpl2pdf.tar.gz
@@ -161,7 +158,7 @@ tar -xzf zpl2pdf.tar.gz
 
 #### Apple Silicon (M1/M2/M3)
 ```bash
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-osx-arm64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-osx-arm64.tar.gz -o zpl2pdf.tar.gz
 tar -xzf zpl2pdf.tar.gz
 ./ZPL2PDF -help
 ```
@@ -290,8 +287,8 @@ ZPL2PDF -i label.txt -o output/ --renderer offline
 ZPL2PDF -i label.txt -o output/ --renderer labelary
 ```
 - ✅ Exact Zebra printer emulation
-- ✅ Vector PDF output (smaller files)
-- ✅ Automatic batching for 50+ labels
+- ✅ High-fidelity rendering via Labelary (uses Labelary to generate PNGs)
+- ✅ Works for multi-label ZPL inputs
 - ⚠️ Requires internet connection
 
 ### **Auto (Fallback)**
@@ -300,6 +297,126 @@ ZPL2PDF -i label.txt -o output/ --renderer auto
 ```
 - ✅ Tries Labelary first
 - ✅ Falls back to BinaryKits if offline
+
+---
+
+## 🌐 REST API
+Start the API server:
+
+```bash
+ZPL2PDF --api --host localhost --port 5000
+```
+
+### Health check
+
+```bash
+curl -s http://localhost:5000/api/health
+```
+
+```json
+{
+  "status": "ok",
+  "service": "ZPL2PDF API"
+}
+```
+
+### Convert (ZPL to PDF/PNG)
+
+Endpoint: `POST /api/convert`
+
+#### Request body
+
+```json
+{
+  "zpl": "^XA...^XZ",
+  "zplArray": ["^XA...^XZ"],
+  "format": "pdf",
+  "width": 7.5,
+  "height": 15,
+  "unit": "in",
+  "dpi": 203,
+  "renderer": "offline"
+}
+```
+
+Notes:
+- You must provide either `zpl` or `zplArray` (at least one non-empty ZPL string).
+- `renderer` supports `offline` (BinaryKits), `labelary` (Labelary online API), or `auto` (try Labelary then fall back).
+- If `width`/`height` are not set or are `0`, dimensions are extracted from ZPL (`^PW` / `^LL`) by default.
+
+#### Example: PDF (offline renderer)
+
+```bash
+curl -s -X POST http://localhost:5000/api/convert -H "Content-Type: application/json" -d '{
+  "zpl": "^XA^FO50,50^A0N,50,50^FDHello^FS^XZ",
+  "format": "pdf",
+  "renderer": "offline",
+  "width": 7.5,
+  "height": 3,
+  "unit": "in",
+  "dpi": 203
+}'
+```
+
+```json
+{
+  "success": true,
+  "format": "pdf",
+  "pdf": "JVBERi0xLjQKJc...base64...",
+  "pages": 1,
+  "message": "Conversion successful"
+}
+```
+
+#### Example: PDF (Labelary renderer - direct PDF)
+
+```bash
+curl -s -X POST http://localhost:5000/api/convert -H "Content-Type: application/json" -d '{
+  "zpl": "^XA^FO50,50^A0N,50,50^FDHello^FS^XZ",
+  "format": "pdf",
+  "renderer": "labelary",
+  "width": 7.5,
+  "height": 3,
+  "unit": "in",
+  "dpi": 203
+}'
+```
+
+```json
+{
+  "success": true,
+  "format": "pdf",
+  "pdf": "JVBERi0xLjQKJc...base64...",
+  "pages": 1,
+  "message": "Conversion successful"
+}
+```
+
+#### Example: PNG (Labelary renderer)
+
+```bash
+curl -s -X POST http://localhost:5000/api/convert -H "Content-Type: application/json" -d '{
+  "zpl": "^XA^FO50,50^A0N,50,50^FDHello^FS^XZ",
+  "format": "png",
+  "renderer": "labelary",
+  "width": 7.5,
+  "height": 3,
+  "unit": "in",
+  "dpi": 203
+}'
+```
+
+```json
+{
+  "success": true,
+  "format": "png",
+  "image": "iVBORw0KGgo...base64...",
+  "pages": 1,
+  "message": "Conversion successful"
+}
+```
+
+If more than one label/image is produced, the response uses `images` (array) instead of `image` (single string).
 
 ---
 
@@ -344,7 +461,7 @@ Run:
 docker-compose up -d
 ```
 
-📘 **Full Docker Guide:** [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md)
+📘 **Full Docker Guide:** [docs/guides/DOCKER_GUIDE.md](docs/guides/DOCKER_GUIDE.md)
 
 ---
 
@@ -376,7 +493,7 @@ See [zpl2pdf.json.example](zpl2pdf.json.example) for full configuration options.
 |----------|-------------|---------|
 | `ZPL2PDF_LANGUAGE` | Application language | `pt-BR` |
 
-📘 **Language Configuration Guide:** [docs/LANGUAGE_CONFIGURATION.md](docs/LANGUAGE_CONFIGURATION.md)
+📘 **Language Configuration Guide:** [docs/guides/LANGUAGE_CONFIGURATION.md](docs/guides/LANGUAGE_CONFIGURATION.md)
 
 ---
 
@@ -421,7 +538,7 @@ src/
 │   ├── Services/         # Business logic
 │   └── Interfaces/       # Service contracts
 ├── Domain/              # Business entities & rules
-│   ├── ValueObjects/    # Immutable data objects
+│   ├── ValueObjects/    # Value objects
 │   └── Services/        # Domain interfaces
 ├── Infrastructure/      # External concerns
 │   ├── FileSystem/      # File operations
@@ -465,15 +582,15 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ### **User Guides**
 - 📖 [Complete Documentation](docs/README.md) - Full user manual
-- 🌍 [Multi-language Configuration](docs/LANGUAGE_CONFIGURATION.md)
-- 🐳 [Docker Usage Guide](docs/DOCKER_GUIDE.md)
+- 🌍 [Multi-language Configuration](docs/guides/LANGUAGE_CONFIGURATION.md)
+- 🐳 [Docker Usage Guide](docs/guides/DOCKER_GUIDE.md)
 - 📦 [Inno Setup Guide](docs/INNO_SETUP_GUIDE.md)
 
 ### **Developer Guides**
 - 🛠️ [Contributing Guide](CONTRIBUTING.md)
 - 📋 [Changelog](CHANGELOG.md)
-- 🏗️ [Architecture Overview](docs/ARCHITECTURE.md)
-- 🔄 [CI/CD Workflow](docs/CI_CD_WORKFLOW.md)
+- 🏗️ [Architecture Overview](wiki/Architecture-Overview.md)
+- 🔄 [CI/CD Workflow](docs/development/CI_CD_WORKFLOW.md)
 
 ### **Build & Deployment**
 - 🔨 [Build Scripts](scripts/README.md)

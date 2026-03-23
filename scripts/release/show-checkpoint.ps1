@@ -11,7 +11,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Split-Path -Parent $ScriptDir
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
 # Load checkpoint utilities
 . (Join-Path $ScriptDir "_checkpoint-utils.ps1")
@@ -104,7 +104,7 @@ if ($checkpoint) {
             }
         }
         Write-Host "Next steps:" -ForegroundColor Yellow
-        Write-Host "  Resume release from step $nextStep:" -ForegroundColor White
+        Write-Host "  Resume release from step ${nextStep}:" -ForegroundColor White
         Write-Host "    .\release\release-main.ps1 -Version `"$Version`" -StartFromStep $nextStep" -ForegroundColor Cyan
         Write-Host ""
     } else {

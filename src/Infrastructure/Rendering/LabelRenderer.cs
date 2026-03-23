@@ -6,18 +6,23 @@ using BinaryKits.Zpl.Label;
 using BinaryKits.Zpl.Viewer;
 using BinaryKits.Zpl.Viewer.ElementDrawers;
 using SkiaSharp;
+using ZPL2PDF.Domain.Services;
 
 namespace ZPL2PDF {
     /// <summary>
     /// Responsible for processing labels, generating images in memory, and returning image data.
     /// </summary>
-    public class LabelRenderer {
+    public class LabelRenderer : ILabelRenderer {
         private readonly IPrinterStorage _printerStorage;
         private readonly ZplAnalyzer _analyzer;
         private readonly ZplElementDrawer _drawer;
         private readonly double _labelWidthMm;
         private readonly double _labelHeightMm;
         private readonly int _printDpi;
+        private readonly double _labelWidthInput;
+        private readonly double _labelHeightInput;
+        private readonly string _labelUnitInput;
+        private readonly int _labelDpi;
         private readonly string? _fontsDirectory;
         private readonly IReadOnlyList<(string Id, string Path)>? _fontMappings;
 
@@ -113,6 +118,10 @@ namespace ZPL2PDF {
 
             // Store DPI (will be converted to DPMM when rendering)
             _printDpi = printDpi;
+            _labelWidthInput = labelWidth;
+            _labelHeightInput = labelHeight;
+            _labelUnitInput = unit;
+            _labelDpi = printDpi;
         }
 
         /// <summary>
@@ -132,6 +141,10 @@ namespace ZPL2PDF {
             _labelWidthMm = dimensions.WidthMm;
             _labelHeightMm = dimensions.HeightMm;
             _printDpi = dimensions.Dpi;
+            _labelWidthInput = dimensions.WidthMm;
+            _labelHeightInput = dimensions.HeightMm;
+            _labelUnitInput = "mm";
+            _labelDpi = dimensions.Dpi;
         }
 
         /// <summary>
@@ -177,6 +190,12 @@ namespace ZPL2PDF {
                 }
             }
             return images;
+        }
+
+        /// <inheritdoc />
+        public (double width, double height, string unit, int dpi) GetDimensions()
+        {
+            return (_labelWidthInput, _labelHeightInput, _labelUnitInput, _labelDpi);
         }
     }
 }

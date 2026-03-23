@@ -61,10 +61,10 @@ Step 13 (GitHub release) uploads everything from **`release/`** that matches `*{
 
 ## 📂 Script Structure
 
-Scripts live in **`release-scripts/`**. Generated artifacts go in **`release/`**.
+Scripts live in **`scripts/release/`**. Generated artifacts go in **`release/`**.
 
 ```
-release-scripts/
+scripts/release/
 ├── README.md                    # This file
 ├── release-main.ps1             # Main script (orchestrates all)
 ├── _checkpoint-utils.ps1        # Checkpoint utilities

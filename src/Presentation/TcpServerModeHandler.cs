@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -53,13 +54,13 @@ namespace ZPL2PDF
 
             if (args.ServerForeground)
             {
-                RunServerInForeground(args.ServerPort, args.ServerOutputFolder);
+                RunServerInForeground(args.ServerPort, args.ServerOutputFolder, args.RendererEngine);
                 return;
             }
 
             // Background: spawn process with --foreground so the child runs the server
             var processManager = new ProcessManager();
-            var serverArgs = BuildServerArguments(args.ServerPort, args.ServerOutputFolder, foreground: true);
+            var serverArgs = BuildServerArguments(args.ServerPort, args.ServerOutputFolder, args.RendererEngine, foreground: true);
             var startedPid = processManager.StartBackgroundProcess(serverArgs);
             if (startedPid <= 0)
             {
@@ -143,9 +144,9 @@ namespace ZPL2PDF
             }
         }
 
-        private static void RunServerInForeground(int port, string outputFolder)
+        private static void RunServerInForeground(int port, string outputFolder, RendererEngine rendererEngine)
         {
-            var server = new TcpPrinterServer(port, outputFolder);
+            var server = new TcpPrinterServer(port, outputFolder, rendererEngine);
             Console.WriteLine($"TCP server listening on port {port}. Output folder: {outputFolder}");
             Console.WriteLine("Press Ctrl+C to stop.");
             using var cts = new CancellationTokenSource();
@@ -165,10 +166,11 @@ namespace ZPL2PDF
             }
         }
 
-        private static string BuildServerArguments(int port, string outputFolder, bool foreground)
+        private static string BuildServerArguments(int port, string outputFolder, RendererEngine rendererEngine, bool foreground)
         {
             var output = outputFolder.Contains(" ") ? $"\"{outputFolder}\"" : outputFolder;
-            var args = $"server start --port {port} -o {output}";
+            var renderer = rendererEngine.ToString().ToLowerInvariant();
+            var args = $"server start --port {port} -o {output} --renderer {renderer}";
             if (foreground)
                 args += " --foreground";
             return args;

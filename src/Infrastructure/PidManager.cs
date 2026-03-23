@@ -9,6 +9,7 @@ namespace ZPL2PDF
     public class PidManager
     {
         private readonly string _pidFilePath;
+        public string PidFilePath => _pidFilePath;
 
         /// <summary>
         /// Initializes a new instance of the PidManager (default PID file: zpl2pdf.pid).

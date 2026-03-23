@@ -86,6 +86,11 @@ namespace ZPL2PDF
         public bool ServerForeground { get; private set; } = false;
 
         /// <summary>
+        /// Rendering engine selection (offline/labelary/auto).
+        /// </summary>
+        public RendererEngine RendererEngine { get; private set; } = RendererEngine.Offline;
+
+        /// <summary>
         /// Gets or sets the input file path.
         /// </summary>
         public string InputFilePath { get; set; } = string.Empty;
@@ -218,6 +223,7 @@ namespace ZPL2PDF
             Height = conversionArgs.Height;
             Unit = conversionArgs.Unit;
             Dpi = conversionArgs.Dpi;
+            RendererEngine = conversionArgs.RendererEngine;
             FontsDirectory = conversionArgs.FontsDirectory ?? string.Empty;
             FontMappings = conversionArgs.FontMappings ?? new List<(string, string)>();
 
@@ -287,6 +293,7 @@ namespace ZPL2PDF
             
         Unit = daemonArgs.Unit;
         Dpi = daemonArgs.Dpi;
+        RendererEngine = daemonArgs.RendererEngine;
 
         // Only validate dimensions if they were explicitly provided (not auto-applied)
         // Check if dimensions are different from defaults (indicating explicit user input)
@@ -322,6 +329,7 @@ namespace ZPL2PDF
             ServerPort = serverArgs.Port;
             ServerOutputFolder = serverArgs.OutputFolder;
             ServerForeground = serverArgs.Foreground;
+            RendererEngine = serverArgs.RendererEngine;
 
             if (ServerCommand == "start")
             {

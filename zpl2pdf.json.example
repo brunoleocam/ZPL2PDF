@@ -5,7 +5,7 @@
   "language": "en-US",
   
   // Daemon Configuration
-  "defaultWatchFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
+  "defaultListenFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
   "labelWidth": 7.5,
   "labelHeight": 15,
   "unit": "in",
