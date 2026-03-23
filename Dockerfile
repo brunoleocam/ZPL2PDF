@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 # Stage 1: Build
 # -----------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:10.0.103 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.201 AS build
 
 # Set working directory
 WORKDIR /src
