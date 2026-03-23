@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using PdfSharpCore.Pdf;
-using PdfSharpCore.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using PdfSharp.Drawing;
 
 namespace ZPL2PDF {
     /// <summary>
@@ -16,7 +17,7 @@ namespace ZPL2PDF {
         public static void GeneratePdf(List<byte[]> imageDataList, string outputPdf) {
             using (var document = new PdfDocument()) {
                 foreach (var imageData in imageDataList) {
-                    using (var image = XImage.FromStream(() => new MemoryStream(imageData))) {
+                    using (var image = XImage.FromStream(new MemoryStream(imageData))) {
                         // Debugging: Print the image dimensions
                         //Console.WriteLine($"Image Width: {image.PixelWidth}, Image Height: {image.PixelHeight}");
 
@@ -46,7 +47,7 @@ namespace ZPL2PDF {
         public static byte[] GeneratePdfToBytes(List<byte[]> imageDataList) {
             using (var document = new PdfDocument()) {
                 foreach (var imageData in imageDataList) {
-                    using (var image = XImage.FromStream(() => new MemoryStream(imageData))) {
+                    using (var image = XImage.FromStream(new MemoryStream(imageData))) {
                         // Create a new page with the same dimensions as the image
                         var page = document.AddPage();
                         page.Width = image.PixelWidth;
@@ -64,6 +65,32 @@ namespace ZPL2PDF {
                     return stream.ToArray();
                 }
             }
+        }
+
+        /// <summary>
+        /// Merges multiple PDF documents (given as bytes) into a single PDF.
+        /// </summary>
+        public static byte[] MergePdfsToBytes(List<byte[]> pdfDocuments)
+        {
+            using var outputDocument = new PdfDocument();
+
+            foreach (var pdfBytes in pdfDocuments)
+            {
+                if (pdfBytes == null || pdfBytes.Length == 0)
+                    continue;
+
+                using var ms = new MemoryStream(pdfBytes);
+                using var inputDocument = PdfReader.Open(ms, PdfDocumentOpenMode.Import);
+
+                for (int i = 0; i < inputDocument.PageCount; i++)
+                {
+                    outputDocument.AddPage(inputDocument.Pages[i]);
+                }
+            }
+
+            using var outStream = new MemoryStream();
+            outputDocument.Save(outStream, false);
+            return outStream.ToArray();
         }
     }
 }

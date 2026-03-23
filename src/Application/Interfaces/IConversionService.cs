@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF.Application.Interfaces
 {
@@ -20,7 +21,8 @@ namespace ZPL2PDF.Application.Interfaces
         /// <returns>List of image data for PDF generation</returns>
         List<byte[]> ConvertWithExplicitDimensions(string zplContent, double width, double height, string unit, int dpi,
             string? fontsDirectory = null,
-            IReadOnlyList<(string Id, string Path)>? fontMappings = null);
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null,
+            RendererEngine rendererEngine = RendererEngine.Offline);
 
         /// <summary>
         /// Converts ZPL content to PDF by extracting dimensions from ZPL
@@ -33,7 +35,8 @@ namespace ZPL2PDF.Application.Interfaces
         /// <returns>List of image data for PDF generation</returns>
         List<byte[]> ConvertWithExtractedDimensions(string zplContent, string unit, int dpi,
             string? fontsDirectory = null,
-            IReadOnlyList<(string Id, string Path)>? fontMappings = null);
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null,
+            RendererEngine rendererEngine = RendererEngine.Offline);
 
         /// <summary>
         /// Converts ZPL content to PDF using mixed approach (explicit or extracted)
@@ -47,6 +50,35 @@ namespace ZPL2PDF.Application.Interfaces
         /// <param name="fontMappings">Optional font ID to path mappings</param>
         /// <returns>List of image data for PDF generation</returns>
         List<byte[]> Convert(string zplContent, double explicitWidth, double explicitHeight, string unit, int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null,
+            RendererEngine rendererEngine = RendererEngine.Offline);
+
+        /// <summary>
+        /// Converts the entire ZPL template directly to a PDF using the Labelary API.
+        /// </summary>
+        byte[] ConvertPdfDirectWithLabelary(
+            string zplContent,
+            double explicitWidth,
+            double explicitHeight,
+            string unit,
+            int dpi,
+            string? fontsDirectory = null,
+            IReadOnlyList<(string Id, string Path)>? fontMappings = null);
+
+        /// <summary>
+        /// Tries direct PDF conversion via Labelary according to renderer policy.
+        /// Returns false when direct mode is not enabled or when auto mode falls back.
+        /// Throws when renderer is Labelary and direct conversion fails.
+        /// </summary>
+        bool TryConvertPdfDirectWithLabelary(
+            string zplContent,
+            double explicitWidth,
+            double explicitHeight,
+            string unit,
+            int dpi,
+            RendererEngine rendererEngine,
+            out byte[]? pdfBytes,
             string? fontsDirectory = null,
             IReadOnlyList<(string Id, string Path)>? fontMappings = null);
     }

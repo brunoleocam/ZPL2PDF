@@ -43,5 +43,10 @@ namespace ZPL2PDF.Presentation.Api.Models
         /// Print density in DPI (optional, default: 203)
         /// </summary>
         public int? Dpi { get; set; }
+
+        /// <summary>
+        /// Rendering engine: "offline" (default), "labelary", or "auto"
+        /// </summary>
+        public string Renderer { get; set; } = "offline";
     }
 }

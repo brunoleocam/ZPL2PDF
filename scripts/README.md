@@ -2,8 +2,8 @@
 
 This directory contains automation scripts for building, packaging, and releasing ZPL2PDF across multiple platforms.
 
-> **📦 Para releases completas, use os scripts na pasta [`release/`](../release/README.md)**  
-> Os scripts desta pasta são utilitários de build individuais.
+> **📦 For full releases, use the scripts in the [`release/`](../release/README.md) folder**  
+> These scripts in this directory are individual build utilities.
 
 ---
 
@@ -164,59 +164,59 @@ Requires the API server to be free on port 5000. See [API Guide](../docs/guides/
 
 ---
 
-### 4️⃣ **`full-release.ps1`** ⭐ RECOMENDADO
+### 4️⃣ **`full-release.ps1`** ⭐ RECOMMENDED
 
-**Purpose:** Script completo de release que automatiza TODO o processo de deploy
+**Purpose:** Full release script that automates the entire deployment process
 
 **Prerequisites:**
 - .NET SDK 9.0+
-- Docker Desktop (para pacotes Linux e imagens Docker)
-- GitHub CLI (`gh`) autenticado
-- Inno Setup 6 (para instalador Windows)
+- Docker Desktop (for Linux packages and Docker images)
+- GitHub CLI (`gh`) authenticated
+- Inno Setup 6 (for the Windows installer)
 
 **Usage:**
 
 ```powershell
-# Release completo
+# Full release
 .\scripts\full-release.ps1 -Version "2.1.0"
 
-# Dry run (testar sem publicar)
+# Dry run (test without publishing)
 .\scripts\full-release.ps1 -Version "2.1.0" -DryRun
 
-# Pular etapas específicas
+# Skip specific steps
 .\scripts\full-release.ps1 -Version "2.1.0" -SkipTests
 .\scripts\full-release.ps1 -Version "2.1.0" -SkipDocker
 .\scripts\full-release.ps1 -Version "2.1.0" -SkipWinGet
 .\scripts\full-release.ps1 -Version "2.1.0" -SkipGitHubRelease
 ```
 
-**O que faz (12 etapas):**
-1. ✅ Verifica pré-requisitos (git, dotnet, docker, gh)
-2. ✅ Atualiza versão em TODOS os arquivos do projeto
-3. ✅ Gera builds para 8 plataformas (Windows, Linux, macOS)
-4. ✅ Gera pacotes Linux (.deb e .rpm) via Docker
-5. ✅ Gera instalador Windows (Inno Setup)
-6. ✅ Gera checksums SHA256
-7. ✅ Build e push de imagens Docker (Docker Hub + GHCR)
-8. ✅ Cria release no GitHub com todos os assets
-9. ✅ Atualiza manifests do WinGet
-10. ✅ Submete PR para microsoft/winget-pkgs
-11. ✅ Commita alterações no repositório
-12. ✅ Exibe resumo final
+**What it does (12 steps):**
+1. ✅ Checks prerequisites (git, dotnet, docker, gh)
+2. ✅ Updates the version in ALL project files
+3. ✅ Generates builds for 8 platforms (Windows, Linux, macOS)
+4. ✅ Builds Linux packages (.deb and .rpm) via Docker
+5. ✅ Generates the Windows installer (Inno Setup)
+6. ✅ Generates SHA256 checksums
+7. ✅ Builds and pushes Docker images (Docker Hub + GHCR)
+8. ✅ Creates the GitHub release with all assets
+9. ✅ Updates WinGet manifests
+10. ✅ Submits a PR to microsoft/winget-pkgs
+11. ✅ Commits changes to the repository
+12. ✅ Displays the final summary
 
 **Output:**
-- Builds para todas as plataformas em `build/publish/`
-- Instalador Windows
-- Pacotes .deb e .rpm
-- Imagens Docker publicadas
-- Release no GitHub
-- PR no WinGet
+- Builds for all platforms in `build/publish/`
+- Windows installer
+- .deb and .rpm packages
+- Published Docker images
+- GitHub release
+- WinGet PR
 
 ---
 
 ### 5️⃣ **`release.ps1` / `release.sh`**
 
-**Purpose:** Release básico (versão + build + git tag) - Use `full-release.ps1` para deploy completo
+**Purpose:** Basic release (version + build + git tag) - Use `full-release.ps1` for full deployment
 
 **Usage:**
 
@@ -249,8 +249,8 @@ Requires the API server to be free on port 5000. See [API Guide](../docs/guides/
    - `ZPL2PDF.csproj`
    - `src/Shared/Constants/ApplicationConstants.cs`
    - `winget-manifest.yaml`
-   - `rpm/zpl2pdf.spec`
-   - `debian/control`
+   - `scripts/release/packages/rpm/rpm/zpl2pdf.spec`
+   - `scripts/release/packages/debian/debian/control`
    - `CHANGELOG.md`
 4. ✅ Runs tests
 5. ✅ Builds all platforms (calls `build-all-platforms.*`)
@@ -293,29 +293,29 @@ Want to test on multiple platforms?
 ./scripts/build-all-platforms.sh --skip-tests
 ```
 
-### Create Release (Recomendado) ⭐
+### Create Release (Recommended) ⭐
 
-Ready to publish a new version? Use os scripts da pasta `release/`:
+Ready to publish a new version? Use the scripts in the `release/` folder:
 
 ```powershell
 # Windows - Test first with dry-run
 .\release\release-main.ps1 -Version "3.1.0" -DryRun
 
-# Windows - Actual release (faz TUDO automaticamente)
+# Windows - Full release (does everything automatically)
 .\release\release-main.ps1 -Version "3.1.0"
 
-# Pular etapas se necessário
+# Skip steps if needed
 .\release\release-main.ps1 -Version "3.1.0" -SkipDocker -SkipWinGet
 
-# Executar etapa específica
+# Run a specific step
 .\release\07-build-all-platforms.ps1 -Version "3.1.0"
 ```
 
-**📚 Veja o [Guia Completo de Release](../release/README.md) para mais detalhes.**
+**📚 See the [Full Release Guide](../release/README.md) for more details.**
 
-### Create Release (Básico)
+### Create Release (Basic)
 
-Se preferir o script básico (sem Docker/WinGet):
+If you prefer the basic script (without Docker/WinGet):
 
 ```powershell
 # Windows - Test first with dry-run
@@ -346,7 +346,7 @@ Se preferir o script básico (sem Docker/WinGet):
 | **Docker build & push** | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **GitHub Release** | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Update versions** | ✅ | ❌ | ❌ | ❌ | ✅ |
-| **Run tests** | ✅ (opcional) | ✅ (opcional) | ❌ | ❌ | ✅ |
+| **Run tests** | ✅ (optional) | ✅ (optional) | ❌ | ❌ | ✅ |
 | **Git operations** | ✅ | ❌ | ❌ | ✅ (fork/PR) | ✅ |
 | **Checksums** | ✅ | ✅ | ❌ | ✅ | ✅ |
 | **WinGet submission** | ✅ | ❌ | ❌ | ✅ | ❌ |

@@ -31,7 +31,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeTrue();
@@ -45,7 +45,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             var zplContent = "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
 
             // Act
-            var result = _validator.ValidateConversionMode("", zplContent, _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode("", zplContent, _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeTrue();
@@ -61,7 +61,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             var zplContent = "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, zplContent, _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, zplContent, _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -72,7 +72,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         public void ValidateConversionMode_WithNeitherInputFileNorZplContent_ReturnsInvalid()
         {
             // Act
-            var result = _validator.ValidateConversionMode("", "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode("", "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -86,7 +86,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             var nonExistentFile = Path.Combine(_testDirectory, "nonexistent.txt");
 
             // Act
-            var result = _validator.ValidateConversionMode(nonExistentFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(nonExistentFile, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -101,11 +101,11 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "This is not a ZPL file");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
-            result.ErrorMessage.Should().Contain("Input file must be .txt or .prn");
+            result.ErrorMessage.Should().Contain("Input file must be .txt, .prn, .zpl or .imp");
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeTrue();
@@ -131,7 +131,37 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            result.ErrorMessage.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateConversionMode_WithZplFile_ReturnsValid()
+        {
+            // Arrange
+            var testFile = Path.Combine(_testDirectory, "test.zpl");
+            File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
+
+            // Act
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            result.ErrorMessage.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateConversionMode_WithImpFile_ReturnsValid()
+        {
+            // Arrange
+            var testFile = Path.Combine(_testDirectory, "test.imp");
+            File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
+
+            // Act
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeTrue();
@@ -146,7 +176,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", "", 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", "", 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -161,7 +191,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", null!, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", null!, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -176,7 +206,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         public void ValidateConversionMode_WithWhitespaceInputFile_ReturnsInvalid()
         {
             // Act
-            var result = _validator.ValidateConversionMode("   ", "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode("   ", "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -187,7 +217,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         public void ValidateConversionMode_WithWhitespaceZplContent_ReturnsInvalid()
         {
             // Act
-            var result = _validator.ValidateConversionMode("", "   ", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode("", "   ", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -202,7 +232,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", "   ", 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", "   ", 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -213,7 +243,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         public void ValidateConversionMode_WithNullInputFile_ReturnsInvalid()
         {
             // Act
-            var result = _validator.ValidateConversionMode(null!, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(null!, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -224,7 +254,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         public void ValidateConversionMode_WithNullZplContent_ReturnsInvalid()
         {
             // Act
-            var result = _validator.ValidateConversionMode("", null!, _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode("", null!, _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeFalse();
@@ -243,7 +273,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
 
             // Assert
             result.IsValid.Should().BeTrue();
@@ -258,7 +288,49 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
-            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm");
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            result.ErrorMessage.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateConversionMode_WhenStandardOutputTrue_AllowsEmptyOutputFolder()
+        {
+            // Arrange
+            var zplContent = "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
+
+            // Act
+            var result = _validator.ValidateConversionMode(
+                "",
+                zplContent,
+                "",
+                0,
+                0,
+                "mm",
+                standardOutput: true);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            result.ErrorMessage.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateConversionMode_WithExplicitDimensionsAndUnitMm_ReturnsValid()
+        {
+            // Arrange
+            var zplContent = "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
+
+            // Act
+            var result = _validator.ValidateConversionMode(
+                "",
+                zplContent,
+                "",
+                100,
+                150,
+                "mm",
+                standardOutput: true);
 
             // Assert
             result.IsValid.Should().BeTrue();

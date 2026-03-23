@@ -1,6 +1,6 @@
 # ZPL2PDF - ZPL to PDF Converter
 
-[![Version](https://img.shields.io/badge/version-3.0.3-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.1.1-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -16,66 +16,23 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.0.3**
+## 🚀 **What's New in v3.1.1**
 
-### 🐛 Bug Fixes
-- **Fixed Issue #45**: Duplicate or blank labels when `^XA` appears inside `~DGR:` base64 payload — `^XA` is now treated as label start only at line start or after `^XZ`.
+### 🔧 Changed
 
-### ✨ New Features
-- **Issue #48 – TCP Server**: Virtual Zebra printer mode is now implemented. Use `ZPL2PDF server start --port 9101 -o output/`, `server stop`, and `server status`.
-- **REST API (PR #47)**: Run `ZPL2PDF --api --host localhost --port 5000` for `POST /api/convert` (ZPL to PDF or PNG) and `GET /api/health`.
+- **Release tooling**: Scripts under `release/scripts/`; Linux packaging assets under `scripts/release/packages/` (documentation and contributor paths updated).
+- **Internals**: Single Labelary PDF fallback path in `ConversionService` across CLI, API, TCP server, and daemon; dimension/value-object consolidation and daemon PID handling without reflection.
 
----
+### 🛠️ Maintenance
 
-## 🚀 **What's New in v3.0.3**
+- **Installer pipeline**: More reliable cleanup in `08-build-installer.ps1`; optional `cleanup-installer-output.ps1` for `installer/Output`.
+- **Docker**: Leaner default build context via `.dockerignore`.
+- **Repo hygiene**: `.github/prompts/` and `.github/skills/` remain untracked; the rest of `.github` (workflows, templates) stays versioned.
 
-### 🐛 Bug Fixes
-- **Fixed Issue #39**: Sequential graphic processing for multiple graphics with same name
-  - ZPL files with multiple `~DGR` graphics now process correctly
-  - Each label uses the correct graphic based on sequential state
-  - `^IDR` cleanup commands no longer generate blank pages
-  - Resolves issue where all labels were identical in Shopee shipping label files
+### Recent highlights (v3.1.1)
 
-### 🔧 Improvements
-- Added input validation in public methods
-- Improved exception handling
-- Performance optimizations with compiled regex
-- Code cleanup and removal of unused methods
-
----
-
-## 🚀 **What's New in v3.0.3**
-
-### 🎉 Major New Features
-- 🎨 **Labelary API Integration** - High-fidelity ZPL rendering with vector PDF output
-- 🖨️ **TCP Server Mode** - Virtual Zebra printer on TCP port (default: 9101)
-- 🔤 **Custom Fonts** - Load TrueType/OpenType fonts with `--fonts-dir` and `--font`
-- 📁 **Extended File Support** - Added `.zpl` and `.imp` file extensions
-- 📝 **Custom Naming** - Set output filename via `^FX FileName:` in ZPL
-
-### 🔧 Rendering Options
-```bash
---renderer offline    # BinaryKits (default, works offline)
---renderer labelary   # Labelary API (high-fidelity, requires internet)
---renderer auto       # Try Labelary, fallback to BinaryKits
-```
-
-### 🖨️ TCP Server (Virtual Printer)
-```bash
-ZPL2PDF server start --port 9101 -o output/
-ZPL2PDF server status
-ZPL2PDF server stop
-```
-
-### v2.x Features (Still Available)
-- 🌍 **Multi-language Support** - 8 languages (EN, PT, ES, FR, DE, IT, JA, ZH)
-- 🔄 **Daemon Mode** - Automatic folder monitoring and batch conversion
-- 🏗️ **Clean Architecture** - Completely refactored with SOLID principles
-- 🌍 **Cross-Platform** - Native support for Windows, Linux, and macOS
-- 📐 **Smart Dimensions** - Automatic ZPL dimension extraction (`^PW`, `^LL`)
-- ⚡ **High Performance** - Async processing with retry mechanisms
-- 🐳 **Docker Support** - Alpine Linux optimized (470MB)
-- 📦 **Professional Installer** - Windows installer with multi-language setup
+- **`--stdout`**, smarter default PDF naming, BinaryKits/PDFsharp bumps, dimension validation fix, Aztec `^B0` → `^BO` preprocessing.
+- Thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for contributions that landed in v3.1.0.
 
 ---
 
@@ -110,7 +67,7 @@ ZPL2PDF server start --port 9101 -o output/
 Set your preferred language:
 ```bash
 # Temporary (current session)
-ZPL2PDF --language pt-BR status
+ZPL2PDF status --language pt-BR
 
 # Permanent (all sessions)
 ZPL2PDF --set-language pt-BR
@@ -141,7 +98,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### Option 2: Installer
-1. Download [ZPL2PDF-Setup-2.0.1.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+1. Download [ZPL2PDF-Setup.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
 2. Run installer
 3. Choose your language during installation
 4. Done! ✅
@@ -151,25 +108,25 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
 
 # Verify installation
-zpl2pdf --help
+zpl2pdf -help
 ```
 
 #### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v3.0.3-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.1-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -178,7 +135,7 @@ sudo chmod +x /usr/bin/ZPL2PDF
 sudo ln -s /usr/bin/ZPL2PDF /usr/bin/zpl2pdf
 
 # Verify installation
-zpl2pdf --help
+zpl2pdf -help
 ```
 
 #### Docker (All Linux distributions)
@@ -192,7 +149,7 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 #### Intel Macs
 ```bash
 # Download
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-osx-x64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-osx-x64.tar.gz -o zpl2pdf.tar.gz
 
 # Extract and run
 tar -xzf zpl2pdf.tar.gz
@@ -201,7 +158,7 @@ tar -xzf zpl2pdf.tar.gz
 
 #### Apple Silicon (M1/M2/M3)
 ```bash
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-osx-arm64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-osx-arm64.tar.gz -o zpl2pdf.tar.gz
 tar -xzf zpl2pdf.tar.gz
 ./ZPL2PDF -help
 ```
@@ -247,16 +204,17 @@ ZPL2PDF stop
 ### **Conversion Mode Parameters**
 
 ```bash
-ZPL2PDF -i <input_file> -o <output_folder> [options]
-ZPL2PDF -z <zpl_content> -o <output_folder> [options]
+ZPL2PDF -i <input_file> (-o <output_folder> | --stdout) [options]
+ZPL2PDF -z <zpl_content> (-o <output_folder> | --stdout) [options]
 ```
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
 | `-i <file>` | Input ZPL file (.txt, .prn, .zpl, .imp) | `-i label.zpl` |
 | `-z <content>` | ZPL content as string | `-z "^XA...^XZ"` |
-| `-o <folder>` | Output folder for PDF | `-o C:\Output` |
-| `-n <name>` | Output PDF filename (optional) | `-n result.pdf` |
+| `-o <folder>` | Output folder for PDF (required unless `--stdout`) | `-o C:\Output` |
+| `--stdout` | Write PDF bytes to stdout only (no file) | `--stdout` |
+| `-n <name>` | Output PDF filename (optional; default: input basename or timestamp for `-z`) | `-n result.pdf` |
 | `-w <width>` | Label width | `-w 10` |
 | `-h <height>` | Label height | `-h 5` |
 | `-u <unit>` | Unit (mm, cm, in) | `-u cm` |
@@ -329,8 +287,8 @@ ZPL2PDF -i label.txt -o output/ --renderer offline
 ZPL2PDF -i label.txt -o output/ --renderer labelary
 ```
 - ✅ Exact Zebra printer emulation
-- ✅ Vector PDF output (smaller files)
-- ✅ Automatic batching for 50+ labels
+- ✅ High-fidelity rendering via Labelary (uses Labelary to generate PNGs)
+- ✅ Works for multi-label ZPL inputs
 - ⚠️ Requires internet connection
 
 ### **Auto (Fallback)**
@@ -339,6 +297,126 @@ ZPL2PDF -i label.txt -o output/ --renderer auto
 ```
 - ✅ Tries Labelary first
 - ✅ Falls back to BinaryKits if offline
+
+---
+
+## 🌐 REST API
+Start the API server:
+
+```bash
+ZPL2PDF --api --host localhost --port 5000
+```
+
+### Health check
+
+```bash
+curl -s http://localhost:5000/api/health
+```
+
+```json
+{
+  "status": "ok",
+  "service": "ZPL2PDF API"
+}
+```
+
+### Convert (ZPL to PDF/PNG)
+
+Endpoint: `POST /api/convert`
+
+#### Request body
+
+```json
+{
+  "zpl": "^XA...^XZ",
+  "zplArray": ["^XA...^XZ"],
+  "format": "pdf",
+  "width": 7.5,
+  "height": 15,
+  "unit": "in",
+  "dpi": 203,
+  "renderer": "offline"
+}
+```
+
+Notes:
+- You must provide either `zpl` or `zplArray` (at least one non-empty ZPL string).
+- `renderer` supports `offline` (BinaryKits), `labelary` (Labelary online API), or `auto` (try Labelary then fall back).
+- If `width`/`height` are not set or are `0`, dimensions are extracted from ZPL (`^PW` / `^LL`) by default.
+
+#### Example: PDF (offline renderer)
+
+```bash
+curl -s -X POST http://localhost:5000/api/convert -H "Content-Type: application/json" -d '{
+  "zpl": "^XA^FO50,50^A0N,50,50^FDHello^FS^XZ",
+  "format": "pdf",
+  "renderer": "offline",
+  "width": 7.5,
+  "height": 3,
+  "unit": "in",
+  "dpi": 203
+}'
+```
+
+```json
+{
+  "success": true,
+  "format": "pdf",
+  "pdf": "JVBERi0xLjQKJc...base64...",
+  "pages": 1,
+  "message": "Conversion successful"
+}
+```
+
+#### Example: PDF (Labelary renderer - direct PDF)
+
+```bash
+curl -s -X POST http://localhost:5000/api/convert -H "Content-Type: application/json" -d '{
+  "zpl": "^XA^FO50,50^A0N,50,50^FDHello^FS^XZ",
+  "format": "pdf",
+  "renderer": "labelary",
+  "width": 7.5,
+  "height": 3,
+  "unit": "in",
+  "dpi": 203
+}'
+```
+
+```json
+{
+  "success": true,
+  "format": "pdf",
+  "pdf": "JVBERi0xLjQKJc...base64...",
+  "pages": 1,
+  "message": "Conversion successful"
+}
+```
+
+#### Example: PNG (Labelary renderer)
+
+```bash
+curl -s -X POST http://localhost:5000/api/convert -H "Content-Type: application/json" -d '{
+  "zpl": "^XA^FO50,50^A0N,50,50^FDHello^FS^XZ",
+  "format": "png",
+  "renderer": "labelary",
+  "width": 7.5,
+  "height": 3,
+  "unit": "in",
+  "dpi": 203
+}'
+```
+
+```json
+{
+  "success": true,
+  "format": "png",
+  "image": "iVBORw0KGgo...base64...",
+  "pages": 1,
+  "message": "Conversion successful"
+}
+```
+
+If more than one label/image is produced, the response uses `images` (array) instead of `image` (single string).
 
 ---
 
@@ -383,7 +461,7 @@ Run:
 docker-compose up -d
 ```
 
-📘 **Full Docker Guide:** [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md)
+📘 **Full Docker Guide:** [docs/guides/DOCKER_GUIDE.md](docs/guides/DOCKER_GUIDE.md)
 
 ---
 
@@ -396,7 +474,7 @@ Create a `zpl2pdf.json` file in the application directory:
 ```json
 {
   "language": "en-US",
-  "defaultWatchFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
+  "defaultListenFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
   "labelWidth": 10,
   "labelHeight": 5,
   "unit": "cm",
@@ -414,9 +492,8 @@ See [zpl2pdf.json.example](zpl2pdf.json.example) for full configuration options.
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `ZPL2PDF_LANGUAGE` | Application language | `pt-BR` |
-| `ZPL2PDF_LOG_LEVEL` | Logging level | `Debug` |
 
-📘 **Language Configuration Guide:** [docs/LANGUAGE_CONFIGURATION.md](docs/LANGUAGE_CONFIGURATION.md)
+📘 **Language Configuration Guide:** [docs/guides/LANGUAGE_CONFIGURATION.md](docs/guides/LANGUAGE_CONFIGURATION.md)
 
 ---
 
@@ -461,7 +538,7 @@ src/
 │   ├── Services/         # Business logic
 │   └── Interfaces/       # Service contracts
 ├── Domain/              # Business entities & rules
-│   ├── ValueObjects/    # Immutable data objects
+│   ├── ValueObjects/    # Value objects
 │   └── Services/        # Domain interfaces
 ├── Infrastructure/      # External concerns
 │   ├── FileSystem/      # File operations
@@ -505,15 +582,15 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ### **User Guides**
 - 📖 [Complete Documentation](docs/README.md) - Full user manual
-- 🌍 [Multi-language Configuration](docs/LANGUAGE_CONFIGURATION.md)
-- 🐳 [Docker Usage Guide](docs/DOCKER_GUIDE.md)
+- 🌍 [Multi-language Configuration](docs/guides/LANGUAGE_CONFIGURATION.md)
+- 🐳 [Docker Usage Guide](docs/guides/DOCKER_GUIDE.md)
 - 📦 [Inno Setup Guide](docs/INNO_SETUP_GUIDE.md)
 
 ### **Developer Guides**
 - 🛠️ [Contributing Guide](CONTRIBUTING.md)
 - 📋 [Changelog](CHANGELOG.md)
-- 🏗️ [Architecture Overview](docs/ARCHITECTURE.md)
-- 🔄 [CI/CD Workflow](docs/CI_CD_WORKFLOW.md)
+- 🏗️ [Architecture Overview](wiki/Architecture-Overview.md)
+- 🔄 [CI/CD Workflow](docs/development/CI_CD_WORKFLOW.md)
 
 ### **Build & Deployment**
 - 🔨 [Build Scripts](scripts/README.md)
@@ -642,8 +719,9 @@ ZPL2PDF/
 ### **Debug Mode**
 
 ```bash
-# Enable verbose logging
-ZPL2PDF -i label.txt -o output/ --log-level Debug
+# Enable verbose logging by setting "logLevel": "Debug" in `zpl2pdf.json`
+# (then re-run your command)
+ZPL2PDF -i label.txt -o output/
 ```
 
 ### **Get Help**
@@ -725,6 +803,8 @@ If ZPL2PDF helps you, please ⭐ star the repository!
 ## 👥 **Contributors**
 
 Thanks to all contributors who have helped make ZPL2PDF better!
+
+Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.0.
 
 <a href="https://github.com/brunoleocam/ZPL2PDF/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF&max=30" alt="Contributors" />

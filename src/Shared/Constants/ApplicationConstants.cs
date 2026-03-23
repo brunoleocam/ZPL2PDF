@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace ZPL2PDF.Shared.Constants
 {
@@ -10,13 +11,14 @@ namespace ZPL2PDF.Shared.Constants
     {
         #region Application Information
         public const string APPLICATION_NAME = "ZPL2PDF";
-        public const string APPLICATION_VERSION = "3.0.2";
+        public static string APPLICATION_VERSION =>
+            typeof(ApplicationConstants).Assembly.GetName().Version?.ToString() ?? "0.0.0";
         public const string APPLICATION_DESCRIPTION = "ZPL to PDF Converter";
         #endregion
 
         #region File Extensions
-        public static readonly string[] VALID_FILE_EXTENSIONS = { ".txt", ".prn" };
-        public const string DEFAULT_FILE_FILTER = "*.txt;*.prn";
+        public static readonly string[] VALID_FILE_EXTENSIONS = { ".txt", ".prn", ".zpl", ".imp" };
+        public const string DEFAULT_FILE_FILTER = "*.txt;*.prn;*.zpl;*.imp";
         public const string PDF_EXTENSION = ".pdf";
         public const string CONFIG_EXTENSION = ".json";
         public const string PID_EXTENSION = ".pid";

@@ -123,7 +123,7 @@ sudo chmod +x /etc/profile.d/zpl2pdf.sh
 ```json
 {
   "language": "es-ES",
-  "defaultWatchFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
+  "defaultListenFolder": "C:\\Users\\user\\Documents\\ZPL2PDF Auto Converter",
   "labelWidth": 7.5,
   "labelHeight": 15,
   "unit": "in",

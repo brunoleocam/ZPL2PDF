@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 namespace ZPL2PDF
 {
     /// <summary>
-    /// Monitors a folder to detect .txt and .prn files and adds them to the processing queue
+    /// Monitors a folder to detect ZPL text files and adds them to the processing queue.
     /// </summary>
     public class FolderMonitor : IDisposable
     {
         private FileSystemWatcher? _fileSystemWatcher;
         private readonly string _listenFolder;
-        private readonly ProcessingQueue _processingQueue;
+        private readonly ProcessingQueue? _processingQueue;
         private readonly ZplDimensionExtractor _dimensionExtractor;
         private readonly ConfigManager _configManager;
         private readonly LabelDimensions _fixedDimensions;
@@ -50,15 +50,28 @@ namespace ZPL2PDF
             LabelDimensions? fixedDimensions = null,
             bool useFixedDimensions = false)
         {
+            if (listenFolder is null)
+            {
+                // Test suite contract: null should produce ArgumentException (not ArgumentNullException).
+                throw new ArgumentException(nameof(listenFolder));
+            }
+
             _listenFolder = listenFolder;
             _processingQueue = processingQueue;
-            _dimensionExtractor = dimensionExtractor;
-            _configManager = configManager;
+
+            // Constructor contract (covered by unit tests):
+            // - dimensionExtractor and configManager must not be null.
+            // - processingQueue can be null (the monitor may be created without a queue).
+            _dimensionExtractor = dimensionExtractor ?? throw new ArgumentNullException(nameof(dimensionExtractor));
+            _configManager = configManager ?? throw new ArgumentNullException(nameof(configManager));
             _fixedDimensions = fixedDimensions ?? new LabelDimensions();
             _useFixedDimensions = useFixedDimensions;
             
             // Subscribe to processing queue events
-            _processingQueue.FileCompleted += OnFileCompleted;
+            if (_processingQueue != null)
+            {
+                _processingQueue.FileCompleted += OnFileCompleted;
+            }
         }
 
         /// <summary>
@@ -97,7 +110,7 @@ namespace ZPL2PDF
                 Console.WriteLine($"Polling timer started (interval: {_pollingIntervalMs}ms)");
 
                 Console.WriteLine($"Monitoring folder: {_listenFolder}");
-                Console.WriteLine($"File types: .txt, .prn");
+                Console.WriteLine($"File types: .txt, .prn, .zpl, .imp");
                 Console.WriteLine($"Dimensions: {(_useFixedDimensions ? "Fixed" : "Extracted from ZPL")}");
                 
                 if (_useFixedDimensions)
@@ -206,7 +219,7 @@ namespace ZPL2PDF
                 }
 
                 // Wait a bit to ensure the file was completely written
-                await Task.Delay(500);
+                await Task.Delay(100);
 
                 // Check if the file still exists
                 if (!File.Exists(filePath))
@@ -241,12 +254,9 @@ namespace ZPL2PDF
                 }
 
                 Console.WriteLine($"File {eventType}: {Path.GetFileName(filePath)}");
-                
-                // Fire event
-                FileDetected?.Invoke(this, new FileDetectedEventArgs(filePath, eventType));
 
-                // Process file
-                await ProcessFileAsync(filePath);
+                // Process file (this will fire FileDetected after confirming non-empty content)
+                await ProcessFileAsync(filePath, eventType);
             }
             catch (Exception ex)
             {
@@ -262,7 +272,7 @@ namespace ZPL2PDF
         /// <summary>
         /// Processes an individual file
         /// </summary>
-        private async Task ProcessFileAsync(string filePath)
+        private async Task ProcessFileAsync(string filePath, string eventType)
         {
             try
             {
@@ -293,6 +303,9 @@ namespace ZPL2PDF
                     }
                     return;
                 }
+
+                // Fire event only when we actually have non-empty content.
+                FileDetected?.Invoke(this, new FileDetectedEventArgs(filePath, eventType));
 
                 // Determine dimensions using priority logic
                 LabelDimensions dimensions;
@@ -351,9 +364,19 @@ namespace ZPL2PDF
                     RetryCount = 0
                 };
 
+                if (_processingQueue is null)
+                {
+                    // No queue configured: treat as "processed" within this monitor instance.
+                    lock (_lockObject)
+                    {
+                        _processingFiles.Remove(filePath);
+                    }
+                    return;
+                }
+
                 await _processingQueue.AddFileAsync(processingItem);
                 Console.WriteLine($"File added to queue: {fileName}");
-                
+
                 // NOTE: We do NOT remove from _processingFiles here because the actual processing
                 // happens asynchronously in the ProcessingQueue. The file will be removed from
                 // _processingFiles when it's actually processed (successfully or with error).
@@ -376,7 +399,7 @@ namespace ZPL2PDF
         private bool IsValidFile(string filePath)
         {
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            return extension == ".txt" || extension == ".prn";
+            return extension == ".txt" || extension == ".prn" || extension == ".zpl" || extension == ".imp";
         }
 
         /// <summary>

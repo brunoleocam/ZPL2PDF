@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ZPL2PDF.Shared;
 using ZPL2PDF.Domain.Services;
+using ZPL2PDF.Shared.Constants;
 using ZPL2PDF.Application.Interfaces;
 using ZPL2PDF.Application.Services;
 
@@ -44,6 +45,33 @@ namespace ZPL2PDF
                     fileContent = argumentProcessor.ZplContent;
                 }
 
+                // If requested, try direct PDF generation via Labelary.
+                if (_conversionService.TryConvertPdfDirectWithLabelary(
+                    fileContent,
+                    argumentProcessor.Width,
+                    argumentProcessor.Height,
+                    argumentProcessor.Unit,
+                    argumentProcessor.Dpi,
+                    argumentProcessor.RendererEngine,
+                    out var pdfBytes,
+                    string.IsNullOrWhiteSpace(argumentProcessor.FontsDirectory) ? null : argumentProcessor.FontsDirectory,
+                    argumentProcessor.FontMappings?.Count > 0 ? argumentProcessor.FontMappings : null))
+                {
+                    if (argumentProcessor.StandardOutput)
+                    {
+                        Stream stdout = Console.OpenStandardOutput();
+                        stdout.Write(pdfBytes!, 0, pdfBytes!.Length);
+                        stdout.Flush();
+                        return;
+                    }
+
+                    _pathService.EnsureDirectoryExists(argumentProcessor.OutputFolderPath);
+                    string outputPdf = Path.Combine(argumentProcessor.OutputFolderPath, argumentProcessor.OutputFileName);
+                    File.WriteAllBytes(outputPdf, pdfBytes!);
+                    Console.WriteLine($"PDF generated successfully: {outputPdf}");
+                    return;
+                }
+
                 var imageDataList = _conversionService.Convert(
                     fileContent,
                     argumentProcessor.Width,
@@ -51,10 +79,10 @@ namespace ZPL2PDF
                     argumentProcessor.Unit,
                     argumentProcessor.Dpi,
                     string.IsNullOrWhiteSpace(argumentProcessor.FontsDirectory) ? null : argumentProcessor.FontsDirectory,
-                    argumentProcessor.FontMappings?.Count > 0 ? argumentProcessor.FontMappings : null
-                );
+                    argumentProcessor.FontMappings?.Count > 0 ? argumentProcessor.FontMappings : null,
+                    argumentProcessor.RendererEngine);
 
-                // Process the generated images
+                // Process the generated PNG images and compose the final PDF locally.
                 ProcessImages(imageDataList, argumentProcessor);
             }
             catch (FileNotFoundException ex)
@@ -87,7 +115,17 @@ namespace ZPL2PDF
                 return;
             }
 
-            // Ensure the output folder exists
+            if (argumentProcessor.StandardOutput)
+            {
+                // Write the PDF bytes to stdout only. Do not write additional console text.
+                byte[] data = PdfGenerator.GeneratePdfToBytes(imageDataList);
+                Stream stdout = Console.OpenStandardOutput();
+                stdout.Write(data, 0, data.Length);
+                stdout.Flush();
+                return;
+            }
+
+            // Ensure the output folder exists (file output mode)
             _pathService.EnsureDirectoryExists(argumentProcessor.OutputFolderPath);
 
             string outputPdf = Path.Combine(argumentProcessor.OutputFolderPath, argumentProcessor.OutputFileName);

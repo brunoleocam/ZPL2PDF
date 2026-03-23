@@ -60,7 +60,7 @@ RUN dotnet restore ZPL2PDF.csproj
 # Copy source code
 COPY src/ ./src/
 COPY README.md LICENSE CHANGELOG.md ./
-COPY debian/ ./debian/
+ COPY scripts/release/packages/debian/ ./debian/
 
 # Build application
 RUN dotnet publish ZPL2PDF.csproj \

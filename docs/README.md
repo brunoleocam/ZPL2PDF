@@ -61,7 +61,7 @@ Documentation for contributors and developers:
 - 🔄 [Git Workflow](development/GIT_WORKFLOW_GUIDE.md) - Git workflow and branching strategy
 
 ### Internal Documentation
-- 🏗️ [Architecture Overview](development/ARCHITECTURE.md) *(Coming soon)*
+- 🏗️ [Architecture Overview](../wiki/Architecture-Overview.md)
 - 📚 [API Documentation](development/API.md) *(Coming soon)*
 
 ---

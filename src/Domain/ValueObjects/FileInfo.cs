@@ -139,7 +139,7 @@ namespace ZPL2PDF.Domain.ValueObjects
         /// <returns>True if valid, False otherwise</returns>
         public bool IsValidExtension()
         {
-            var validExtensions = new[] { ".txt", ".prn" };
+            var validExtensions = new[] { ".txt", ".prn", ".zpl", ".imp" };
             return Array.Exists(validExtensions, ext => 
                 ext.Equals(Extension, StringComparison.OrdinalIgnoreCase));
         }
@@ -157,7 +157,7 @@ namespace ZPL2PDF.Domain.ValueObjects
                 return "File extension cannot be null or empty";
 
             if (!IsValidExtension())
-                return $"Invalid file extension: {Extension}. Valid extensions are: .txt, .prn";
+                return $"Invalid file extension: {Extension}. Valid extensions are: .txt, .prn, .zpl, .imp";
 
             return string.Empty;
         }

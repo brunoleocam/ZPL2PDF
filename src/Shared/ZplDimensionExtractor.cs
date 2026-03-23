@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ZPL2PDF.Domain.Services;
 
 namespace ZPL2PDF
 {
     /// <summary>
     /// Extracts ZPL label dimensions (^PW and ^LL) and converts points to mm
     /// </summary>
-    public class ZplDimensionExtractor
+    public class ZplDimensionExtractor : IDimensionExtractor
     {
 
         /// <summary>

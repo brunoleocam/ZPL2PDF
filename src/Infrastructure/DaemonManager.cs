@@ -275,9 +275,7 @@ namespace ZPL2PDF
                     ProcessId = pid
                 };
 
-                // Get the directory where the PID file is stored
-                var pidFilePath = _pidManager.GetType().GetField("_pidFilePath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(_pidManager)?.ToString();
-                var infoFilePath = Path.Combine(Path.GetDirectoryName(pidFilePath ?? ""), "zpl2pdf.info");
+                var infoFilePath = GetDaemonInfoFilePath();
                 
                 // Save daemon info to file in a simple format
                 var lines = new[]
@@ -307,9 +305,7 @@ namespace ZPL2PDF
         {
             try
             {
-                // Get the directory where the PID file is stored
-                var pidFilePath = _pidManager.GetType().GetField("_pidFilePath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(_pidManager)?.ToString();
-                var infoFilePath = Path.Combine(Path.GetDirectoryName(pidFilePath ?? ""), "zpl2pdf.info");
+                var infoFilePath = GetDaemonInfoFilePath();
                 
                 if (!File.Exists(infoFilePath))
                 {
@@ -363,6 +359,17 @@ namespace ZPL2PDF
             {
                 return null;
             }
+        }
+
+        private string GetDaemonInfoFilePath()
+        {
+            var pidDirectory = Path.GetDirectoryName(_pidManager.PidFilePath);
+            if (string.IsNullOrWhiteSpace(pidDirectory))
+            {
+                return "zpl2pdf.info";
+            }
+
+            return Path.Combine(pidDirectory, "zpl2pdf.info");
         }
     }
 }
