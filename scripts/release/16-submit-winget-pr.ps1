@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Split-Path -Parent $ScriptDir
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 $RepoOwner = "brunoleocam"
 $RepoName = "ZPL2PDF"
 $WinGetRepo = "microsoft/winget-pkgs"

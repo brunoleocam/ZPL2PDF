@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using ZPL2PDF.Application.Services;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -17,17 +18,19 @@ namespace ZPL2PDF
         private readonly int _port;
         private readonly string _outputFolder;
         private readonly ConversionService _conversionService;
+        private readonly RendererEngine _rendererEngine;
         private TcpListener? _listener;
         private volatile bool _running;
         private const int ReadTimeoutMs = 30000;
         private const int DefaultDpi = 203;
         private const string DefaultUnit = "mm";
 
-        public TcpPrinterServer(int port, string outputFolder)
+        public TcpPrinterServer(int port, string outputFolder, RendererEngine rendererEngine = RendererEngine.Offline)
         {
             _port = port;
             _outputFolder = outputFolder ?? throw new ArgumentNullException(nameof(outputFolder));
             _conversionService = new ConversionService();
+            _rendererEngine = rendererEngine;
         }
 
         /// <summary>
@@ -109,15 +112,31 @@ namespace ZPL2PDF
 
             try
             {
-                var imageDataList = _conversionService.ConvertWithExtractedDimensions(zplContent, DefaultUnit, DefaultDpi);
-                if (imageDataList == null || imageDataList.Count == 0)
-                {
-                    return;
-                }
-
                 var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 var fileName = $"ZPL2PDF_TCP_{timestamp}.pdf";
                 var outputPath = Path.Combine(_outputFolder, fileName);
+
+                if (_conversionService.TryConvertPdfDirectWithLabelary(
+                    zplContent,
+                    explicitWidth: 0,
+                    explicitHeight: 0,
+                    unit: DefaultUnit,
+                    dpi: DefaultDpi,
+                    rendererEngine: _rendererEngine,
+                    out var pdfBytes))
+                {
+                    File.WriteAllBytes(outputPath, pdfBytes!);
+                    return;
+                }
+
+                var imageDataList = _conversionService.ConvertWithExtractedDimensions(
+                    zplContent,
+                    DefaultUnit,
+                    DefaultDpi,
+                    rendererEngine: _rendererEngine);
+                if (imageDataList == null || imageDataList.Count == 0)
+                    return;
+
                 PdfGenerator.GeneratePdf(imageDataList, outputPath);
             }
             catch (Exception ex)

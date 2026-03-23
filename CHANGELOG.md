@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.1.1] - 2026-03-20
+
+### 🔧 Changed
+
+- **Release layout**: Release automation scripts live under `release/scripts/`; Linux package sources under `scripts/release/packages/` (paths updated in docs and `CONTRIBUTING.md`).
+- **Conversion pipeline**: Shared Labelary PDF fallback path in `ConversionService` for CLI, REST API, TCP server, and daemon queue; internal cleanup of dimension types and daemon PID handling (no reflection).
+
+### 🛠️ Maintenance
+
+- **Windows installer build**: `release/scripts/08-build-installer.ps1` — safer post-build cleanup; optional `release/scripts/cleanup-installer-output.ps1` for `installer/Output`.
+- **Docker build context**: `.dockerignore` excludes non-essential trees (e.g. `tests`, `docs`, `release`, `.cursor`) for smaller/faster `docker build`.
+- **Repository**: `.gitignore` — track `.github` except `.github/prompts/` and `.github/skills/` (local Cursor/GitHub Copilot prompts stay private).
+
+---
+
 ## [3.1.0] - 2026-03-19
 
 ### ✨ Added

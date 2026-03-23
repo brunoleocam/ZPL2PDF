@@ -2,6 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using ZPL2PDF.Application.Interfaces;
+using ZPL2PDF.Application.Services;
+using ZPL2PDF.Domain.Services;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -17,6 +21,8 @@ namespace ZPL2PDF
         private readonly ZplDimensionExtractor _dimensionExtractor;
         private readonly ConfigManager _configManager;
         private readonly string? _customOutputFolder;
+        private readonly RendererEngine _rendererEngine;
+        private readonly IConversionService _conversionService;
         private bool _isDisposed = false;
         private bool _isProcessing = false;
 
@@ -50,8 +56,32 @@ namespace ZPL2PDF
             _dimensionExtractor = dimensionExtractor;
             _configManager = configManager;
             _customOutputFolder = customOutputFolder;
+            _rendererEngine = RendererEngine.Offline;
+            _conversionService = new ConversionService();
 
             // Start processing task
+            _processingTask = Task.Run(ProcessQueueAsync);
+        }
+
+        /// <summary>
+        /// ProcessingQueue constructor (with renderer engine).
+        /// </summary>
+        public ProcessingQueue(
+            ZplDimensionExtractor dimensionExtractor,
+            ConfigManager configManager,
+            int maxConcurrentFiles,
+            string? customOutputFolder,
+            RendererEngine rendererEngine)
+        {
+            _queue = new ConcurrentQueue<ProcessingItem>();
+            _semaphore = new SemaphoreSlim(maxConcurrentFiles, maxConcurrentFiles);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _dimensionExtractor = dimensionExtractor;
+            _configManager = configManager;
+            _customOutputFolder = customOutputFolder;
+            _rendererEngine = rendererEngine;
+            _conversionService = new ConversionService();
+
             _processingTask = Task.Run(ProcessQueueAsync);
         }
 
@@ -207,22 +237,40 @@ namespace ZPL2PDF
 
                     item.Dimensions = finalDimensions;
                 }
-                
-                for (int i = 0; i < labels.Count; i++)
+
+                // Output file info (used by both Labelary-direct PDF and PNG->PDF fallback).
+                var outputFileName = Path.ChangeExtension(item.FileName, ".pdf");
+                var outputFolder = _customOutputFolder ?? Path.GetDirectoryName(item.FilePath)!;
+                var outputPath = Path.Combine(outputFolder, outputFileName);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+
+                // If requested, try to return PDF directly from Labelary (no PNG composition).
+                if (_conversionService.TryConvertPdfDirectWithLabelary(
+                    item.Content,
+                    finalDimensions.WidthMm,
+                    finalDimensions.HeightMm,
+                    "mm",
+                    finalDimensions.Dpi,
+                    _rendererEngine,
+                    out var directPdfBytes))
                 {
-                    var label = labels[i];
-                    
-                    // Use the computed dimensions for this file.
-                    // Debug: Log what we're using
-                    //Console.WriteLine($"DEBUG - Using dimensions for label {i + 1}: {finalDimensions.WidthMm:F1}mm x {finalDimensions.HeightMm:F1}mm [{finalDimensions.Source}]");
-                    
-                    // Create specific renderer for this label
-                    var labelRenderer = new LabelRenderer(finalDimensions);
-                    var labelImages = labelRenderer.RenderLabels(new List<string> { label });
-                    allImageData.AddRange(labelImages);
-                    
-                    Console.WriteLine($"Label {i + 1}: {finalDimensions.WidthMm:F1}mm x {finalDimensions.HeightMm:F1}mm [{finalDimensions.Source}]");
+                    File.WriteAllBytes(outputPath, directPdfBytes!);
+                    var directFileInfo = new FileInfo(outputPath);
+                    Console.WriteLine($"PDF generated successfully: {outputFileName} ({directFileInfo.Length} bytes)");
+                    return true;
                 }
+                
+                var renderer = _rendererEngine switch
+                {
+                    RendererEngine.Labelary => (ILabelRenderer)new LabelaryRenderer(finalDimensions),
+                    RendererEngine.Auto => (ILabelRenderer)new AutoRenderer(finalDimensions),
+                    _ => (ILabelRenderer)new LabelRenderer(finalDimensions)
+                };
+
+                var labelImages = renderer.RenderLabels(labels);
+                allImageData.AddRange(labelImages);
+                Console.WriteLine($"Rendered {labels.Count} label(s) using renderer: {_rendererEngine}");
 
                 if (allImageData.Count == 0)
                 {
@@ -230,17 +278,8 @@ namespace ZPL2PDF
                     return false;
                 }
 
-                // Generate PDF
-                var outputFileName = Path.ChangeExtension(item.FileName, ".pdf");
-                var outputFolder = _customOutputFolder ?? Path.GetDirectoryName(item.FilePath)!;
-                var outputPath = Path.Combine(outputFolder, outputFileName);
-                
                 Console.WriteLine($"Output folder: {outputFolder}");
                 Console.WriteLine($"Output path: {outputPath}");
-                
-                // Ensure destination folder exists
-                Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
-                
                 Console.WriteLine($"Calling PdfGenerator.GeneratePdf with {allImageData.Count} images...");
                 PdfGenerator.GeneratePdf(allImageData, outputPath);
                 

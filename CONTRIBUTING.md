@@ -49,7 +49,7 @@ ZPL2PDF/
 │   ├── ZPL2PDF.Unit/     # Unit tests
 │   └── ZPL2PDF.Integration/ # Integration tests
 ├── docs/                  # Documentation
-└── build/                 # Build scripts
+└── scripts/               # Build and utility scripts
 ```
 
 ## 🧪 Testing

@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Xunit;
 using ZPL2PDF;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF.Tests.UnitTests.Presentation
 {
@@ -66,6 +67,48 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
 
             // Assert
             result.StandardOutput.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ParseConversionMode_WithRendererLabelary_SetsRendererEngine()
+        {
+            // Arrange
+            var parser = new ArgumentParser();
+            var zplContent = "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
+
+            var args = new[]
+            {
+                "-z", zplContent,
+                "-o", "/tmp",
+                "--renderer", "labelary"
+            };
+
+            // Act
+            var result = parser.ParseConversionMode(args, 0);
+
+            // Assert
+            result.RendererEngine.Should().Be(RendererEngine.Labelary);
+        }
+
+        [Fact]
+        public void ParseConversionMode_WithRendererAuto_SetsRendererEngine()
+        {
+            // Arrange
+            var parser = new ArgumentParser();
+            var zplContent = "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ";
+
+            var args = new[]
+            {
+                "-z", zplContent,
+                "-o", "/tmp",
+                "--renderer", "auto"
+            };
+
+            // Act
+            var result = parser.ParseConversionMode(args, 0);
+
+            // Assert
+            result.RendererEngine.Should().Be(RendererEngine.Auto);
         }
     }
 }

@@ -297,6 +297,66 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
         }
 
         [Fact]
+        public void FileDetection_WithValidZplFile_DetectsFile()
+        {
+            // Arrange
+            var fixedDimensions = new LabelDimensions { Width = 100, Height = 200, Dpi = 203 };
+            var folderMonitor = new FolderMonitor(
+                _testDirectory,
+                _processingQueue,
+                _dimensionExtractor,
+                _configManager,
+                fixedDimensions,
+                true
+            );
+
+            bool fileDetected = false;
+            folderMonitor.FileDetected += (sender, e) => fileDetected = true;
+
+            folderMonitor.StartWatching();
+
+            // Act
+            var testFile = Path.Combine(_testDirectory, "test.zpl");
+            File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
+
+            // Wait a bit for file detection
+            Thread.Sleep(500);
+
+            // Assert
+            fileDetected.Should().BeTrue();
+        }
+
+        [Fact]
+        public void FileDetection_WithValidImpFile_DetectsFile()
+        {
+            // Arrange
+            var fixedDimensions = new LabelDimensions { Width = 100, Height = 200, Dpi = 203 };
+            var folderMonitor = new FolderMonitor(
+                _testDirectory,
+                _processingQueue,
+                _dimensionExtractor,
+                _configManager,
+                fixedDimensions,
+                true
+            );
+
+            bool fileDetected = false;
+            folderMonitor.FileDetected += (sender, e) => fileDetected = true;
+
+            folderMonitor.StartWatching();
+
+            // Act
+            var testFile = Path.Combine(_testDirectory, "test.imp");
+            File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
+
+            // Wait a bit for file detection
+            Thread.Sleep(500);
+
+            // Assert
+            fileDetected.Should().BeTrue();
+        }
+
+        [Fact]
         public void FileDetection_WithInvalidFile_IgnoresFile()
         {
             // Arrange

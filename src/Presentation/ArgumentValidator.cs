@@ -50,9 +50,9 @@ namespace ZPL2PDF
                 }
 
                 var extension = Path.GetExtension(inputFilePath).ToLowerInvariant();
-                if (extension != ".txt" && extension != ".prn")
+                if (extension != ".txt" && extension != ".prn" && extension != ".zpl" && extension != ".imp")
                 {
-                    return (false, "Input file must be .txt or .prn");
+                    return (false, "Input file must be .txt, .prn, .zpl or .imp");
                 }
             }
 

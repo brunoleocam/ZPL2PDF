@@ -14,7 +14,7 @@ Una poderosa herramienta multiplataforma de línea de comandos que convierte arc
 
 ---
 
-## 🚀 **Novedades en v3.1.0**
+## 🚀 **Novedades en v3.1.1**
 
 ### 🐛 Correcciones
 - **Issue #45**: Corregidas etiquetas duplicadas o en blanco cuando `^XA` aparece dentro del payload base64 de `~DGR:` — `^XA` ahora se trata como inicio de etiqueta solo al inicio de línea o después de `^XZ`.
@@ -25,7 +25,7 @@ Una poderosa herramienta multiplataforma de línea de comandos que convierte arc
 
 ---
 
-## 🚀 **Novedades en v3.1.0**
+## 🚀 **Novedades en v3.1.1**
 
 ### 🐛 Correcciones
 - **Issue #39**: Procesamiento secuencial de gráficos para múltiples gráficos con el mismo nombre
@@ -42,7 +42,7 @@ Una poderosa herramienta multiplataforma de línea de comandos que convierte arc
 
 ---
 
-## 🚀 **Novedades en v3.1.0**
+## 🚀 **Novedades en v3.1.1**
 
 ### 🎉 Principales Nuevas Funcionalidades
 - 🎨 **Integración con API Labelary** - Renderizado ZPL de alta fidelidad con salida PDF vectorial
@@ -139,10 +139,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (paquete .deb)
 ```bash
 # Descargar paquete .deb
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-v3.1.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Instalar paquete
-sudo dpkg -i ZPL2PDF-v3.1.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Corregir dependencias si es necesario
 sudo apt-get install -f
@@ -252,8 +252,8 @@ ZPL2PDF server status              # Verificar estado del servidor TCP
 ## 📚 **Documentación**
 
 - 📖 [Documentación Completa](../README.md)
-- 🌍 [Configuración Multi-idioma](../LANGUAGE_CONFIGURATION.md)
-- 🐳 [Guía Docker](../DOCKER_GUIDE.md)
+- 🌍 [Configuración Multi-idioma](../guides/LANGUAGE_CONFIGURATION.md)
+- 🐳 [Guía Docker](../guides/DOCKER_GUIDE.md)
 - 🛠️ [Guía de Contribución](../../CONTRIBUTING.md)
 - 📋 [Registro de Cambios](../../CHANGELOG.md)
 

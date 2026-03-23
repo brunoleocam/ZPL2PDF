@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using PdfSharp.Drawing;
 
 namespace ZPL2PDF {
@@ -64,6 +65,32 @@ namespace ZPL2PDF {
                     return stream.ToArray();
                 }
             }
+        }
+
+        /// <summary>
+        /// Merges multiple PDF documents (given as bytes) into a single PDF.
+        /// </summary>
+        public static byte[] MergePdfsToBytes(List<byte[]> pdfDocuments)
+        {
+            using var outputDocument = new PdfDocument();
+
+            foreach (var pdfBytes in pdfDocuments)
+            {
+                if (pdfBytes == null || pdfBytes.Length == 0)
+                    continue;
+
+                using var ms = new MemoryStream(pdfBytes);
+                using var inputDocument = PdfReader.Open(ms, PdfDocumentOpenMode.Import);
+
+                for (int i = 0; i < inputDocument.PageCount; i++)
+                {
+                    outputDocument.AddPage(inputDocument.Pages[i]);
+                }
+            }
+
+            using var outStream = new MemoryStream();
+            outputDocument.Save(outStream, false);
+            return outStream.ToArray();
         }
     }
 }

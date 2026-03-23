@@ -7,7 +7,7 @@ VERSION="$(cat ZPL2PDF.csproj | grep '<Version>' | sed -E 's%\s*</?[A-Za-z]*>%%g
 RELEASE="1"
 ARCH="x86_64"  # or aarch64, armv7hl
 PROJECT_NAME="zpl2pdf"
-SPEC_FILE="rpm/${PROJECT_NAME}.spec"
+SPEC_FILE="release/packages/rpm/${PROJECT_NAME}.spec"
 
 echo "============================================"
 echo "   Building .rpm Package for ZPL2PDF"

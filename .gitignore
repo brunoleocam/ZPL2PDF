@@ -24,9 +24,9 @@ build/publish/
 *.cache
 *.log
 
-# Installers (generated files)
-installer/*.exe
-installer/*.sha256
+# Installers (generated files; includes installer/Output/)
+installer/**/*.exe
+installer/**/*.sha256
 
 # WinGet temporary files
 winget-pkgs-*/
@@ -41,6 +41,10 @@ Assets/
 # Release artifacts (build outputs uploaded to GitHub Release; do not version)
 release/*
 !release/README.md
+!release/scripts/
+!release/scripts/**
+!release/packages/
+!release/packages/**
 
 # Generated EditorConfig
 *.editorconfig
@@ -59,9 +63,6 @@ release/*
 # System files
 Thumbs.db
 Desktop.ini
-
-# Cursor
-.cursor/
 
 # Test directories and script output
 test-docker/
@@ -87,11 +88,12 @@ TESTES-MANUAIS-*.md
 coverage-out/
 TestResults/
 
-# Cursor (local IDE/agent config)
+# Cursor / local tooling (optional)
 .cursor/
 # GitHub prompts/skills (not versioned)
-.github/
-# Agent instructions (not versioned)
+.github/prompts/
+.github/skills/
+# Agent instructions (optional local-only; remove this line to version AGENTS.md)
 AGENTS.md
 # OpenSpec (local change tracking)
 openspec/

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ZPL2PDF
 {
     /// <summary>
-    /// Monitors a folder to detect .txt and .prn files and adds them to the processing queue
+    /// Monitors a folder to detect ZPL text files and adds them to the processing queue.
     /// </summary>
     public class FolderMonitor : IDisposable
     {
@@ -110,7 +110,7 @@ namespace ZPL2PDF
                 Console.WriteLine($"Polling timer started (interval: {_pollingIntervalMs}ms)");
 
                 Console.WriteLine($"Monitoring folder: {_listenFolder}");
-                Console.WriteLine($"File types: .txt, .prn");
+                Console.WriteLine($"File types: .txt, .prn, .zpl, .imp");
                 Console.WriteLine($"Dimensions: {(_useFixedDimensions ? "Fixed" : "Extracted from ZPL")}");
                 
                 if (_useFixedDimensions)
@@ -399,7 +399,7 @@ namespace ZPL2PDF
         private bool IsValidFile(string filePath)
         {
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            return extension == ".txt" || extension == ".prn";
+            return extension == ".txt" || extension == ".prn" || extension == ".zpl" || extension == ".imp";
         }
 
         /// <summary>

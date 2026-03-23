@@ -105,7 +105,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
 
             // Assert
             result.IsValid.Should().BeFalse();
-            result.ErrorMessage.Should().Contain("Input file must be .txt or .prn");
+            result.ErrorMessage.Should().Contain("Input file must be .txt, .prn, .zpl or .imp");
         }
 
         [Fact]
@@ -128,6 +128,36 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
         {
             // Arrange
             var testFile = Path.Combine(_testDirectory, "test.prn");
+            File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
+
+            // Act
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            result.ErrorMessage.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateConversionMode_WithZplFile_ReturnsValid()
+        {
+            // Arrange
+            var testFile = Path.Combine(_testDirectory, "test.zpl");
+            File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
+
+            // Act
+            var result = _validator.ValidateConversionMode(testFile, "", _testDirectory, 0, 0, "mm", false);
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            result.ErrorMessage.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateConversionMode_WithImpFile_ReturnsValid()
+        {
+            // Arrange
+            var testFile = Path.Combine(_testDirectory, "test.imp");
             File.WriteAllText(testFile, "^XA^FO50,50^A0N,50,50^FDTest Label^FS^XZ");
 
             // Act
