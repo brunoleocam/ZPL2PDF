@@ -23,9 +23,24 @@ namespace ZPL2PDF
         /// </summary>
         public ConfigManager()
         {
-            // Determine configuration file location (in executable folder)
-            var executablePath = System.AppContext.BaseDirectory;
-            _configFilePath = Path.Combine(executablePath, "zpl2pdf.json");
+            // Determine configuration file location.
+            // Integration tests can override via env var to isolate state.
+            var configuredConfigFolder = Environment.GetEnvironmentVariable("ZPL2PDF_CONFIG_FOLDER");
+            if (!string.IsNullOrWhiteSpace(configuredConfigFolder))
+            {
+                if (!Directory.Exists(configuredConfigFolder))
+                {
+                    Directory.CreateDirectory(configuredConfigFolder);
+                }
+
+                _configFilePath = Path.Combine(configuredConfigFolder, "zpl2pdf.json");
+            }
+            else
+            {
+                // Default: in executable folder
+                var executablePath = System.AppContext.BaseDirectory;
+                _configFilePath = Path.Combine(executablePath, "zpl2pdf.json");
+            }
             
             // Load configurations
             LoadConfig();

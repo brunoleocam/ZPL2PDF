@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ZPL2PDF.Application.Services;
 using ZPL2PDF.Infrastructure;
@@ -63,7 +64,12 @@ namespace ZPL2PDF
                 var configManager = new ConfigManager();
                 
                 // Create processing queue
-                var processingQueue = new ProcessingQueue(dimensionExtractor, configManager);
+                var processingQueue = new ProcessingQueue(
+                    dimensionExtractor,
+                    configManager,
+                    maxConcurrentFiles: 1,
+                    customOutputFolder: null,
+                    rendererEngine: argumentProcessor.RendererEngine);
                 
                 // Create fixed dimensions if using fixed dimensions
                 LabelDimensions? fixedDimensions = null;
@@ -121,7 +127,7 @@ namespace ZPL2PDF
                 folderMonitor.StartWatching();
 
                 // Keep running until interrupted
-                await Task.Delay(-1);
+                await Task.Delay(Timeout.InfiniteTimeSpan);
             }
             catch (Exception ex)
             {

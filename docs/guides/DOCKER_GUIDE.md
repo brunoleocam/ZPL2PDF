@@ -431,7 +431,7 @@ docker run --rm -e ZPL2PDF_LANGUAGE=es-ES zpl2pdf:2.0.0 /app/ZPL2PDF -help
 cat > zpl2pdf.json <<EOF
 {
   "language": "pt-BR",
-  "defaultWatchFolder": "/app/watch",
+  "defaultListenFolder": "/app/watch",
   "labelWidth": 10,
   "labelHeight": 5,
   "unit": "cm",
@@ -460,8 +460,9 @@ docker build \
 
 ```bash
 # Run with debug logging
+ # Adjust log level using `logLevel` from the mounted `zpl2pdf.json`
 docker run -it --rm \
-  -e ZPL2PDF_LOG_LEVEL=Debug \
+  -v ./zpl2pdf.json:/app/zpl2pdf.json \
   -v ./watch:/app/watch \
   zpl2pdf:2.0.0 \
   /app/ZPL2PDF run -l /app/watch

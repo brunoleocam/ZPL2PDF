@@ -81,35 +81,53 @@ namespace ZPL2PDF.Shared.Localization
             {
                 return key; // Fallback to key if initialization failed
             }
-            
+
+            string? localizedString = null;
+
+            // Some cultures can cause ResourceManager lookups to throw. We never want to lose
+            // the "fallback to en-US" behavior when that happens (unit tests depend on it).
             try
             {
-                var localizedString = _resourceManager.GetString(key, _currentCulture);
-                
-                if (string.IsNullOrEmpty(localizedString))
-                {
-                    // Try fallback to English
-                    var fallbackCulture = new CultureInfo("en-US");
-                    localizedString = _resourceManager.GetString(key, fallbackCulture);
-                }
-                
-                if (string.IsNullOrEmpty(localizedString))
-                {
-                    return key; // Fallback to key
-                }
-                
-                // Format string with arguments if provided
-                if (args.Length > 0)
-                {
-                    return string.Format(localizedString, args);
-                }
-                
-                return localizedString;
+                localizedString = _resourceManager.GetString(key, _currentCulture);
             }
             catch (Exception)
             {
-                return key; // Fallback to key on error
+                localizedString = null;
             }
+
+            if (string.IsNullOrEmpty(localizedString))
+            {
+                try
+                {
+                    var fallbackCulture = new CultureInfo("en-US");
+                    localizedString = _resourceManager.GetString(key, fallbackCulture);
+                }
+                catch (Exception)
+                {
+                    localizedString = null;
+                }
+            }
+
+            if (string.IsNullOrEmpty(localizedString))
+            {
+                return key; // Fallback to key
+            }
+
+            // Format string with arguments if provided
+            if (args.Length > 0)
+            {
+                try
+                {
+                    return string.Format(localizedString, args);
+                }
+                catch (Exception)
+                {
+                    // If formatting fails, return the raw template.
+                    return localizedString;
+                }
+            }
+
+            return localizedString;
         }
         
         /// <summary>

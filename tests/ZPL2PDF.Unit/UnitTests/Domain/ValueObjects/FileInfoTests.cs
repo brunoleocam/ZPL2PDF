@@ -215,6 +215,40 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.ValueObjects
         }
 
         [Fact]
+        public void IsValid_WithValidZplFile_ReturnsTrue()
+        {
+            // Arrange
+            var fileInfo = new FileInfo
+            {
+                FileName = "test.zpl",
+                Extension = ".zpl"
+            };
+
+            // Act
+            var result = fileInfo.IsValid();
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsValid_WithValidImpFile_ReturnsTrue()
+        {
+            // Arrange
+            var fileInfo = new FileInfo
+            {
+                FileName = "test.imp",
+                Extension = ".imp"
+            };
+
+            // Act
+            var result = fileInfo.IsValid();
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
         public void IsValid_WithEmptyFileName_ReturnsFalse()
         {
             // Arrange
@@ -304,6 +338,32 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.ValueObjects
         {
             // Arrange
             var fileInfo = new FileInfo { Extension = ".prn" };
+
+            // Act
+            var result = fileInfo.IsValidExtension();
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsValidExtension_WithZplExtension_ReturnsTrue()
+        {
+            // Arrange
+            var fileInfo = new FileInfo { Extension = ".zpl" };
+
+            // Act
+            var result = fileInfo.IsValidExtension();
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsValidExtension_WithImpExtension_ReturnsTrue()
+        {
+            // Arrange
+            var fileInfo = new FileInfo { Extension = ".imp" };
 
             // Act
             var result = fileInfo.IsValidExtension();
@@ -446,7 +506,7 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.ValueObjects
             var result = fileInfo.GetValidationError();
 
             // Assert
-            result.Should().Be("Invalid file extension: .doc. Valid extensions are: .txt, .prn");
+            result.Should().Be("Invalid file extension: .doc. Valid extensions are: .txt, .prn, .zpl, .imp");
         }
 
         #endregion

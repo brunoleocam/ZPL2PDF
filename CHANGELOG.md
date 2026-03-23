@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.1.1] - 2026-03-20
+
+### 🔧 Changed
+
+- **Release layout**: Release automation scripts live under `release/scripts/`; Linux package sources under `scripts/release/packages/` (paths updated in docs and `CONTRIBUTING.md`).
+- **Conversion pipeline**: Shared Labelary PDF fallback path in `ConversionService` for CLI, REST API, TCP server, and daemon queue; internal cleanup of dimension types and daemon PID handling (no reflection).
+
+### 🛠️ Maintenance
+
+- **Windows installer build**: `release/scripts/08-build-installer.ps1` — safer post-build cleanup; optional `release/scripts/cleanup-installer-output.ps1` for `installer/Output`.
+- **Docker build context**: `.dockerignore` excludes non-essential trees (e.g. `tests`, `docs`, `release`, `.cursor`) for smaller/faster `docker build`.
+- **Repository**: `.gitignore` — track `.github` except `.github/prompts/` and `.github/skills/` (local Cursor/GitHub Copilot prompts stay private).
+
+---
+
+## [3.1.0] - 2026-03-19
+
+### ✨ Added
+
+- **`--stdout` (conversion mode)**: write the generated PDF to standard output (binary). With `--stdout`, `-o` is not required and no extra text is written to stdout.
+
+### 🔧 Changed
+
+- **Default output PDF name**: if `-n` is omitted, the PDF name is derived from the input file stem (e.g. `label.txt` → `label.pdf`); for `-z`, a timestamped `ZPL2PDF_*.pdf` name is used (no implicit `output.pdf`).
+- **Linux packages**: `scripts/build-deb.sh` and `scripts/build-rpm.sh` take `VERSION` from `<Version>` in `ZPL2PDF.csproj` instead of a hardcoded value.
+- **Dependencies (offline PDF)**: **BinaryKits.Zpl.Label** 3.3.1, **BinaryKits.Zpl.Viewer** 1.3.1, **PDFsharp** 6.2.4 (replaces PdfSharpCore). Re-verify Docker/Linux rendering if you relied on the older BinaryKits pin documented for 3.0.3; see [LINUX-RENDERING.md](docs/guides/LINUX-RENDERING.md).
+
+### 🐛 Fixed
+
+- **Dimensions**: `-u` is required whenever `-w` / `-h` are set, including when the unit is `mm` (consistent validation).
+- **Aztec `^B0`**: preprocess maps `^B0` → `^BO` so the offline viewer accepts Aztec barcodes (BinaryKits recognizes `^BO`).
+
+### 🙏 Acknowledgements
+
+- Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.0.
+
+---
+
 ## [3.0.3] - 2026-03-03
 
 ### 🐛 Fixed

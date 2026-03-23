@@ -34,9 +34,8 @@ src/
 │   │   ├── IPdfGenerator.cs
 │   │   ├── IFileValidator.cs
 │   │   └── IDimensionExtractor.cs
-│   └── ValueObjects/    # Immutable Value Objects
+│   └── ValueObjects/    # Value Objects
 │       ├── ConversionOptions.cs
-│       ├── LabelDimensions.cs
 │       ├── FileInfo.cs
 │       ├── ProcessingResult.cs
 │       └── DaemonConfiguration.cs
@@ -125,7 +124,6 @@ Output PDFs
 **Purpose**: Business logic and domain rules
 
 **Key Concepts**:
-- `LabelDimensions`: Width, height, unit, DPI
 - `ConversionOptions`: User-specified options
 - `ProcessingResult`: Conversion outcomes
 - Domain interfaces (no implementations)
@@ -171,14 +169,12 @@ public class ConversionService : IConversionService
 
 ### Value Objects
 ```csharp
-public record LabelDimensions(
-    double Width,
-    double Height,
-    string Unit,
-    int Dpi)
+public class ConversionOptions
 {
-    public double WidthInMm => ConvertToMm(Width, Unit);
-    public double HeightInMm => ConvertToMm(Height, Unit);
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public string Unit { get; set; } = "mm";
+    public int Dpi { get; set; } = 203;
 }
 ```
 

@@ -27,6 +27,7 @@ namespace ZPL2PDF
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_ZPL_CONTENT));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_OUTPUT_FOLDER));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_OUTPUT_NAME));
+            Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_STDOUT));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_WIDTH));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_HEIGHT));
             Console.WriteLine(LocalizationManager.GetString(ResourceKeys.HELP_PARAM_DENSITY));

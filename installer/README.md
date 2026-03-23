@@ -81,6 +81,16 @@ This creates the required files in `build/publish/`.
 .\installer\build-installer.ps1 -Version "3.0.0"
 ```
 
+### **Optional: Clean old installer artifacts**
+
+```powershell
+# Remove old installer artifacts and keep only one version
+.\release\scripts\cleanup-installer-output.ps1 -KeepVersion "3.1.1"
+
+# Preview only (no deletion)
+.\release\scripts\cleanup-installer-output.ps1 -KeepVersion "3.1.1" -WhatIf
+```
+
 ---
 
 ## 📦 **What Gets Installed**

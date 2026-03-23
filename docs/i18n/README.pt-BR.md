@@ -14,7 +14,7 @@ Uma ferramenta poderosa e multiplataforma que converte arquivos ZPL (Zebra Progr
 
 ---
 
-## 🚀 **Novidades na v3.0.3**
+## 🚀 **Novidades na v3.1.1**
 
 ### 🐛 Correções
 - **Issue #45**: Corrigidas etiquetas duplicadas ou em branco quando `^XA` aparece dentro do payload base64 de `~DGR:` — `^XA` agora é tratado como início de etiqueta apenas no início da linha ou após `^XZ`.
@@ -25,7 +25,7 @@ Uma ferramenta poderosa e multiplataforma que converte arquivos ZPL (Zebra Progr
 
 ---
 
-## 🚀 **Novidades na v3.0.3**
+## 🚀 **Novidades na v3.1.1**
 
 ### 🐛 Correções
 - **Issue #39**: Processamento sequencial de gráficos para múltiplos gráficos com o mesmo nome
@@ -42,7 +42,7 @@ Uma ferramenta poderosa e multiplataforma que converte arquivos ZPL (Zebra Progr
 
 ---
 
-## 🚀 **Novidades na v3.0.3**
+## 🚀 **Novidades na v3.1.1**
 
 ### 🎉 Principais Novas Funcionalidades
 - 🎨 **Integração com API Labelary** - Renderização ZPL de alta fidelidade com saída PDF vetorial
@@ -149,10 +149,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (pacote .deb)
 ```bash
 # Baixar pacote .deb das releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Instalar pacote
-sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # Corrigir dependências se necessário
 sudo apt-get install -f
@@ -324,15 +324,15 @@ docker run -d \
   brunoleocam/zpl2pdf:latest
 ```
 
-📘 **Guia Completo Docker:** [docs/DOCKER_GUIDE.md](../DOCKER_GUIDE.md)
+📘 **Guia Completo Docker:** [docs/guides/DOCKER_GUIDE.md](../guides/DOCKER_GUIDE.md)
 
 ---
 
 ## 📚 **Documentação**
 
 - 📖 [Documentação Completa](../README.md)
-- 🌍 [Configuração Multi-idioma](../LANGUAGE_CONFIGURATION.md)
-- 🐳 [Guia Docker](../DOCKER_GUIDE.md)
+- 🌍 [Configuração Multi-idioma](../guides/LANGUAGE_CONFIGURATION.md)
+- 🐳 [Guia Docker](../guides/DOCKER_GUIDE.md)
 - 🛠️ [Guia de Contribuição](../../CONTRIBUTING.md)
 - 📋 [Changelog](../../CHANGELOG.md)
 

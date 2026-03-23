@@ -42,7 +42,7 @@ namespace ZPL2PDF.Tests.UnitTests.Application
         }
 
         [Fact]
-        public void ConvertWithExplicitDimensions_WithEmptyZpl_ThrowsArgumentException()
+        public void ConvertWithExplicitDimensions_WithEmptyZpl_ReturnsEmptyList()
         {
             // Arrange
             var zplContent = "";
@@ -51,16 +51,16 @@ namespace ZPL2PDF.Tests.UnitTests.Application
             var unit = "in";
             var dpi = 203;
 
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => 
-                _conversionService.ConvertWithExplicitDimensions(zplContent, width, height, unit, dpi));
-            
-            exception.ParamName.Should().Be("zplContent");
-            exception.Message.Should().Contain("cannot be null or empty");
+            // Act
+            var result = _conversionService.ConvertWithExplicitDimensions(zplContent, width, height, unit, dpi);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
         }
 
         [Fact]
-        public void ConvertWithExplicitDimensions_WithNullZpl_ThrowsArgumentException()
+        public void ConvertWithExplicitDimensions_WithNullZpl_ReturnsEmptyList()
         {
             // Arrange
             string zplContent = null;
@@ -69,16 +69,16 @@ namespace ZPL2PDF.Tests.UnitTests.Application
             var unit = "in";
             var dpi = 203;
 
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => 
-                _conversionService.ConvertWithExplicitDimensions(zplContent, width, height, unit, dpi));
-            
-            exception.ParamName.Should().Be("zplContent");
-            exception.Message.Should().Contain("cannot be null or empty");
+            // Act
+            var result = _conversionService.ConvertWithExplicitDimensions(zplContent, width, height, unit, dpi);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
         }
 
         [Fact]
-        public void ConvertWithExplicitDimensions_WithWhitespaceZpl_ThrowsArgumentException()
+        public void ConvertWithExplicitDimensions_WithWhitespaceZpl_ReturnsEmptyList()
         {
             // Arrange
             var zplContent = "   ";
@@ -87,12 +87,12 @@ namespace ZPL2PDF.Tests.UnitTests.Application
             var unit = "in";
             var dpi = 203;
 
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => 
-                _conversionService.ConvertWithExplicitDimensions(zplContent, width, height, unit, dpi));
-            
-            exception.ParamName.Should().Be("zplContent");
-            exception.Message.Should().Contain("cannot be null or empty");
+            // Act
+            var result = _conversionService.ConvertWithExplicitDimensions(zplContent, width, height, unit, dpi);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
         }
 
         [Fact]
@@ -137,35 +137,35 @@ namespace ZPL2PDF.Tests.UnitTests.Application
         }
 
         [Fact]
-        public void ConvertWithExtractedDimensions_WithEmptyZpl_ThrowsArgumentException()
+        public void ConvertWithExtractedDimensions_WithEmptyZpl_ReturnsEmptyList()
         {
             // Arrange
             var zplContent = "";
             var unit = "mm";
             var dpi = 203;
 
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => 
-                _conversionService.ConvertWithExtractedDimensions(zplContent, unit, dpi));
-            
-            exception.ParamName.Should().Be("zplContent");
-            exception.Message.Should().Contain("cannot be null or empty");
+            // Act
+            var result = _conversionService.ConvertWithExtractedDimensions(zplContent, unit, dpi);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
         }
 
         [Fact]
-        public void ConvertWithExtractedDimensions_WithNullZpl_ThrowsArgumentException()
+        public void ConvertWithExtractedDimensions_WithNullZpl_ReturnsEmptyList()
         {
             // Arrange
             string zplContent = null;
             var unit = "mm";
             var dpi = 203;
 
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => 
-                _conversionService.ConvertWithExtractedDimensions(zplContent, unit, dpi));
-            
-            exception.ParamName.Should().Be("zplContent");
-            exception.Message.Should().Contain("cannot be null or empty");
+            // Act
+            var result = _conversionService.ConvertWithExtractedDimensions(zplContent, unit, dpi);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
         }
 
         #endregion

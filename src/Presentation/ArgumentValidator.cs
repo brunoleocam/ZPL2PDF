@@ -18,8 +18,16 @@ namespace ZPL2PDF
         /// <param name="width">Label width</param>
         /// <param name="height">Label height</param>
         /// <param name="unit">Unit of measurement</param>
+        /// <param name="standardOutput">When true, PDF is written to stdout and output folder is optional.</param>
         /// <returns>Validation result with error message if invalid</returns>
-        public (bool IsValid, string ErrorMessage) ValidateConversionMode(string inputFilePath, string zplContent, string outputFolderPath, double width, double height, string unit)
+        public (bool IsValid, string ErrorMessage) ValidateConversionMode(
+            string inputFilePath,
+            string zplContent,
+            string outputFolderPath,
+            double width,
+            double height,
+            string unit,
+            bool standardOutput)
         {
             // Must have either input file or ZPL content
             if (string.IsNullOrWhiteSpace(inputFilePath) && string.IsNullOrWhiteSpace(zplContent))
@@ -42,14 +50,14 @@ namespace ZPL2PDF
                 }
 
                 var extension = Path.GetExtension(inputFilePath).ToLowerInvariant();
-                if (extension != ".txt" && extension != ".prn")
+                if (extension != ".txt" && extension != ".prn" && extension != ".zpl" && extension != ".imp")
                 {
-                    return (false, "Input file must be .txt or .prn");
+                    return (false, "Input file must be .txt, .prn, .zpl or .imp");
                 }
             }
 
-            // Output folder is required
-            if (string.IsNullOrWhiteSpace(outputFolderPath))
+            // Output folder is required only when writing to file.
+            if (string.IsNullOrWhiteSpace(outputFolderPath) && !standardOutput)
             {
                 return (false, "Output folder (-o) is required");
             }
@@ -109,7 +117,7 @@ namespace ZPL2PDF
             // Check if any dimension parameter is explicitly specified (not default values)
             bool hasWidth = width > 0;
             bool hasHeight = height > 0;
-            bool hasUnit = !string.IsNullOrWhiteSpace(unit) && IsValidUnit(unit) && unit != "mm"; // "mm" is default
+            bool hasUnit = !string.IsNullOrWhiteSpace(unit) && IsValidUnit(unit);
 
             // Check if any dimension is specified - only consider it specified if width OR height is > 0
             if (hasWidth || hasHeight)

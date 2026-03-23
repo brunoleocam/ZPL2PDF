@@ -12,14 +12,14 @@ namespace ZPL2PDF.Domain.Services
         /// </summary>
         /// <param name="zplContent">ZPL content to analyze</param>
         /// <returns>List of extracted dimensions for each label</returns>
-        List<LabelDimensions> ExtractDimensions(string zplContent);
+        List<global::ZPL2PDF.LabelDimensions> ExtractDimensions(string zplContent);
 
         /// <summary>
         /// Extracts dimensions from a single ZPL label
         /// </summary>
         /// <param name="zplLabel">Single ZPL label string</param>
         /// <returns>Extracted dimensions or null if not found</returns>
-        LabelDimensions ExtractDimensionsFromLabel(string zplLabel);
+        global::ZPL2PDF.LabelDimensions ExtractDimensionsFromLabel(string zplLabel);
 
         /// <summary>
         /// Applies priority logic to determine final dimensions
@@ -30,7 +30,12 @@ namespace ZPL2PDF.Domain.Services
         /// <param name="extractedDimensions">Extracted dimensions from ZPL</param>
         /// <param name="dpi">DPI to use for conversions</param>
         /// <returns>Final dimensions to use</returns>
-        LabelDimensions ApplyPriorityLogic(double? explicitWidth, double? explicitHeight, string unit, LabelDimensions extractedDimensions, int dpi = 203);
+        global::ZPL2PDF.LabelDimensions ApplyPriorityLogic(
+            double? explicitWidth,
+            double? explicitHeight,
+            string unit,
+            global::ZPL2PDF.LabelDimensions extractedDimensions,
+            int dpi = 203);
 
         /// <summary>
         /// Converts points to millimeters
@@ -41,14 +46,4 @@ namespace ZPL2PDF.Domain.Services
         double ConvertPointsToMm(int points, int dpi = 203);
     }
 
-    /// <summary>
-    /// Represents label dimensions
-    /// </summary>
-    public class LabelDimensions
-    {
-        public double Width { get; set; }
-        public double Height { get; set; }
-        public string Unit { get; set; } = "mm";
-        public int Dpi { get; set; } = 203;
-    }
 }

@@ -14,7 +14,7 @@
 
 ---
 
-## 🚀 **v3.0.3新功能**
+## 🚀 **v3.1.1新功能**
 
 ### 🐛 错误修复
 - **Issue #45**：当 `^XA` 出现在 `~DGR:` 的 base64 有效负载内时，修复重复或空白标签 — `^XA` 仅在行首或 `^XZ` 之后被视为标签开始。
@@ -25,7 +25,7 @@
 
 ---
 
-## 🚀 **v3.0.3新功能**
+## 🚀 **v3.1.1新功能**
 
 ### 🐛 错误修复
 - **Issue #39**：同名多个图形的顺序处理
@@ -42,7 +42,7 @@
 
 ---
 
-## 🚀 **v3.0.3新功能**
+## 🚀 **v3.1.1新功能**
 
 ### 🎉 主要新功能
 - 🎨 **Labelary API集成** - 高保真ZPL渲染，矢量PDF输出
@@ -139,10 +139,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian（.deb包）
 ```bash
 # 下载 .deb 包
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.0.3/ZPL2PDF-v3.0.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # 安装包
-sudo dpkg -i ZPL2PDF-v3.0.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
 
 # 如需修复依赖关系
 sudo apt-get install -f
@@ -252,8 +252,8 @@ ZPL2PDF server status          # 检查TCP服务器状态
 ## 📚 **文档**
 
 - 📖 [完整文档](../README.md)
-- 🌍 [多语言配置](../LANGUAGE_CONFIGURATION.md)
-- 🐳 [Docker指南](../DOCKER_GUIDE.md)
+- 🌍 [多语言配置](../guides/LANGUAGE_CONFIGURATION.md)
+- 🐳 [Docker指南](../guides/DOCKER_GUIDE.md)
 - 🛠️ [贡献指南](../../CONTRIBUTING.md)
 - 📋 [更新日志](../../CHANGELOG.md)
 

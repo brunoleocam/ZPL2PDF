@@ -80,7 +80,7 @@
     <value>MODO CONVERSIÓN:</value>
   </data>
   <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
-    <value>Uso: ZPL2PDF.exe -i &lt;ruta_archivo_entrada&gt; -o &lt;carpeta_salida&gt; [-n &lt;nombre_archivo_salida&gt;] | -z &lt;contenido_zpl&gt;</value>
+    <value>Uso: ZPL2PDF.exe -i &lt;ruta_archivo_entrada&gt; (-o &lt;carpeta_salida&gt; | --stdout) [opciones] | -z &lt;contenido_zpl&gt; (-o &lt;carpeta_salida&gt; | --stdout) [opciones]</value>
   </data>
   <data name="HELP_DAEMON_MODE" xml:space="preserve">
     <value>MODO DAEMON:</value>
@@ -89,7 +89,7 @@
     <value>Uso: ZPL2PDF.exe start [opciones] | stop | status | run [opciones]</value>
   </data>
   <data name="DAEMON_STARTED_SUCCESS" xml:space="preserve">
-    <value>¡Daemon iniciado con éxito! PID: {0}</value>
+    <value>Daemon iniciado con éxito! PID: {0}</value>
   </data>
   <data name="DAEMON_STOPPED_SUCCESS" xml:space="preserve">
     <value>¡Daemon detenido con éxito!</value>
@@ -161,10 +161,13 @@
     <value>  -z &lt;contenido_zpl&gt;           Contenido ZPL como cadena</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
-    <value>  -o &lt;carpeta_salida&gt;    Ruta a la carpeta donde se guardará el archivo PDF</value>
+    <value>  -o &lt;carpeta_salida&gt;    Carpeta de salida del PDF (obligatoria salvo con --stdout)</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
-    <value>  -n &lt;nombre_archivo_salida&gt;      Nombre del archivo PDF de salida (opcional)</value>
+    <value>  -n &lt;nombre_archivo_salida&gt;      Nombre del PDF de salida (opcional; predeterminado: base del archivo de entrada .pdf, o nombre con marca de tiempo con -z)</value>
+  </data>
+  <data name="HELP_PARAM_STDOUT" xml:space="preserve">
+    <value>  --stdout                   Escribe el PDF solo en la salida estándar (binario; -o no obligatorio)</value>
   </data>
   <data name="HELP_PARAM_WIDTH" xml:space="preserve">
     <value>  -w &lt;ancho&gt;                 Ancho de la etiqueta (acepta . o , como separador decimal)</value>

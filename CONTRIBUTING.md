@@ -49,7 +49,7 @@ ZPL2PDF/
 │   ├── ZPL2PDF.Unit/     # Unit tests
 │   └── ZPL2PDF.Integration/ # Integration tests
 ├── docs/                  # Documentation
-└── build/                 # Build scripts
+└── scripts/               # Build and utility scripts
 ```
 
 ## 🧪 Testing
@@ -65,8 +65,10 @@ dotnet test tests/ZPL2PDF.Unit/
 # Run integration tests only
 dotnet test tests/ZPL2PDF.Integration/
 
-# Run with coverage
-dotnet test --collect:"XPlat Code Coverage"
+# Run with coverage (Cobertura XML under ./coverage-out)
+dotnet test tests/ZPL2PDF.Unit/ZPL2PDF.Unit.csproj --collect:"XPlat Code Coverage" --results-directory ./coverage-out -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+# Then open coverage-out/*/coverage.cobertura.xml or generate HTML with ReportGenerator:
+# https://github.com/danielpalme/ReportGenerator
 ```
 
 ### Test Guidelines

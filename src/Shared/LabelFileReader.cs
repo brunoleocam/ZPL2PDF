@@ -296,6 +296,9 @@ namespace ZPL2PDF {
             // Remove ^FN<number> when followed by ^FD
             string result = FieldNumberRegex.Replace(content, string.Empty);
 
+            // Work around typo in BinaryKits.Zpl.Viewer: it recognizes ^BO, but not ^B0.
+            result = Regex.Replace(result, @"\^B0", "^BO", RegexOptions.IgnoreCase);
+
             // Decode ^FH hex sequences (_XX) in field data as UTF-8 so ã, ç, ú render correctly
             result = DecodeFhHexInFieldData(result);
 
@@ -307,13 +310,79 @@ namespace ZPL2PDF {
         /// Prevents BinaryKits from interpreting UTF-8 bytes as Latin-1 (e.g. Ã£ instead of ã).
         /// </summary>
         private static string DecodeFhHexInFieldData(string zpl) {
-            // Match ^FD ... ^FS (non-greedy, allow newlines). Timeout to avoid ReDoS.
-            var fdFsRegex = new Regex(@"\^FD(.*?)\^FS", RegexOptions.Singleline | RegexOptions.IgnoreCase, TimeSpan.FromSeconds(5));
-            return fdFsRegex.Replace(zpl, match => {
-                string fieldData = match.Groups[1].Value;
-                string decoded = DecodeFhHexSequence(fieldData);
-                return "^FD" + decoded + "^FS";
-            });
+            if (string.IsNullOrEmpty(zpl)) return zpl ?? string.Empty;
+
+            var sb = new StringBuilder(zpl.Length);
+            int i = 0;
+
+            // Only decode _XX when the next field is explicitly marked with ^FH.
+            bool decodeHexForNextField = false;
+
+            // Barcode payload fields should NOT be UTF-8 decoded, otherwise content gets truncated/corrupted.
+            // This is set when we encounter a ^B* instruction and consumed when we process the next ^FD...^FS.
+            bool barcodeFieldPending = false;
+
+            while (i < zpl.Length) {
+                // ^FH: next ^FD is hex-encoded field data
+                if (i + 3 <= zpl.Length &&
+                    zpl[i] == '^' &&
+                    (zpl[i + 1] == 'F' || zpl[i + 1] == 'f') &&
+                    (zpl[i + 2] == 'H' || zpl[i + 2] == 'h')) {
+                    sb.Append(zpl, i, 3);
+                    decodeHexForNextField = true;
+                    i += 3;
+                    continue;
+                }
+
+                // ^FD...^FS: field data block
+                if (i + 3 <= zpl.Length &&
+                    zpl[i] == '^' &&
+                    (zpl[i + 1] == 'F' || zpl[i + 1] == 'f') &&
+                    (zpl[i + 2] == 'D' || zpl[i + 2] == 'd')) {
+                    int fieldDataStart = i + 3;
+                    int fsIndex = zpl.IndexOf("^FS", fieldDataStart, StringComparison.OrdinalIgnoreCase);
+                    if (fsIndex < 0) {
+                        // Malformed label; copy remainder as-is.
+                        sb.Append(zpl.Substring(i));
+                        break;
+                    }
+
+                    string fieldData = zpl.Substring(fieldDataStart, fsIndex - fieldDataStart);
+
+                    bool shouldDecode = decodeHexForNextField && !barcodeFieldPending;
+                    string decoded = shouldDecode ? DecodeFhHexSequence(fieldData) : fieldData;
+
+                    sb.Append(zpl, i, 3);
+                    sb.Append(decoded);
+                    sb.Append(zpl, fsIndex, 3);
+
+                    i = fsIndex + 3;
+                    decodeHexForNextField = false;
+                    barcodeFieldPending = false;
+                    continue;
+                }
+
+                // ^B*: barcodes. We must avoid UTF-8 decoding the payload that comes in the next ^FD...^FS.
+                if (i + 2 < zpl.Length &&
+                    zpl[i] == '^' &&
+                    (zpl[i + 1] == 'B' || zpl[i + 1] == 'b')) {
+                    // Skip ^BY (barcode parameter/mode), but still treat most ^B* payload producers as barcodes.
+                    char barcodeType = zpl[i + 2];
+                    if (barcodeType != 'Y' && barcodeType != 'y') {
+                        barcodeFieldPending = true;
+                    }
+
+                    sb.Append(zpl, i, 2); // Copy "^B" verbatim
+                    i += 2;
+                    continue;
+                }
+
+                // Default: copy char
+                sb.Append(zpl[i]);
+                i++;
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>

@@ -80,7 +80,7 @@
     <value>KONVERTIERUNGSMODUS:</value>
   </data>
   <data name="HELP_CONVERSION_USAGE" xml:space="preserve">
-    <value>Verwendung: ZPL2PDF.exe -i &lt;Eingabedateipfad&gt; -o &lt;Ausgabeordner&gt; [-n &lt;Ausgabedateiname&gt;] | -z &lt;ZPL-Inhalt&gt;</value>
+    <value>Verwendung: ZPL2PDF.exe -i &lt;Eingabedateipfad&gt; (-o &lt;Ausgabeordner&gt; | --stdout) [Optionen] | -z &lt;ZPL-Inhalt&gt; (-o &lt;Ausgabeordner&gt; | --stdout) [Optionen]</value>
   </data>
   <data name="HELP_DAEMON_MODE" xml:space="preserve">
     <value>DAEMON-MODUS:</value>
@@ -161,10 +161,13 @@
     <value>  -z &lt;zpl_inhalt&gt;           ZPL-Inhalt als Zeichenfolge</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_FOLDER" xml:space="preserve">
-    <value>  -o &lt;ausgabeordner_pfad&gt;    Pfad zum Ordner, in dem die PDF-Datei gespeichert wird</value>
+    <value>  -o &lt;ausgabeordner_pfad&gt;    Ausgabeordner für die PDF-Datei (erforderlich außer mit --stdout)</value>
   </data>
   <data name="HELP_PARAM_OUTPUT_NAME" xml:space="preserve">
-    <value>  -n &lt;ausgabedatei_name&gt;      Name der Ausgabe-PDF-Datei (optional)</value>
+    <value>  -n &lt;ausgabedatei_name&gt;      Name der Ausgabe-PDF (optional; Standard: Basisname der Eingabedatei .pdf oder zeitgestempelter Name mit -z)</value>
+  </data>
+  <data name="HELP_PARAM_STDOUT" xml:space="preserve">
+    <value>  --stdout                   PDF nur auf die Standardausgabe schreiben (binär; -o nicht erforderlich)</value>
   </data>
   <data name="HELP_PARAM_WIDTH" xml:space="preserve">
     <value>  -w &lt;breite&gt;                 Breite des Etiketts (akzeptiert . oder , als Dezimaltrennzeichen)</value>
