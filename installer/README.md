@@ -85,10 +85,10 @@ This creates the required files in `build/publish/`.
 
 ```powershell
 # Remove old installer artifacts and keep only one version
-.\release\scripts\cleanup-installer-output.ps1 -KeepVersion "3.1.1"
+.\scripts\release\cleanup-installer-output.ps1 -KeepVersion "3.1.1"
 
 # Preview only (no deletion)
-.\release\scripts\cleanup-installer-output.ps1 -KeepVersion "3.1.1" -WhatIf
+.\scripts\release\cleanup-installer-output.ps1 -KeepVersion "3.1.1" -WhatIf
 ```
 
 ---

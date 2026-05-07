@@ -53,7 +53,7 @@ Developer commits code
         ↓
     Is this a Release Tag? ─── NO ──→ ✅ End (artifacts saved)
         ↓
-       YES (v3.1.0, v3.1.0, etc.)
+       YES (v3.1.2, v3.1.2, etc.)
         ↓
     ┌─────────────────────────────────────┐
     │   Step 5: Publish Docker Images     │
@@ -110,7 +110,7 @@ on:
 
 ---
 
-### **Trigger 2: Create Release (v3.1.0, v3.1.0, etc.)**
+### **Trigger 2: Create Release (v3.1.2, v3.1.2, etc.)**
 
 ```yaml
 on:
@@ -237,12 +237,12 @@ git commit -m "chore: bump version to 2.1.0"
 git push
 
 # 3. Create Git tag
-git tag -a v3.1.0 -m "Release version 3.1.0"
-git push origin v3.1.0
+git tag -a v3.1.2 -m "Release version 3.1.2"
+git push origin v3.1.2
 
 # 4. Create GitHub Release
 # - Go to: https://github.com/brunoleocam/ZPL2PDF/releases/new
-# - Select tag: v3.1.0
+# - Select tag: v3.1.2
 # - Write release notes
 # - Click "Publish release"
 
@@ -320,7 +320,7 @@ When you create a release, Docker workflow automatically:
 # .github/workflows/winget-publish.yml (CREATED)
 
 1. Download installer from GitHub Release
-   - URL: github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.0/ZPL2PDF-Setup-3.0.3.exe
+   - URL: github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-Setup-3.0.3.exe
 
 2. Calculate SHA256 hash automatically
 
@@ -337,7 +337,7 @@ When you create a release, Docker workflow automatically:
 6. Copy manifests to: manifests/b/brunoleocam/ZPL2PDF/2.1.0/
 
 7. Create Pull Request to microsoft/winget-pkgs
-   - Title: "brunoleocam.ZPL2PDF version 3.1.0"
+   - Title: "brunoleocam.ZPL2PDF version 3.1.2"
    - Body: Auto-generated with release notes
 ```
 
@@ -415,8 +415,8 @@ Configure these in GitHub Settings → Secrets:
 
 ```bash
 # 1. Create test tag (doesn't trigger release)
-git tag -a test-v3.1.0 -m "Test release"
-git push origin test-v3.1.0
+git tag -a test-v3.1.2 -m "Test release"
+git push origin test-v3.1.2
 
 # 2. Manually trigger workflow
 # Go to: https://github.com/brunoleocam/ZPL2PDF/actions

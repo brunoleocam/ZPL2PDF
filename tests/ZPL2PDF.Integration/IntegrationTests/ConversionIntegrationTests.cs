@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -89,6 +90,34 @@ namespace ZPL2PDF.Integration.IntegrationTests
             result.Should().NotBeNull();
             result.Should().NotBeEmpty();
             result[0].Should().NotBeEmpty(); // PDF should have content
+        }
+
+        [Fact]
+        public async Task ConvertZplToPdf_WithRelativeNestedFontMapping_DoesNotBreakConversion()
+        {
+            // Arrange
+            var zplContent = SampleZplData.SimpleLabel;
+            var fontsDir = Path.Combine(_testDirectory, "fonts");
+            var nestedDir = Path.Combine(fontsDir, "custom");
+            Directory.CreateDirectory(nestedDir);
+            var fakeFontPath = Path.Combine(nestedDir, "fake-font.ttf");
+            await File.WriteAllTextAsync(fakeFontPath, "not-a-real-font");
+
+            // Act
+            var result = await Task.Run(() =>
+                _conversionService.ConvertWithExplicitDimensions(
+                    zplContent,
+                    7.5,
+                    15,
+                    "in",
+                    203,
+                    fontsDir,
+                    new List<(string Id, string Path)> { ("A", "custom/fake-font.ttf") }));
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().NotBeEmpty();
+            result[0].Should().NotBeEmpty();
         }
 
         #endregion

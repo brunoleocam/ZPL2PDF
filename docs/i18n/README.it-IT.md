@@ -14,7 +14,7 @@ Un potente strumento da riga di comando multipiattaforma che converte file ZPL (
 
 ---
 
-## 🚀 **Novità nella v3.1.1**
+## 🚀 **Novità nella v3.1.2**
 
 ### 🐛 Correzioni
 - **Issue #45**: Etichette duplicate o vuote quando `^XA` appare nel payload base64 di `~DGR:` — `^XA` è ora trattato come inizio etichetta solo all'inizio riga o dopo `^XZ`.
@@ -25,7 +25,7 @@ Un potente strumento da riga di comando multipiattaforma che converte file ZPL (
 
 ---
 
-## 🚀 **Novità nella v3.1.1**
+## 🚀 **Novità nella v3.1.2**
 
 ### 🐛 Correzioni
 - **Issue #39**: Elaborazione sequenziale dei grafici per più grafici con lo stesso nome
@@ -42,7 +42,7 @@ Un potente strumento da riga di comando multipiattaforma che converte file ZPL (
 
 ---
 
-## 🚀 **Novità nella v3.1.1**
+## 🚀 **Novità nella v3.1.2**
 
 ### 🎉 Principali Nuove Funzionalità
 - 🎨 **Integrazione API Labelary** - Rendering ZPL ad alta fedeltà con output PDF vettoriale
@@ -139,10 +139,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (pacchetto .deb)
 ```bash
 # Scaricare il pacchetto .deb
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-v3.1.2-linux-amd64.deb
 
 # Installare il pacchetto
-sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.2-linux-amd64.deb
 
 # Correggere le dipendenze se necessario
 sudo apt-get install -f

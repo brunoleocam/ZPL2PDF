@@ -93,7 +93,7 @@ if ($checkpoint) {
         Write-Host "Next steps:" -ForegroundColor Yellow
         Write-Host "  1. Fix issues in failed steps" -ForegroundColor White
         Write-Host "  2. Resume release with:" -ForegroundColor White
-        Write-Host "     .\release\release-main.ps1 -Version `"$Version`" -Resume" -ForegroundColor Cyan
+        Write-Host "     .\scripts\release\release-main.ps1 -Version `"$Version`" -Resume" -ForegroundColor Cyan
         Write-Host ""
     } elseif ($completed.Count -lt 16) {
         $nextStep = 1
@@ -105,7 +105,7 @@ if ($checkpoint) {
         }
         Write-Host "Next steps:" -ForegroundColor Yellow
         Write-Host "  Resume release from step ${nextStep}:" -ForegroundColor White
-        Write-Host "    .\release\release-main.ps1 -Version `"$Version`" -StartFromStep $nextStep" -ForegroundColor Cyan
+        Write-Host "    .\scripts\release\release-main.ps1 -Version `"$Version`" -StartFromStep $nextStep" -ForegroundColor Cyan
         Write-Host ""
     } else {
         Write-Host "✅ All steps completed!" -ForegroundColor Green
@@ -115,6 +115,6 @@ if ($checkpoint) {
     Write-Host "No checkpoint found for version $Version" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "To start a release:" -ForegroundColor Cyan
-    Write-Host "  .\release\release-main.ps1 -Version `"$Version`"" -ForegroundColor White
+    Write-Host "  .\scripts\release\release-main.ps1 -Version `"$Version`"" -ForegroundColor White
     Write-Host ""
 }

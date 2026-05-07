@@ -295,23 +295,23 @@ Want to test on multiple platforms?
 
 ### Create Release (Recommended) ⭐
 
-Ready to publish a new version? Use the scripts in the `release/` folder:
+Ready to publish a new version? Use the scripts in the `scripts/release/` folder:
 
 ```powershell
 # Windows - Test first with dry-run
-.\release\release-main.ps1 -Version "3.1.0" -DryRun
+.\scripts\release\release-main.ps1 -Version "3.1.0" -DryRun
 
 # Windows - Full release (does everything automatically)
-.\release\release-main.ps1 -Version "3.1.0"
+.\scripts\release\release-main.ps1 -Version "3.1.0"
 
 # Skip steps if needed
-.\release\release-main.ps1 -Version "3.1.0" -SkipDocker -SkipWinGet
+.\scripts\release\release-main.ps1 -Version "3.1.0" -SkipDocker -SkipWinGet
 
 # Run a specific step
-.\release\07-build-all-platforms.ps1 -Version "3.1.0"
+.\scripts\release\07-build-all-platforms.ps1 -Version "3.1.0"
 ```
 
-**📚 See the [Full Release Guide](../release/README.md) for more details.**
+**📚 See the [Full Release Guide](./release/README.md) for more details.**
 
 ### Create Release (Basic)
 
