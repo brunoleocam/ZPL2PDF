@@ -170,5 +170,18 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             processed.Should().Contain("_1D03");
             processed.Should().Contain("_1D75");
         }
+
+        [Fact]
+        public void PreprocessZpl_WithCode128AndUnderscoreHexPattern_KeepsBarcodePayloadUntouched()
+        {
+            // Arrange
+            var zpl = "^XA^BY2,3,80^BCN,80,Y,N^FH\\^FD123_ba456^FS^XZ";
+
+            // Act
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            // Assert
+            processed.Should().Contain("^FD123_ba456^FS");
+        }
     }
 }

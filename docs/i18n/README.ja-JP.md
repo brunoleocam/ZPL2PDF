@@ -14,7 +14,7 @@ ZPL（Zebra Programming Language）ファイルを高品質なPDFドキュメン
 
 ---
 
-## 🚀 **v3.1.1の新機能**
+## 🚀 **v3.1.2の新機能**
 
 ### 🐛 バグ修正
 - **Issue #45**: `~DGR:`のbase64ペイロード内に`^XA`が含まれる場合の重複または空白ラベルを修正 — `^XA`は行頭または`^XZ`の後のみラベル開始として扱われます。
@@ -25,7 +25,7 @@ ZPL（Zebra Programming Language）ファイルを高品質なPDFドキュメン
 
 ---
 
-## 🚀 **v3.1.1の新機能**
+## 🚀 **v3.1.2の新機能**
 
 ### 🐛 バグ修正
 - **Issue #39**: 同じ名前の複数グラフィックの順次処理
@@ -42,7 +42,7 @@ ZPL（Zebra Programming Language）ファイルを高品質なPDFドキュメン
 
 ---
 
-## 🚀 **v3.1.1の新機能**
+## 🚀 **v3.1.2の新機能**
 
 ### 🎉 主要な新機能
 - 🎨 **Labelary API統合** - ベクターPDF出力による高忠実度ZPLレンダリング
@@ -139,10 +139,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian（.debパッケージ）
 ```bash
 # .debパッケージをダウンロード
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.1/ZPL2PDF-v3.1.1-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-v3.1.2-linux-amd64.deb
 
 # パッケージをインストール
-sudo dpkg -i ZPL2PDF-v3.1.1-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.2-linux-amd64.deb
 
 # 必要に応じて依存関係を修正
 sudo apt-get install -f

@@ -55,10 +55,7 @@ namespace ZPL2PDF {
             if (_fontMappings != null) {
                 foreach (var (id, path) in _fontMappings) {
                     if (string.IsNullOrEmpty(id)) continue;
-                    var resolved = path;
-                    if (!Path.IsPathRooted(resolved) && !string.IsNullOrWhiteSpace(fontsDir)) {
-                        resolved = Path.Combine(fontsDir, Path.GetFileName(resolved));
-                    }
+                    var resolved = ResolveFontPath(path, fontsDir);
                     mappings[id.Trim()] = resolved;
                 }
             }
@@ -80,6 +77,28 @@ namespace ZPL2PDF {
                 }
                 return SKTypeface.Default;
             };
+        }
+
+        /// <summary>
+        /// Resolves font path declared in --font mapping.
+        /// Supports absolute paths and relative paths (with or without nested folders) against --fonts-dir.
+        /// </summary>
+        private static string ResolveFontPath(string declaredPath, string fontsDir) {
+            if (string.IsNullOrWhiteSpace(declaredPath)) {
+                return declaredPath;
+            }
+
+            if (Path.IsPathRooted(declaredPath) || string.IsNullOrWhiteSpace(fontsDir)) {
+                return declaredPath;
+            }
+
+            // Keep nested relative path first (e.g. custom/arial.ttf), then fallback to only filename for compatibility.
+            var combined = Path.Combine(fontsDir, declaredPath);
+            if (File.Exists(combined)) {
+                return combined;
+            }
+
+            return Path.Combine(fontsDir, Path.GetFileName(declaredPath));
         }
 
         /// <summary>

@@ -7,16 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.1.2] - 2026-05-07
+
+### 🐛 Fixed
+
+- **Issue #70**: Prevent barcode payload corruption when `^FH` data contains `_XX`-like sequences (e.g. `_ba`) in Code128 fields.
+  - Keep barcode `^FD...^FS` payload untouched during `^FH` preprocessing.
+  - Add regression test to guarantee `_ba` remains unchanged in barcode data.
+- **Custom font mapping**: Improve relative path resolution for `--font` when used with `--fonts-dir`.
+  - Preserve nested relative paths first (e.g. `custom/font.ttf`), with compatibility fallback to filename-only resolution.
+  - Add integration coverage for nested relative font mapping paths.
+
+### 📚 Documentation
+
+- Correct release script paths from legacy `release/scripts`/`release-scripts` references to `scripts/release`.
+
+---
+
 ## [3.1.1] - 2026-03-20
 
 ### 🔧 Changed
 
-- **Release layout**: Release automation scripts live under `release/scripts/`; Linux package sources under `scripts/release/packages/` (paths updated in docs and `CONTRIBUTING.md`).
+- **Release layout**: Release automation scripts live under `scripts/release/`; Linux package sources under `scripts/release/packages/` (paths updated in docs and `CONTRIBUTING.md`).
 - **Conversion pipeline**: Shared Labelary PDF fallback path in `ConversionService` for CLI, REST API, TCP server, and daemon queue; internal cleanup of dimension types and daemon PID handling (no reflection).
 
 ### 🛠️ Maintenance
 
-- **Windows installer build**: `release/scripts/08-build-installer.ps1` — safer post-build cleanup; optional `release/scripts/cleanup-installer-output.ps1` for `installer/Output`.
+- **Windows installer build**: `scripts/release/08-build-installer.ps1` — safer post-build cleanup; optional `scripts/release/cleanup-installer-output.ps1` for `installer/Output`.
 - **Docker build context**: `.dockerignore` excludes non-essential trees (e.g. `tests`, `docs`, `release`, `.cursor`) for smaller/faster `docker build`.
 - **Repository**: `.gitignore` — track `.github` except `.github/prompts/` and `.github/skills/` (local Cursor/GitHub Copilot prompts stay private).
 
