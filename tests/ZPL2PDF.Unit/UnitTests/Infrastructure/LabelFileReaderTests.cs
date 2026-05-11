@@ -183,5 +183,69 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             // Assert
             processed.Should().Contain("^FD123_ba456^FS");
         }
+
+        [Fact]
+        public void PreprocessZpl_WithFhBackslashIndicator_UnderscorePlusHexInText_StaysLiteral()
+        {
+            // ZPL: optional ^FH parameter sets hex indicator to '\' — underscores in field data are not hex escapes.
+            var zpl = "^XA^FH\\^CI28^FDLote: 123_ba456^FS^CI27^XZ";
+
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            processed.Should().Contain("^FDLote: 123_ba456^FS");
+        }
+
+        [Fact]
+        public void PreprocessZpl_WithFhBackslashIndicator_BackslashHexPairs_DecodeToUtf8()
+        {
+            // UTF-8 for "ã" using '\' as hex indicator (same bytes as _C3_A3 with default indicator).
+            var zpl = "^XA^FH\\^FD\\C3\\A3^FS^XZ";
+
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            processed.Should().Contain("^FDã^FS");
+        }
+
+        [Fact]
+        public void PreprocessZpl_UserReportLabel_FhBackslashCi28Bcn_PlaceholdersPreserved()
+        {
+            // Full label from user report (GitHub): ^FH\ + ^CI28 text line + Code 128 + same placeholder in barcode.
+            var zpl = "^XA\n"
+                + "^PW2400\n"
+                + "^LL1920\n"
+                + "^LS0\n\n"
+                + "^FO50,50^AAN,50,50^FDTest^FS\n"
+                + "^FT45,180^AAN,42,37^FH\\^CI28^FDLote: {{nf_item_batch_number}}^FS^CI27\n"
+                + "^BY6,3,128^FT57,400^BCN,,Y,N\n"
+                + "^FH\\^FD{{nf_item_batch_number}}^FS\n"
+                + "^XZ";
+
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            processed.Should().Contain("^FDLote: {{nf_item_batch_number}}^FS");
+            processed.Should().Contain("^FD{{nf_item_batch_number}}^FS");
+            processed.Should().NotContain("\uFFFD", because: "replacement char must not appear after preprocess for this ZPL.");
+        }
+
+        [Fact]
+        public void PreprocessZpl_UserReportLabel_FhBackslashCi28Bcn_SubstitutedBatchWithUnderscoreHexPattern_Preserved()
+        {
+            // Same layout as user report; substituted value contains _ba (underscore + hex digits) — must stay literal with ^FH\.
+            var zpl = "^XA\n"
+                + "^PW2400\n"
+                + "^LL1920\n"
+                + "^LS0\n\n"
+                + "^FO50,50^AAN,50,50^FDTest^FS\n"
+                + "^FT45,180^AAN,42,37^FH\\^CI28^FDLote: BATCH_ba99_x^FS^CI27\n"
+                + "^BY6,3,128^FT57,400^BCN,,Y,N\n"
+                + "^FH\\^FDBATCH_ba99_x^FS\n"
+                + "^XZ";
+
+            var processed = LabelFileReader.PreprocessZpl(zpl);
+
+            processed.Should().Contain("^FDLote: BATCH_ba99_x^FS");
+            processed.Should().Contain("^FDBATCH_ba99_x^FS");
+            processed.Should().NotContain("\uFFFD");
+        }
     }
 }
