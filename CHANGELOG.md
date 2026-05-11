@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.1.3] - 2026-05-11
+
+### 🐛 Fixed
+
+- **`^FH` field hex (ZPL)**: Honor the optional hexadecimal indicator character on `^FH` (default `_`). When the label uses `^FH\` (backslash as indicator), only `\<two hex digits>` sequences are decoded—not `_XX` in the field data—so human-readable text (e.g. batch values with `_ba`) no longer produces U+FFFD replacement characters after preprocessing.
+- **Regression tests**: Full user-reported label layout (`^PW`/`^LL`, `^FT`/`^AAN`, `^FH\` + `^CI28`, `^BCN`) covered in unit tests for placeholders and for substituted values containing `_ba`.
+
+---
+
 ## [3.1.2] - 2026-05-07
 
 ### 🐛 Fixed

@@ -16,7 +16,7 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 
 ---
 
-## 🚀 **What's New in v3.1.2**
+## 🚀 **What's New in v3.1.3**
 
 ### 🔧 Changed
 
@@ -29,10 +29,10 @@ A powerful, cross-platform command-line tool that converts ZPL (Zebra Programmin
 - **Docker**: Leaner default build context via `.dockerignore`.
 - **Repo hygiene**: `.github/prompts/` and `.github/skills/` remain untracked; the rest of `.github` (workflows, templates) stays versioned.
 
-### Recent highlights (v3.1.2)
+### Recent highlights (v3.1.3)
 
 - **`--stdout`**, smarter default PDF naming, BinaryKits/PDFsharp bumps, dimension validation fix, Aztec `^B0` → `^BO` preprocessing.
-- Thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for contributions that landed in v3.1.2.
+- Thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for contributions that landed in v3.1.3.
 
 ---
 
@@ -108,10 +108,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-v3.1.2-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v3.1.2-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.3-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
@@ -123,10 +123,10 @@ zpl2pdf -help
 #### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-v3.1.2-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v3.1.2-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.3-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -149,7 +149,7 @@ docker run -v ./watch:/app/watch -v ./output:/app/output brunoleocam/zpl2pdf:lat
 #### Intel Macs
 ```bash
 # Download
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-v3.1.2-osx-x64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-osx-x64.tar.gz -o zpl2pdf.tar.gz
 
 # Extract and run
 tar -xzf zpl2pdf.tar.gz
@@ -158,7 +158,7 @@ tar -xzf zpl2pdf.tar.gz
 
 #### Apple Silicon (M1/M2/M3)
 ```bash
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.2/ZPL2PDF-v3.1.2-osx-arm64.tar.gz -o zpl2pdf.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-osx-arm64.tar.gz -o zpl2pdf.tar.gz
 tar -xzf zpl2pdf.tar.gz
 ./ZPL2PDF -help
 ```
@@ -804,7 +804,7 @@ If ZPL2PDF helps you, please ⭐ star the repository!
 
 Thanks to all contributors who have helped make ZPL2PDF better!
 
-Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.2.
+Special thanks to Jacques Caruso (jacques.caruso@exhibitgroup.fr) for sending the solutions for version 3.1.3.
 
 <a href="https://github.com/brunoleocam/ZPL2PDF/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=brunoleocam/ZPL2PDF&max=30" alt="Contributors" />
