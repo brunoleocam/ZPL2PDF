@@ -2,7 +2,7 @@
 
 This directory contains automation scripts for building, packaging, and releasing ZPL2PDF across multiple platforms.
 
-> **📦 For full releases, use the scripts in the [`release/`](../release/README.md) folder**  
+> **📦 For full releases, use the scripts in the [`release/`](release/README.md) folder**  
 > These scripts in this directory are individual build utilities.
 
 ---
@@ -311,7 +311,7 @@ Ready to publish a new version? Use the scripts in the `scripts/release/` folder
 .\scripts\release\07-build-all-platforms.ps1 -Version "3.1.0"
 ```
 
-**📚 See the [Full Release Guide](./release/README.md) for more details.**
+**📚 See the [Full Release Guide](release/README.md) for more details.**
 
 ### Create Release (Basic)
 
@@ -445,7 +445,7 @@ These scripts are designed to work with GitHub Actions, Azure Pipelines, and oth
 ## 📚 Additional Resources
 
 - [../README.md](../README.md) - Project documentation
-- [../release/README.md](../release/README.md) - **Guia completo de release** ⭐
+- [release/README.md](release/README.md) - **Guia completo de release** ⭐
 - [../CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 - [../CHANGELOG.md](../CHANGELOG.md) - Version history
 - [../docs/development/WINGET_GUIDE.md](../docs/development/WINGET_GUIDE.md) - WinGet packaging guide
