@@ -144,6 +144,41 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             AssertValidPng(result[0]);
         }
 
+        [Fact]
+        public void AppendMissing_AppendsFallbacksAfterExistingEntriesWithoutDuplicates()
+        {
+            var stack = new List<string> { "Arial", "Helvetica" };
+
+            LabelRenderer.AppendMissing(stack, new[] { "helvetica", "Liberation Sans", "DejaVu Sans" });
+
+            stack.Should().Equal("Arial", "Helvetica", "Liberation Sans", "DejaVu Sans");
+        }
+
+        /// <summary>
+        /// Regression (#81): with BinaryKits 1.3.x the custom loader must be wired on FontManager;
+        /// a mapped font for ID 0 must change the output compared with the default stack.
+        /// </summary>
+        [Fact]
+        public void RenderLabels_WithFontMappingForFont0_ChangesOutputComparedToDefault()
+        {
+            var systemTtf = TryGetExistingSystemSansFont();
+            if (systemTtf == null)
+            {
+                return; // optional per machine/CI image
+            }
+
+            var zpl = "^XA^FO10,10^A0N,40,40^FDMapped font^FS^XZ";
+            var mappings = new List<(string Id, string Path)> { ("0", systemTtf) };
+
+            var withMapping = new LabelRenderer(80, 40, 203, "mm", Path.GetDirectoryName(systemTtf), mappings)
+                .RenderLabels(new List<string> { zpl });
+            var withoutMapping = new LabelRenderer(80, 40, 203, "mm")
+                .RenderLabels(new List<string> { zpl });
+
+            withMapping.Should().HaveCount(1);
+            withMapping[0].Should().NotEqual(withoutMapping[0]);
+        }
+
         private static string? TryGetExistingSystemSansFont()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
