@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### 🛠️ Maintenance
+
+- **Release scripts**: step 15 checks `write:packages` on the active `gh` account only (it used the scopes of every logged-in account); the checkpoint no longer crashes when recording a second failed step.
+
+---
+
 ## [3.1.4] - 2026-11-09
 
 ### 🐛 Fixed

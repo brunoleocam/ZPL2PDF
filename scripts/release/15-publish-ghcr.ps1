@@ -66,9 +66,10 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Check write:packages scope
-$ghScopes = gh auth status 2>&1 | Select-String "Token scopes"
-if ($ghScopes -notmatch "write:packages") {
+# Check write:packages scope of the ACTIVE account. `gh auth status` lists every logged-in account, so with
+# more than one account the scopes of an inactive one were mistaken for the active token's.
+$ghScopes = (gh api -i user 2>$null | Select-String -Pattern '^X-Oauth-Scopes:' | Select-Object -First 1)
+if (-not $ghScopes -or "$ghScopes" -notmatch "write:packages") {
     Write-Warning "Token doesn't have 'write:packages' scope"
     Write-Info "Run: gh auth refresh -h github.com -s write:packages"
     exit 1
