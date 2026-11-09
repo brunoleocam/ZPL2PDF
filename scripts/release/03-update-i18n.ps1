@@ -16,6 +16,9 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
+# Load version utilities
+. (Join-Path $ScriptDir "_version-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[03] $Message" -ForegroundColor Yellow
@@ -52,21 +55,9 @@ if ($i18nFiles.Count -eq 0) {
 }
 
 foreach ($file in $i18nFiles) {
-    $content = Get-Content $file.FullName -Raw -Encoding UTF8
-    $originalContent = $content
-    
-    # Update version references
-    $content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
-    $content = $content -replace 'version \d+\.\d+\.\d+', "version $Version"
-    $content = $content -replace 'Version: \d+\.\d+\.\d+', "Version: $Version"
-    
-    if ($content -ne $originalContent) {
-        if (-not $DryRun) {
-            Set-Content $file.FullName $content -NoNewline -Encoding UTF8
-            Write-Success "Updated: $($file.Name)"
-        } else {
-            Write-Info "[DRY RUN] Would update: $($file.Name)"
-        }
+    #: translated "What's New" headings (e.g. "## Novidades na v3.1.3") also follow the release
+    if (Update-ReleaseReferencesInFile -Path $file.FullName -Version $Version -DryRun:$DryRun) {
+        if ($DryRun) { Write-Info "[DRY RUN] Would update: $($file.Name)" } else { Write-Success "Updated: $($file.Name)" }
     } else {
         Write-Info "No changes needed: $($file.Name)"
     }

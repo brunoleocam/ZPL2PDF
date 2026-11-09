@@ -49,10 +49,10 @@ See [[Docker Deployment]] for detailed instructions.
 ### Ubuntu/Debian
 ```bash
 # Download latest release
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Extract
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+tar -xzf ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Move to system directory
 sudo mv ZPL2PDF /usr/local/bin/
@@ -71,10 +71,10 @@ ZPL2PDF --help
 ### CentOS/RHEL/Fedora
 ```bash
 # Download latest release
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Extract
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+tar -xzf ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Move to system directory
 sudo mv ZPL2PDF /usr/local/bin/
@@ -92,10 +92,10 @@ ZPL2PDF --help
 ### Arch Linux
 ```bash
 # Download latest release
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Extract
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+tar -xzf ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Move to system directory
 sudo mv ZPL2PDF /usr/local/bin/
@@ -117,10 +117,10 @@ ZPL2PDF --help
 ### Ubuntu/Debian (.deb package)
 ```bash
 # Download .deb package from GitHub Releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Install package
-sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Fix dependencies if needed
 sudo apt-get install -f
@@ -132,10 +132,10 @@ zpl2pdf --help
 ### Fedora/CentOS/RHEL (.tar.gz)
 ```bash
 # Download tarball from GitHub Releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -274,10 +274,10 @@ docker-compose up -d
 ZPL2PDF stop
 
 # Download latest version
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Extract and replace
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+tar -xzf ZPL2PDF-v3.1.4-linux-x64.tar.gz
 sudo mv -f ZPL2PDF /usr/local/bin/
 
 # Verify new version

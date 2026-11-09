@@ -85,20 +85,20 @@ winget install JRSoftware.InnoSetup
 # Option 2: Manual compilation
 & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\ZPL2PDF-Setup.iss
 
-# Output: installer\ZPL2PDF-Setup-2.0.0.exe (~50 MB)
+# Output: installer\ZPL2PDF-Setup-3.1.4.exe (~50 MB)
 ```
 
 ### **Test Installation:**
 
 ```powershell
 # Run the installer
-.\installer\ZPL2PDF-Setup-2.0.0.exe
+.\installer\ZPL2PDF-Setup-3.1.4.exe
 
 # Or silent installation
-.\installer\ZPL2PDF-Setup-2.0.0.exe /SILENT /LANG=english
+.\installer\ZPL2PDF-Setup-3.1.4.exe /SILENT /LANG=english
 
 # Or very silent (no UI at all)
-.\installer\ZPL2PDF-Setup-2.0.0.exe /VERYSILENT /LANG=brazilianportuguese
+.\installer\ZPL2PDF-Setup-3.1.4.exe /VERYSILENT /LANG=brazilianportuguese
 ```
 
 ---
@@ -262,7 +262,7 @@ SignedUninstaller=yes
 
 ```powershell
 # 1. Install
-.\installer\ZPL2PDF-Setup-2.0.0.exe
+.\installer\ZPL2PDF-Setup-3.1.4.exe
 
 # 2. Verify installation
 Test-Path "C:\Program Files\ZPL2PDF\ZPL2PDF.exe"
@@ -302,7 +302,7 @@ Error: Cannot find source file
 .\scripts\build-all-platforms.ps1
 
 # Check if files exist
-dir build\publish\ZPL2PDF-v2.0.0-win-x64.zip
+dir build\publish\ZPL2PDF-v3.1.4-win-x64.zip
 ```
 
 ### **Issue: "ISCC.exe not found"**

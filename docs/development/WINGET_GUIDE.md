@@ -49,7 +49,7 @@ InstallerType: inno
 Scope: machine
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/YOUR_USERNAME/YOUR_REPO/releases/download/v2.0.0/YOUR_PACKAGE-Setup-2.0.0.exe
+  InstallerUrl: https://github.com/YOUR_USERNAME/YOUR_REPO/releases/download/v3.1.4/YOUR_PACKAGE-Setup-2.0.0.exe
   InstallerSha256: <SHA256_HASH>
 ```
 
@@ -307,7 +307,7 @@ After submitting PR, Microsoft's CI automatically:
 
 ```powershell
 # Recalculate SHA256
-$hash = (Get-FileHash -Path "installer\ZPL2PDF-Setup-2.0.0.exe" -Algorithm SHA256).Hash
+$hash = (Get-FileHash -Path "installer\ZPL2PDF-Setup-3.1.4.exe" -Algorithm SHA256).Hash
 Write-Host $hash
 ```
 
@@ -315,7 +315,7 @@ Write-Host $hash
 
 ```bash
 # Verify release exists
-curl -I https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-Setup-2.0.0.exe
+curl -I https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-Setup-3.1.4.exe
 
 # Check release page
 https://github.com/brunoleocam/ZPL2PDF/releases/tag/v2.0.0

@@ -77,6 +77,18 @@ if (-not $SkipTests) {
 function Invoke-MacOSAdhocSign {
     param([string]$ExePath)
 
+    # Native libraries shipped next to the executable (libSkiaSharp.dylib, libHarfBuzzSharp.dylib) must be signed
+    # too: arm64 refuses to load unsigned dylibs even into a signed process.
+    $dylibs = @(Get-ChildItem -Path (Split-Path -Parent $ExePath) -Filter "*.dylib" -File -ErrorAction SilentlyContinue)
+    foreach ($dylib in $dylibs) {
+        Invoke-MacOSAdhocSignFile -ExePath $dylib.FullName
+    }
+    Invoke-MacOSAdhocSignFile -ExePath $ExePath
+}
+
+function Invoke-MacOSAdhocSignFile {
+    param([string]$ExePath)
+
     if (Get-Command codesign -ErrorAction SilentlyContinue) {
         codesign --force --sign - $ExePath
     } elseif (Get-Command rcodesign -ErrorAction SilentlyContinue) {

@@ -1,6 +1,6 @@
 ﻿# ZPL2PDF - Convertidor ZPL a PDF
 
-[![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.1.4-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -11,6 +11,15 @@
 **[English](../../README.md)** | **[Português-BR](README.pt-BR.md)** | **[Español](#)** | **[Français](README.fr-FR.md)** | **[Deutsch](README.de-DE.md)** | **[Italiano](README.it-IT.md)** | **[日本語](README.ja-JP.md)** | **[中文](README.zh-CN.md)**
 
 Una poderosa herramienta multiplataforma de línea de comandos que convierte archivos ZPL (Zebra Programming Language) en documentos PDF de alta calidad. Perfecta para flujos de trabajo de impresión de etiquetas, generación automatizada de documentos y sistemas empresariales de gestión de etiquetas.
+
+---
+
+## 🚀 **Novedades en v3.1.4**
+
+- **Tamaño de página del PDF (#82)**: las páginas ahora tienen el tamaño físico de la etiqueta (4x6 in a 203 dpi → 288x432 pt) en lugar del número de píxeles como puntos.
+- **`--renderer` (#83)**: en modo API se respeta `--api --renderer labelary` como valor predeterminado del servidor; un valor no válido ahora es un error.
+- **Etiquetas UPS (#81)**: `^PW` sin `^LL` ya no recorta el contenido, fuente sans-serif de respaldo en Linux/Docker y soporte de `^POI`; `--fonts-dir`/`--font` vuelven a funcionar.
+- **macOS Apple Silicon (#67)**: los binarios `osx-*` se firman ad-hoc y ya no se cierran al iniciar.
 
 ---
 
@@ -129,7 +138,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### Opción 2: Instalador
-1. Descargar [ZPL2PDF-Setup-3.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+1. Descargar [ZPL2PDF-Setup-3.1.4.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
 2. Ejecutar instalador
 3. Elegir idioma durante la instalación
 4. ¡Listo! ✅
@@ -139,10 +148,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian (paquete .deb)
 ```bash
 # Descargar paquete .deb
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Instalar paquete
-sudo dpkg -i ZPL2PDF-v3.1.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Corregir dependencias si es necesario
 sudo apt-get install -f

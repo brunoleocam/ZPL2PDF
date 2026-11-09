@@ -27,7 +27,16 @@ param(
     [int]$StartFromStep = 1,
     
     [Parameter(Mandatory=$false)]
-    [switch]$Resume
+    [switch]$Resume,
+
+    # Stop after this step (e.g. -StopAfterStep 6 only prepares versions/docs so the diff can be reviewed).
+    [Parameter(Mandatory=$false)]
+    [ValidateRange(1,16)]
+    [int]$StopAfterStep = 16,
+
+    # Do not ask for confirmation before steps that publish outside the working tree (12-16).
+    [Parameter(Mandatory=$false)]
+    [switch]$AssumeYes
 )
 
 $ErrorActionPreference = "Stop"
@@ -101,8 +110,35 @@ Write-Info "  SkipWinGet: $SkipWinGet"
 Write-Info "  SkipGitHubRelease: $SkipGitHubRelease"
 Write-Info "  DryRun: $DryRun"
 Write-Info "  StartFromStep: $StartFromStep"
+Write-Info "  StopAfterStep: $StopAfterStep"
+Write-Info "  AssumeYes: $AssumeYes"
 Write-Info "  Resume: $Resume"
 Write-Host ""
+
+# ----------------------------------------------------------------------------
+# Preflight: warn about things that make a release silently worse
+# ----------------------------------------------------------------------------
+if (-not $DryRun -and $StartFromStep -le 7 -and $StopAfterStep -ge 7) {
+    # Apple Silicon kills unsigned binaries (issue #67). The build ad-hoc signs osx-* binaries when
+    # codesign (macOS) or rcodesign (any OS) is available.
+    if (-not (Get-Command codesign -ErrorAction SilentlyContinue) -and -not (Get-Command rcodesign -ErrorAction SilentlyContinue)) {
+        Write-Warning "Neither 'codesign' nor 'rcodesign' found: the osx-arm64/osx-x64 binaries will NOT be signed."
+        Write-Info "Apple Silicon will kill the unsigned binary. Install rcodesign (https://github.com/indygreg/apple-platform-rs) or build on a Mac."
+        if (-not $AssumeYes) {
+            $answer = Read-Host "Continue without macOS signing? (Y/N)"
+            if ($answer -ne "Y" -and $answer -ne "y") { exit 1 }
+        }
+    }
+}
+
+# Steps that leave the working tree: push/PR (12), GitHub release (13), Docker Hub (14), GHCR (15), WinGet PR (16)
+$publishSteps = @{
+    12 = "push branch release/v$Version and open a PR"
+    13 = "create tag/GitHub release v$Version and upload all files in release/"
+    14 = "push images to Docker Hub"
+    15 = "push images to GHCR (ghcr.io)"
+    16 = "open a pull request on microsoft/winget-pkgs"
+}
 
 # Initialize checkpoint
 $checkpoint = Initialize-Checkpoint -Version $Version -ProjectRoot $ProjectRoot
@@ -161,6 +197,25 @@ foreach ($script in $scripts) {
         continue
     }
     
+    # Stop early if requested
+    if ($script.Number -gt $StopAfterStep) {
+        Write-Info "Stopping before step $($script.Number) (StopAfterStep = $StopAfterStep)"
+        break
+    }
+
+    # Confirm before anything that publishes outside the working tree
+    if (-not $DryRun -and -not $AssumeYes -and $publishSteps.ContainsKey($script.Number)) {
+        Write-Host ""
+        Write-Warning "Step $($script.Number) will $($publishSteps[$script.Number])."
+        $confirm = Read-Host "Proceed? (Y/N)"
+        if ($confirm -ne "Y" -and $confirm -ne "y") {
+            Write-Info "Not confirmed. Resume later with: -Version `"$Version`" -StartFromStep $($script.Number)"
+            Mark-StepSkipped -Version $Version -ProjectRoot $ProjectRoot -StepNumber $script.Number
+            $skippedSteps += $script.Number
+            break
+        }
+    }
+
     Write-Step "$($script.Number)/16" "$($script.Description)"
     
     $scriptPath = Join-Path $ScriptDir $script.Name
@@ -185,7 +240,9 @@ foreach ($script in $scripts) {
             $params.SkipTests = $true
         }
         
-        # Execute script
+        # Execute script. Reset the exit code first: a script that finishes without an explicit `exit`
+        # leaves $LASTEXITCODE untouched (null in a fresh session), which was misread as a failure.
+        $global:LASTEXITCODE = 0
         & $scriptPath @params
         
         if ($LASTEXITCODE -eq 0) {

@@ -303,13 +303,13 @@ When you create a release, Docker workflow automatically:
 
 3. Compile Inno Setup script
    - Uses: installer/ZPL2PDF-Setup.iss
-   - Output: ZPL2PDF-Setup-2.1.0.exe
+   - Output: ZPL2PDF-Setup-3.1.4.exe
 
 4. Calculate SHA256 checksum
 
 5. Upload to GitHub Release
-   - ZPL2PDF-Setup-2.1.0.exe
-   - ZPL2PDF-Setup-2.1.0.exe.sha256
+   - ZPL2PDF-Setup-3.1.4.exe
+   - ZPL2PDF-Setup-3.1.4.exe.sha256
 ```
 
 ---
@@ -320,7 +320,7 @@ When you create a release, Docker workflow automatically:
 # .github/workflows/winget-publish.yml (CREATED)
 
 1. Download installer from GitHub Release
-   - URL: github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-Setup-3.0.3.exe
+   - URL: github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-Setup-3.1.4.exe
 
 2. Calculate SHA256 hash automatically
 

@@ -11,7 +11,7 @@ winget install brunoleocam.ZPL2PDF
 
 ### Option 2: Direct Download
 1. Go to [Releases](https://github.com/brunoleocam/ZPL2PDF/releases)
-2. Download `ZPL2PDF-v2.0.0-win-x64.zip`
+2. Download `ZPL2PDF-v3.1.4-win-x64.zip`
 3. Extract to desired folder
 4. Add to PATH (optional)
 
@@ -34,8 +34,8 @@ docker run -v /path/to/watch:/app/watch -v /path/to/output:/app/output brunoleoc
 ### Option 2: Binary Download
 ```bash
 # Download and extract
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64.tar.gz
-tar -xzf ZPL2PDF-v2.0.0-linux-x64.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64.tar.gz
+tar -xzf ZPL2PDF-v3.1.4-linux-x64.tar.gz
 
 # Make executable
 chmod +x ZPL2PDF
@@ -61,7 +61,7 @@ sudo dnf install zpl2pdf
 ### Option 1: Binary Download
 ```bash
 # Download and extract
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
 tar -xzf ZPL2PDF.tar.gz
 
 # Make executable
