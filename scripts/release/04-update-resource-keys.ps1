@@ -16,6 +16,9 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
+# Load version utilities
+. (Join-Path $ScriptDir "_version-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[04] $Message" -ForegroundColor Yellow
@@ -41,21 +44,10 @@ if (-not (Test-Path $resourceKeysPath)) {
     exit 1
 }
 
-$content = Get-Content $resourceKeysPath -Raw
-$originalContent = $content
-
-# ResourceKeys.cs usually doesn't contain explicit version,
-# but we can check if there are comments or documentation with version
-$content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
-$content = $content -replace 'version \d+\.\d+\.\d+', "version $Version"
-
-if ($content -ne $originalContent) {
-    if (-not $DryRun) {
-        Set-Content $resourceKeysPath $content -NoNewline
-        Write-Success "Updated: ResourceKeys.cs"
-    } else {
-        Write-Info "[DRY RUN] Would update: ResourceKeys.cs"
-    }
+# ResourceKeys.cs holds resource key constants, not version text (the app version comes from
+# ZPL2PDF.csproj). Only release markers would be touched; a blanket vX.Y.Z replace over C# source is unsafe.
+if (Update-ReleaseReferencesInFile -Path $resourceKeysPath -Version $Version -DryRun:$DryRun) {
+    if ($DryRun) { Write-Info "[DRY RUN] Would update: ResourceKeys.cs" } else { Write-Success "Updated: ResourceKeys.cs" }
 } else {
     Write-Info "No changes needed in ResourceKeys.cs"
     Write-Info "ResourceKeys.cs doesn't contain version references (expected behavior)"

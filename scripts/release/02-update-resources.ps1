@@ -16,6 +16,9 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
+# Load version utilities
+. (Join-Path $ScriptDir "_version-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[02] $Message" -ForegroundColor Yellow
@@ -56,22 +59,9 @@ $resourceFiles = @(
 foreach ($resourceFile in $resourceFiles) {
     $fullPath = Join-Path $resourcesDir $resourceFile
     if (Test-Path $fullPath) {
-        $content = Get-Content $fullPath -Raw -Encoding UTF8
-        $originalContent = $content
-        
-        # Update version in comments or metadata if present
-        # Note: .resx files usually don't have explicit version,
-        # but we can update if there are references
-        $content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
-        $content = $content -replace 'version \d+\.\d+\.\d+', "version $Version"
-        
-        if ($content -ne $originalContent) {
-            if (-not $DryRun) {
-                Set-Content $fullPath $content -NoNewline -Encoding UTF8
-                Write-Success "Updated: $resourceFile"
-            } else {
-                Write-Info "[DRY RUN] Would update: $resourceFile"
-            }
+        # .resx files normally carry no version; only release markers are touched.
+        if (Update-ReleaseReferencesInFile -Path $fullPath -Version $Version -DryRun:$DryRun) {
+            if ($DryRun) { Write-Info "[DRY RUN] Would update: $resourceFile" } else { Write-Success "Updated: $resourceFile" }
         } else {
             Write-Info "No changes needed: $resourceFile"
         }
