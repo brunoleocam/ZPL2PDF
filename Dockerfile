@@ -37,7 +37,7 @@ RUN dotnet publish ZPL2PDF.csproj \
 # -----------------------------------------------------------------------------
 # Stage 2: Runtime (Alpine Linux - Ultra Light)
 # -----------------------------------------------------------------------------
-FROM alpine:3.23 AS runtime
+FROM alpine:3.24 AS runtime
 
 # Install runtime dependencies
 # - libgdiplus: Required for System.Drawing compatibility
