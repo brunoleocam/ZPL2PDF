@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ZPL2PDF.Domain.Services;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -21,7 +22,9 @@ namespace ZPL2PDF
             IReadOnlyList<(string Id, string Path)>? fontMappings = null)
         {
             _labelaryRenderer = new LabelaryRenderer(labelWidth, labelHeight, unit, dpi);
-            _offlineRenderer = new LabelRenderer(labelWidth, labelHeight, dpi, unit, fontsDirectory, fontMappings);
+            // Align the offline fallback with Labelary's dpmm so both produce the same pixel scale.
+            _offlineRenderer = new LabelRenderer(labelWidth, labelHeight,
+                RendererEngineParser.ToEffectiveDpi(dpi, RendererEngine.Auto), unit, fontsDirectory, fontMappings);
         }
 
         public AutoRenderer(
@@ -30,7 +33,14 @@ namespace ZPL2PDF
             IReadOnlyList<(string Id, string Path)>? fontMappings = null)
         {
             _labelaryRenderer = new LabelaryRenderer(dimensions);
-            _offlineRenderer = new LabelRenderer(dimensions, fontsDirectory, fontMappings);
+            _offlineRenderer = new LabelRenderer(new LabelDimensions
+            {
+                Width = dimensions.Width,
+                Height = dimensions.Height,
+                WidthMm = dimensions.WidthMm,
+                HeightMm = dimensions.HeightMm,
+                Dpi = RendererEngineParser.ToEffectiveDpi(dimensions.Dpi, RendererEngine.Auto)
+            }, fontsDirectory, fontMappings);
         }
 
         public (double width, double height, string unit, int dpi) GetDimensions()
