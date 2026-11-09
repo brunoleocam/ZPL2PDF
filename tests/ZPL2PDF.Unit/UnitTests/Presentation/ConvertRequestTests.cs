@@ -30,7 +30,7 @@ namespace ZPL2PDF.Tests.UnitTests.Presentation
 
             // Assert
             request.Format.Should().Be("pdf");
-            request.Renderer.Should().Be("offline");
+            request.Renderer.Should().BeNull("an omitted renderer falls back to the server default (--renderer)");
             request.Unit.Should().Be("mm");
             request.Dpi.Should().BeNull();
         }

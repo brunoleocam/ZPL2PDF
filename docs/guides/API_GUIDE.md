@@ -25,6 +25,10 @@ ZPL2PDF --api --host 0.0.0.0 --port 8080
 
 # Alternative: Use --web flag
 ZPL2PDF --web --host 0.0.0.0 --port 5000
+
+# Set the default renderer for all requests (offline | labelary | auto)
+# A request's "renderer" field overrides this default
+ZPL2PDF --api --renderer labelary
 ```
 
 **Host Options:**

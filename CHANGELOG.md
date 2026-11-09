@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### 🐛 Fixed
+
+- **Issue #82**: PDF page size is now the label's physical size. Rendered pixels are converted to PDF points using the print DPI (e.g. 4x6 in @ 203 dpi → `/MediaBox [0 0 288 432]`) instead of writing the pixel count as points (~2.8x oversized).
+- **Issue #83**: `--renderer` is now honored in API mode (`--api --renderer labelary`) as the server-wide default; a request's `renderer` field still overrides it. An invalid `--renderer` value makes the API fail to start with a clear error.
+- **`--renderer` validation (CLI)**: an unrecognized value in conversion, daemon and TCP server modes is now an error (exit code 1) instead of being silently ignored.
+- **PDF page size for non-standard DPI**: the page size now uses the DPI the engine actually rendered at (Labelary supports only 6/8/12/24 dpmm; `auto` aligns its offline fallback to it), so e.g. 400 dpi no longer produces a mis-sized page with `labelary`/`auto`.
+
+---
+
 ## [3.1.3] - 2026-05-11
 
 ### 🐛 Fixed
