@@ -16,6 +16,9 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
+# Load version utilities
+. (Join-Path $ScriptDir "_version-utils.ps1")
+
 function Write-Step {
     param([string]$Message)
     Write-Host "[06] $Message" -ForegroundColor Yellow
@@ -41,20 +44,19 @@ if (-not (Test-Path $dockerfilePath)) {
     exit 1
 }
 
-$content = Get-Content $dockerfilePath -Raw
+$content = Read-ReleaseTextFile -Path $dockerfilePath
 $originalContent = $content
 
-# Update LABEL version
-$content = $content -replace 'version="[^"]*"', "version=`"$Version`""
-$content = $content -replace 'version=\d+\.\d+\.\d+', "version=$Version"
-$content = $content -replace 'version: \d+\.\d+\.\d+', "version: $Version"
-
-# Update other version references if any
-$content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
+# Only the image LABEL version is updated (e.g. version="3.1.3"). Base image tags such as
+# dotnet/sdk:10.0.301 or alpine:3.24 are managed by Dependabot and must not be rewritten.
+$content = $content -replace '(?m)^(\s*(?:LABEL\s+)?(?:org\.opencontainers\.image\.)?version=)"[^"]*"', ('${1}"' + $Version + '"')
+if ($content -eq $originalContent -and $content -notmatch 'version="') {
+    Write-Info "No LABEL version found in Dockerfile - nothing to update"
+}
 
 if ($content -ne $originalContent) {
     if (-not $DryRun) {
-        Set-Content $dockerfilePath $content -NoNewline
+        Write-ReleaseTextFile -Path $dockerfilePath -Content $content
         Write-Success "Dockerfile updated"
     } else {
         Write-Info "[DRY RUN] Would update Dockerfile"
