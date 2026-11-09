@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using ZPL2PDF.Domain.Services;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF
 {
@@ -17,8 +18,6 @@ namespace ZPL2PDF
         {
             Timeout = TimeSpan.FromSeconds(30)
         };
-
-        private static readonly int[] AllowedDpmm = { 6, 8, 12, 24 };
 
         private readonly double _labelWidth;
         private readonly double _labelHeight;
@@ -148,24 +147,6 @@ namespace ZPL2PDF
         }
 
         private static int MapDpiToDpmm(int dpi)
-        {
-            // dpmm = dpi / 25.4, but Labelary only accepts 6/8/12/24.
-            var dpmmRaw = dpi / 25.4;
-            var best = AllowedDpmm[0];
-            var bestDelta = Math.Abs(best - dpmmRaw);
-
-            foreach (var candidate in AllowedDpmm)
-            {
-                var delta = Math.Abs(candidate - dpmmRaw);
-                if (delta < bestDelta)
-                {
-                    best = candidate;
-                    bestDelta = delta;
-                }
-            }
-
-            return best;
-        }
+            => RendererEngineParser.ToDpmm(dpi, RendererEngine.Labelary);
     }
 }
-

@@ -91,14 +91,8 @@ namespace ZPL2PDF
                     case "--renderer":
                         if (!string.IsNullOrWhiteSpace(nextArg))
                         {
-                            var renderer = nextArg.Trim().ToLowerInvariant();
-                            result.RendererEngine = renderer switch
-                            {
-                                "offline" => RendererEngine.Offline,
-                                "labelary" => RendererEngine.Labelary,
-                                "auto" => RendererEngine.Auto,
-                                _ => result.RendererEngine
-                            };
+                            if (RendererEngineParser.TryParse(nextArg, out var parsedRenderer)) result.RendererEngine = parsedRenderer;
+                            else result.InvalidRenderer = nextArg;
                             i++; // Skip next argument as it's the value
                         }
                         break;
@@ -208,14 +202,8 @@ namespace ZPL2PDF
                     case "--renderer":
                         if (i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
                         {
-                            var renderer = args[i + 1].Trim().ToLowerInvariant();
-                            result.RendererEngine = renderer switch
-                            {
-                                "offline" => RendererEngine.Offline,
-                                "labelary" => RendererEngine.Labelary,
-                                "auto" => RendererEngine.Auto,
-                                _ => result.RendererEngine
-                            };
+                            if (RendererEngineParser.TryParse(args[i + 1], out var parsedRenderer)) result.RendererEngine = parsedRenderer;
+                            else result.InvalidRenderer = args[i + 1];
                             i++; // Skip next argument as it's the value
                         }
                         break;
@@ -271,14 +259,8 @@ namespace ZPL2PDF
                 }
                 else if (arg.Equals("--renderer", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length && !string.IsNullOrWhiteSpace(args[i + 1]))
                 {
-                    var renderer = args[i + 1].Trim().ToLowerInvariant();
-                    result.RendererEngine = renderer switch
-                    {
-                        "offline" => RendererEngine.Offline,
-                        "labelary" => RendererEngine.Labelary,
-                        "auto" => RendererEngine.Auto,
-                        _ => result.RendererEngine
-                    };
+                    if (RendererEngineParser.TryParse(args[i + 1], out var parsedRenderer)) result.RendererEngine = parsedRenderer;
+                    else result.InvalidRenderer = args[i + 1];
                     i++;
                 }
                 else if (arg.Equals("--foreground", StringComparison.OrdinalIgnoreCase))
@@ -330,6 +312,8 @@ namespace ZPL2PDF
         public bool StandardOutput { get; set; } = false;
         /// <summary>Rendering engine selection (offline/labelary/auto).</summary>
         public RendererEngine RendererEngine { get; set; } = RendererEngine.Offline;
+        /// <summary>Raw --renderer value that was not recognized (null when valid or absent).</summary>
+        public string? InvalidRenderer { get; set; }
         /// <summary>Directory containing TTF/OTF fonts (e.g. for --fonts-dir).</summary>
         public string FontsDirectory { get; set; } = string.Empty;
         /// <summary>Font ID to file path (e.g. A=arial.ttf, B=another.ttf).</summary>
@@ -348,6 +332,8 @@ namespace ZPL2PDF
         public int Dpi { get; set; } = 203;
         /// <summary>Rendering engine selection (offline/labelary/auto).</summary>
         public RendererEngine RendererEngine { get; set; } = RendererEngine.Offline;
+        /// <summary>Raw --renderer value that was not recognized (null when valid or absent).</summary>
+        public string? InvalidRenderer { get; set; }
     }
 
     /// <summary>
@@ -360,5 +346,7 @@ namespace ZPL2PDF
         public bool Foreground { get; set; } = false;
         /// <summary>Rendering engine selection (offline/labelary/auto).</summary>
         public RendererEngine RendererEngine { get; set; } = RendererEngine.Offline;
+        /// <summary>Raw --renderer value that was not recognized (null when valid or absent).</summary>
+        public string? InvalidRenderer { get; set; }
     }
 }

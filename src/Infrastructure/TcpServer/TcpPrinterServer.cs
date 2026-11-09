@@ -137,7 +137,8 @@ namespace ZPL2PDF
                 if (imageDataList == null || imageDataList.Count == 0)
                     return;
 
-                PdfGenerator.GeneratePdf(imageDataList, outputPath);
+                PdfGenerator.GeneratePdf(imageDataList, outputPath,
+                    RendererEngineParser.ToEffectiveDpi(DefaultDpi, _rendererEngine));
             }
             catch (Exception ex)
             {

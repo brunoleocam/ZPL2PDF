@@ -45,8 +45,9 @@ namespace ZPL2PDF.Presentation.Api.Models
         public int? Dpi { get; set; }
 
         /// <summary>
-        /// Rendering engine: "offline" (default), "labelary", or "auto"
+        /// Rendering engine: "offline", "labelary", or "auto".
+        /// When omitted, the server default is used (the --renderer startup flag, otherwise "offline").
         /// </summary>
-        public string Renderer { get; set; } = "offline";
+        public string? Renderer { get; set; }
     }
 }

@@ -307,6 +307,8 @@ Start the API server:
 ZPL2PDF --api --host localhost --port 5000
 ```
 
+Use `--renderer offline|labelary|auto` to set the server-wide default renderer (default: `offline`). A request's `renderer` field overrides it.
+
 ### Health check
 
 ```bash
