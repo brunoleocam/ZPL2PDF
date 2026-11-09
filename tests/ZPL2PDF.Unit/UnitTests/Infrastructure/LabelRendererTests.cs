@@ -179,6 +179,40 @@ namespace ZPL2PDF.Tests.UnitTests.Infrastructure
             withMapping[0].Should().NotEqual(withoutMapping[0]);
         }
 
+        [Theory]
+        [InlineData("^XA^POI^FO10,10^A0N,30,30^FDHi^FS^XZ", true)]
+        [InlineData("^XA^poi^FO10,10^A0N,30,30^FDHi^FS^XZ", true)]
+        [InlineData("^XA^PON^FO10,10^A0N,30,30^FDHi^FS^XZ", false)]
+        [InlineData("^XA^POI^PON^FO10,10^A0N,30,30^FDHi^FS^XZ", false)]
+        [InlineData("^XA^FO10,10^A0N,30,30^FDHi^FS^XZ", false)]
+        [InlineData("^XA^FO10,10^A0N,30,30^FDtext ^POI inside field^FS^XZ", false)]
+        public void IsInvertedOrientation_DetectsEffectivePrintOrientation(string zpl, bool expected)
+        {
+            LabelRenderer.IsInvertedOrientation(zpl).Should().Be(expected);
+        }
+
+        [Fact]
+        public void RenderLabels_WithPoi_ProducesImageRotated180DegreesComparedToNormal()
+        {
+            // Arrange: same content, only ^POI differs; content is placed in the top-left corner
+            var normal = "^XA^FO10,10^GB100,60,60^FS^XZ";
+            var inverted = "^XA^POI^FO10,10^GB100,60,60^FS^XZ";
+            var sut = new LabelRenderer(60, 40, 203, "mm");
+
+            // Act
+            var normalPng = sut.RenderLabels(new List<string> { normal })[0];
+            var invertedPng = sut.RenderLabels(new List<string> { inverted })[0];
+
+            // Assert: the black box moves from top-left to bottom-right
+            using var normalBmp = SkiaSharp.SKBitmap.Decode(normalPng);
+            using var invertedBmp = SkiaSharp.SKBitmap.Decode(invertedPng);
+            normalBmp.Width.Should().Be(invertedBmp.Width);
+            normalBmp.Height.Should().Be(invertedBmp.Height);
+            normalBmp.GetPixel(20, 20).Alpha.Should().BeGreaterThan(200, "box is drawn top-left in the normal label");
+            invertedBmp.GetPixel(20, 20).Alpha.Should().BeLessThan(50, "top-left is empty when inverted (background is transparent)");
+            invertedBmp.GetPixel(invertedBmp.Width - 20, invertedBmp.Height - 20).Alpha.Should().BeGreaterThan(200, "box moves bottom-right when inverted");
+        }
+
         private static string? TryGetExistingSystemSansFont()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

@@ -355,7 +355,7 @@ Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](
 Construído com bibliotecas open-source incríveis:
 
 - [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) - Parsing e renderização ZPL
-- [PdfSharpCore](https://github.com/empira/PdfSharpCore) - Geração de PDF
+- [PDFsharp](https://github.com/empira/PDFsharp) - Geração de PDF
 - [SkiaSharp](https://github.com/mono/SkiaSharp) - Gráficos multiplataforma
 
 ---
