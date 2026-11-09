@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - **Issue #81**: A ZPL label that declares only `^PW` (no `^LL`), or only `^LL`, no longer falls back to the full 100x150 mm default. The declared axis is kept (e.g. `^PW812` → 101.6 mm) and the missing one comes from explicit `-w/-h` or the default, so content is no longer clipped on the right.
+- **Issue #81 (fonts)**: the offline renderer now falls back to a sans-serif face (Liberation Sans, Noto Sans, DejaVu Sans, ...) when none of BinaryKits' preferred narrow/Helvetica/Arial families is installed, instead of the system default (a wide serif on Linux/Docker). Monospace fonts (ZPL fonts A-Z) get a similar fallback.
+- **Custom fonts (`--fonts-dir` / `--font`)**: the font loader is now registered on BinaryKits' `FontManager`. With BinaryKits.Zpl.Viewer 1.3.x the previous `DrawerOptions.FontLoader` was no longer consulted, so custom fonts were silently ignored since v3.1.0.
 
 ---
 
