@@ -233,12 +233,18 @@ function Mark-StepFailed {
         $checkpoint.FailedSteps += $StepNumber
     }
     
-    # Add error message
+    # Add error message. ErrorMessages comes back from JSON as a PSCustomObject once a previous failure
+    # was saved, and a PSCustomObject cannot be indexed - normalize it to a hashtable first.
     if ($ErrorMessage) {
-        if (-not $checkpoint.Data.ErrorMessages) {
-            $checkpoint.Data.ErrorMessages = @{}
+        $messages = @{}
+        $existing = $checkpoint.Data.ErrorMessages
+        if ($existing -is [hashtable]) {
+            $messages = $existing
+        } elseif ($existing) {
+            $existing.PSObject.Properties | ForEach-Object { $messages[$_.Name] = $_.Value }
         }
-        $checkpoint.Data.ErrorMessages["Step$StepNumber"] = $ErrorMessage
+        $messages["Step$StepNumber"] = $ErrorMessage
+        $checkpoint.Data.ErrorMessages = $messages
     }
     
     Save-Checkpoint -Version $Version -ProjectRoot $ProjectRoot -Checkpoint $checkpoint
