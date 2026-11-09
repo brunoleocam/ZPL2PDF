@@ -382,6 +382,21 @@ sudo xattr -r -d com.apple.quarantine /usr/local/bin/ZPL2PDF
 # System Preferences → Security & Privacy → General → Allow
 ```
 
+### Issue: Process is "killed" immediately on Apple Silicon
+```bash
+# ./ZPL2PDF --help
+# zsh: killed     ./ZPL2PDF --help
+```
+Apple Silicon refuses to run unsigned executables. If `codesign -dv ./ZPL2PDF` reports
+`code object is not signed at all`, sign the binary locally (ad-hoc, no Apple account needed):
+```bash
+xattr -cr .                          # clear quarantine attributes (if present)
+chmod +x ./ZPL2PDF
+codesign --force --sign - ./ZPL2PDF  # ad-hoc signature
+./ZPL2PDF --help
+```
+If it is still killed, check Console.app for `amfid` / `syspolicyd` messages.
+
 ### Issue: "Permission denied"
 ```bash
 # Make executable
