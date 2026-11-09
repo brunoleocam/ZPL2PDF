@@ -229,6 +229,10 @@ ZPL2PDF -z <zpl_content> (-o <output_folder> | --stdout) [options]
 ZPL2PDF -i zpl_teste.txt -o output -n label1.pdf -d 600 -w 10.0 -h 8.0 -u cm --fonts-dir ./fonts --font "A=arial.ttf" --font "B=another.ttf"
 ```
 
+**Fonts on Linux/Docker (offline renderer):** the default font `0` looks for a narrow sans-serif (Nimbus Sans Narrow, Roboto Condensed, Helvetica, Arial, …) and falls back to Liberation Sans, Noto Sans or DejaVu Sans. Install at least one sans-serif font package on minimal hosts; see [Linux rendering notes](docs/guides/LINUX-RENDERING.md).
+
+**Print orientation:** `^POI` (inverted, 180°) is honored by the offline renderer, matching Labelary.
+
 ### **Daemon Mode Commands**
 
 ```bash
@@ -586,7 +590,7 @@ dotnet test --collect:"XPlat Code Coverage"
 - 📖 [Complete Documentation](docs/README.md) - Full user manual
 - 🌍 [Multi-language Configuration](docs/guides/LANGUAGE_CONFIGURATION.md)
 - 🐳 [Docker Usage Guide](docs/guides/DOCKER_GUIDE.md)
-- 📦 [Inno Setup Guide](docs/INNO_SETUP_GUIDE.md)
+- 📦 [Inno Setup Guide](docs/guides/INNO_SETUP_GUIDE.md)
 
 ### **Developer Guides**
 - 🛠️ [Contributing Guide](CONTRIBUTING.md)
@@ -596,7 +600,7 @@ dotnet test --collect:"XPlat Code Coverage"
 
 ### **Build & Deployment**
 - 🔨 [Build Scripts](scripts/README.md)
-- 🐳 [Docker Publishing](docs/DOCKER_PUBLISH_GUIDE.md)
+- 🐳 [Docker Publishing](docs/development/DOCKER_PUBLISH_GUIDE.md)
 - 📦 [Windows Installer](installer/README.md)
 
 ---
@@ -770,7 +774,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Built with amazing open-source libraries:
 
 - [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) - ZPL parsing and rendering
-- [PdfSharpCore](https://github.com/empira/PdfSharpCore) - PDF generation
+- [PDFsharp](https://github.com/empira/PDFsharp) - PDF generation
 - [SkiaSharp](https://github.com/mono/SkiaSharp) - Cross-platform graphics
 
 ---
