@@ -55,8 +55,8 @@ if ($i18nFiles.Count -eq 0) {
 }
 
 foreach ($file in $i18nFiles) {
-    # -Headings: translated "What's New" headings (e.g. "## Novidades na v3.1.3") also follow the release
-    if (Update-ReleaseReferencesInFile -Path $file.FullName -Version $Version -Headings -DryRun:$DryRun) {
+    #: translated "What's New" headings (e.g. "## Novidades na v3.1.3") also follow the release
+    if (Update-ReleaseReferencesInFile -Path $file.FullName -Version $Version -DryRun:$DryRun) {
         if ($DryRun) { Write-Info "[DRY RUN] Would update: $($file.Name)" } else { Write-Success "Updated: $($file.Name)" }
     } else {
         Write-Info "No changes needed: $($file.Name)"

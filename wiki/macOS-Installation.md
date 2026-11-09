@@ -48,7 +48,7 @@ brew uninstall zpl2pdf
 ### Intel Macs (x64)
 ```bash
 # Download latest release
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-x64.tar.gz -o ZPL2PDF.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-osx-x64.tar.gz -o ZPL2PDF.tar.gz
 
 # Extract
 tar -xzf ZPL2PDF.tar.gz
@@ -66,7 +66,7 @@ ZPL2PDF --help
 ### Apple Silicon (ARM64)
 ```bash
 # Download latest release
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
 
 # Extract
 tar -xzf ZPL2PDF.tar.gz
@@ -249,7 +249,7 @@ brew upgrade zpl2pdf
 ZPL2PDF stop
 
 # Download latest version
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
 
 # Extract and replace
 tar -xzf ZPL2PDF.tar.gz
@@ -429,10 +429,10 @@ source ~/.bash_profile
 uname -m  # Should show "arm64" for Apple Silicon
 
 # Download ARM64 version
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-osx-arm64.tar.gz -o ZPL2PDF.tar.gz
 
 # For Intel Macs, use x64 version
-curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-osx-x64.tar.gz -o ZPL2PDF.tar.gz
+curl -L https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-osx-x64.tar.gz -o ZPL2PDF.tar.gz
 ```
 
 ---

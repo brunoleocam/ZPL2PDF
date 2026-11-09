@@ -69,7 +69,7 @@ winget uninstall brunoleocam.ZPL2PDF
 ### Download
 ```powershell
 # Download using PowerShell
-Invoke-WebRequest -Uri "https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-win-x64.zip" -OutFile "ZPL2PDF.zip"
+Invoke-WebRequest -Uri "https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-win-x64.zip" -OutFile "ZPL2PDF.zip"
 
 # Extract
 Expand-Archive -Path "ZPL2PDF.zip" -DestinationPath "C:\ZPL2PDF"
