@@ -19,6 +19,49 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.Services
             _extractor = new ZplDimensionExtractor();
         }
 
+        #region Partial ZPL dimensions (issue #81)
+
+        [Fact]
+        public void ApplyPriorityLogic_WithOnlyPw_KeepsZplWidthAndUsesDefaultHeight()
+        {
+            // Arrange: ^PW812 without ^LL (e.g. UPS labels)
+            var zpl = _extractor.ExtractDimensionsFromLabel("^XA^PW812^FO10,10^A0N,20,20^FDX^FS^XZ");
+            var defaults = _extractor.GetDefaultDimensions();
+
+            // Act
+            var result = _extractor.ApplyPriorityLogic(null, null, "mm", zpl, 203);
+
+            // Assert: width must not be clipped to the 100 mm default
+            result.WidthMm.Should().BeApproximately(812 / 203.0 * 25.4, 0.01);
+            result.HeightMm.Should().Be(defaults.HeightMm);
+            result.Source.Should().Be("zpl_partial");
+        }
+
+        [Fact]
+        public void ApplyPriorityLogic_WithOnlyLl_KeepsZplHeightAndUsesDefaultWidth()
+        {
+            var zpl = _extractor.ExtractDimensionsFromLabel("^XA^LL1218^FO10,10^A0N,20,20^FDX^FS^XZ");
+            var defaults = _extractor.GetDefaultDimensions();
+
+            var result = _extractor.ApplyPriorityLogic(null, null, "mm", zpl, 203);
+
+            result.HeightMm.Should().BeApproximately(1218 / 203.0 * 25.4, 0.01);
+            result.WidthMm.Should().Be(defaults.WidthMm);
+        }
+
+        [Fact]
+        public void ApplyPriorityLogic_WithOnlyPwAndExplicitSize_UsesExplicitForMissingAxis()
+        {
+            var zpl = _extractor.ExtractDimensionsFromLabel("^XA^PW812^XZ");
+
+            var result = _extractor.ApplyPriorityLogic(50, 80, "mm", zpl, 203);
+
+            result.WidthMm.Should().BeApproximately(812 / 203.0 * 25.4, 0.01);
+            result.HeightMm.Should().Be(80);
+        }
+
+        #endregion
+
         #region ExtractDimensions Tests
 
         [Fact]

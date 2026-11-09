@@ -212,6 +212,7 @@ namespace ZPL2PDF
         private void ProcessConversionMode(string[] args)
         {
             var conversionArgs = _argumentParser.ParseConversionMode(args, 0);
+            if (RejectInvalidRenderer(conversionArgs.InvalidRenderer)) return;
 
             // Set properties
             InputFilePath = conversionArgs.InputFilePath;
@@ -271,6 +272,7 @@ namespace ZPL2PDF
                 startIndex = args.Length > 0 ? 1 : 0;
             }
             var daemonArgs = _argumentParser.ParseDaemonMode(args, startIndex);
+            if (RejectInvalidRenderer(daemonArgs.InvalidRenderer)) return;
 
         // Set properties
         ListenFolderPath = string.IsNullOrWhiteSpace(daemonArgs.ListenFolderPath) 
@@ -325,6 +327,7 @@ namespace ZPL2PDF
             // Parse from index 2 (skip "server" and subcommand start/stop/status)
             int startIndex = args.Length >= 2 ? 2 : args.Length;
             var serverArgs = _argumentParser.ParseServerMode(args, startIndex);
+            if (RejectInvalidRenderer(serverArgs.InvalidRenderer)) return;
 
             ServerPort = serverArgs.Port;
             ServerOutputFolder = serverArgs.OutputFolder;
@@ -346,6 +349,24 @@ namespace ZPL2PDF
                     ServerOutputFolder = _argumentParser.GetDefaultTcpOutputFolder();
                 }
             }
+        }
+
+        /// <summary>
+        /// Reports an unrecognized --renderer value and switches to help mode with a failing exit code.
+        /// </summary>
+        /// <returns>True when the value was invalid and processing must stop.</returns>
+        private bool RejectInvalidRenderer(string? invalidRenderer)
+        {
+            if (invalidRenderer == null)
+            {
+                return false;
+            }
+
+            Console.WriteLine($"Error: invalid --renderer '{invalidRenderer}'. Use 'offline', 'labelary', or 'auto'.");
+            Mode = OperationMode.Help;
+            ExitCode = 1;
+            _helpDisplay.ShowHelp();
+            return true;
         }
 
         /// <summary>

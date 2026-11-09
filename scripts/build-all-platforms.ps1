@@ -71,6 +71,29 @@ if (-not $SkipTests) {
     }
 }
 
+# Ad-hoc code signing for macOS binaries.
+# Apple Silicon kills unsigned binaries immediately ("killed ./ZPL2PDF", issue #67).
+# Uses `codesign` on macOS or `rcodesign` (https://github.com/indygreg/apple-platform-rs) on any OS.
+function Invoke-MacOSAdhocSign {
+    param([string]$ExePath)
+
+    if (Get-Command codesign -ErrorAction SilentlyContinue) {
+        codesign --force --sign - $ExePath
+    } elseif (Get-Command rcodesign -ErrorAction SilentlyContinue) {
+        rcodesign sign $ExePath
+    } else {
+        Write-Info "   WARNING: neither 'codesign' nor 'rcodesign' found - $ExePath is NOT signed."
+        Write-Info "   Apple Silicon will kill it; users must run: codesign --force --sign - ./ZPL2PDF"
+        return
+    }
+
+    if ($LASTEXITCODE -eq 0) {
+        Write-Info "   Ad-hoc signed: $ExePath"
+    } else {
+        Write-Info "   WARNING: ad-hoc signing failed for $ExePath"
+    }
+}
+
 # Define platforms
 $platforms = @(
     @{ Runtime = "win-x64";     Name = "Windows 64-bit";              Archive = "zip" },
@@ -124,6 +147,11 @@ foreach ($platform in $platforms) {
                 $fileSize = (Get-Item $exePath).Length / 1MB
                 Write-Success "Built successfully! Size: $([math]::Round($fileSize, 2)) MB"
                 
+                # macOS binaries must be (at least ad-hoc) signed before archiving
+                if ($runtime -like "osx-*") {
+                    Invoke-MacOSAdhocSign -ExePath $exePath
+                }
+
                 # Create archive
                 $archiveName = "ZPL2PDF-v$Version-$runtime"
                 if ($archiveType -eq "zip") {
