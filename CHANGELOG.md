@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### 🐛 Fixed
+
+- **Issue #81**: A ZPL label that declares only `^PW` (no `^LL`), or only `^LL`, no longer falls back to the full 100x150 mm default. The declared axis is kept (e.g. `^PW812` → 101.6 mm) and the missing one comes from explicit `-w/-h` or the default, so content is no longer clipped on the right.
+
+---
+
 ## [3.1.3] - 2026-05-11
 
 ### 🐛 Fixed
