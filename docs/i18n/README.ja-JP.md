@@ -1,6 +1,6 @@
 ﻿# ZPL2PDF - ZPLからPDFへのコンバーター
 
-[![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.1.4-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -11,6 +11,15 @@
 **[English](../../README.md)** | **[Português-BR](README.pt-BR.md)** | **[Español](README.es-ES.md)** | **[Français](README.fr-FR.md)** | **[Deutsch](README.de-DE.md)** | **[Italiano](README.it-IT.md)** | **[日本語](#)** | **[中文](README.zh-CN.md)**
 
 ZPL（Zebra Programming Language）ファイルを高品質なPDFドキュメントに変換する強力なクロスプラットフォームコマンドラインツール。ラベル印刷ワークフロー、自動ドキュメント生成、エンタープライズラベル管理システムに最適です。
+
+---
+
+## 🚀 **v3.1.4の新機能**
+
+- **PDFのページサイズ (#82)**: ピクセル数をポイントとして書き込む代わりに、ラベルの実寸(203 dpiで4x6 in → 288x432 pt)になりました。
+- **`--renderer` (#83)**: APIモードで `--api --renderer labelary` がサーバーの既定として反映されます。無効な値はエラーになります。
+- **UPSラベル (#81)**: `^PW` のみ指定でも内容が切れなくなり、Linux/Dockerではサンセリフのフォントにフォールバックし、`^POI` に対応しました。`--fonts-dir`/`--font` も再び機能します。
+- **macOS Apple Silicon (#67)**: `osx-*` バイナリにアドホック署名を行い、起動時に強制終了されなくなりました。
 
 ---
 
@@ -129,7 +138,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### オプション2：インストーラー
-1. [ZPL2PDF-Setup-3.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)をダウンロード
+1. [ZPL2PDF-Setup-3.1.4.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)をダウンロード
 2. インストーラーを実行
 3. インストール中に言語を選択
 4. 完了！ ✅
@@ -139,10 +148,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian（.debパッケージ）
 ```bash
 # .debパッケージをダウンロード
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # パッケージをインストール
-sudo dpkg -i ZPL2PDF-v3.1.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # 必要に応じて依存関係を修正
 sudo apt-get install -f

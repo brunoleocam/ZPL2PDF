@@ -1,6 +1,6 @@
 ﻿# ZPL2PDF - ZPL转PDF转换器
 
-[![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
+[![Version](https://img.shields.io/badge/version-3.1.4-blue.svg)](https://github.com/brunoleocam/ZPL2PDF/releases)
 ![GitHub all releases](https://img.shields.io/github/downloads/brunoleocam/ZPL2PDF/total)
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/brunoleocam/ZPL2PDF)
@@ -11,6 +11,15 @@
 **[English](../../README.md)** | **[Português-BR](README.pt-BR.md)** | **[Español](README.es-ES.md)** | **[Français](README.fr-FR.md)** | **[Deutsch](README.de-DE.md)** | **[Italiano](README.it-IT.md)** | **[日本語](README.ja-JP.md)** | **[中文](#)**
 
 一个强大的跨平台命令行工具，可将ZPL（Zebra Programming Language）文件转换为高质量的PDF文档。非常适合标签打印工作流程、自动化文档生成和企业标签管理系统。
+
+---
+
+## 🚀 **v3.1.4新功能**
+
+- **PDF页面尺寸 (#82)**:页面现在使用标签的实际物理尺寸(203 dpi下4x6英寸 → 288x432 pt),而不是把像素数当作点数。
+- **`--renderer` (#83)**:API模式下 `--api --renderer labelary` 会作为服务器默认值生效;无效值现在会报错。
+- **UPS标签 (#81)**:只有 `^PW` 而没有 `^LL` 时不再裁剪内容,Linux/Docker下回退到无衬线字体,并支持 `^POI`;`--fonts-dir`/`--font` 重新可用。
+- **macOS Apple Silicon (#67)**:`osx-*` 二进制文件进行了临时签名,启动时不会再被系统终止。
 
 ---
 
@@ -129,7 +138,7 @@ winget install brunoleocam.ZPL2PDF
 ```
 
 #### 选项2：安装程序
-1. 下载 [ZPL2PDF-Setup-3.0.0.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
+1. 下载 [ZPL2PDF-Setup-3.1.4.exe](https://github.com/brunoleocam/ZPL2PDF/releases/latest)
 2. 运行安装程序
 3. 在安装过程中选择语言
 4. 完成！ ✅
@@ -139,10 +148,10 @@ winget install brunoleocam.ZPL2PDF
 #### Ubuntu/Debian（.deb包）
 ```bash
 # 下载 .deb 包
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.3/ZPL2PDF-v3.1.3-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # 安装包
-sudo dpkg -i ZPL2PDF-v3.1.3-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # 如需修复依赖关系
 sudo apt-get install -f

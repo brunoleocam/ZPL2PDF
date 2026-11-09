@@ -26,8 +26,8 @@ Instead of maintaining official repositories (PPA for Debian/Ubuntu or COPR for 
 .\scripts\build-linux-packages.ps1
 
 # Outputs:
-# - build/publish/ZPL2PDF-v2.0.0-linux-amd64.deb (37.67 MB)
-# - build/publish/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz (48.93 MB)
+# - build/publish/ZPL2PDF-v3.1.4-linux-amd64.deb (37.67 MB)
+# - build/publish/ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz (48.93 MB)
 ```
 
 ### Build Individual Packages
@@ -58,8 +58,8 @@ When creating a GitHub Release:
 1. Go to [Releases](https://github.com/brunoleocam/ZPL2PDF/releases)
 2. Click "Draft a new release"
 3. Upload packages from `build/publish/`:
-   - `ZPL2PDF-v2.0.0-linux-amd64.deb` (37.67 MB)
-   - `ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz` (48.93 MB)
+   - `ZPL2PDF-v3.1.4-linux-amd64.deb` (37.67 MB)
+   - `ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz` (48.93 MB)
 
 ---
 
@@ -68,10 +68,10 @@ When creating a GitHub Release:
 ### Debian/Ubuntu
 ```bash
 # Download from GitHub Releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-amd64.deb
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Install
-sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Fix dependencies (if needed)
 sudo apt-get install -f
@@ -83,10 +83,10 @@ zpl2pdf --help
 ### Fedora/CentOS/RHEL
 ```bash
 # Download from GitHub Releases
-wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v2.0.0/ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+wget https://github.com/brunoleocam/ZPL2PDF/releases/download/v3.1.4/ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz
 
 # Extract to system
-sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz -C /
 
 # Make executable
 sudo chmod +x /usr/bin/ZPL2PDF
@@ -105,29 +105,29 @@ zpl2pdf --help
 ### Test .deb
 ```bash
 # Check package contents
-dpkg-deb -c ZPL2PDF-v2.0.0-linux-amd64.deb
+dpkg-deb -c ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Check package info
-dpkg-deb -I ZPL2PDF-v2.0.0-linux-amd64.deb
+dpkg-deb -I ZPL2PDF-v3.1.4-linux-amd64.deb
 
 # Install locally for testing
-sudo dpkg -i ZPL2PDF-v2.0.0-linux-amd64.deb
+sudo dpkg -i ZPL2PDF-v3.1.4-linux-amd64.deb
 ```
 
 ### Test .rpm tarball
 ```bash
 # Check tarball contents
-tar -tzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz
+tar -tzf ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz
 
 # Extract to temporary location for testing
 mkdir -p /tmp/rpm-test
-tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /tmp/rpm-test
+tar -xzf ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz -C /tmp/rpm-test
 
 # Check binary
 /tmp/rpm-test/usr/bin/ZPL2PDF --help
 
 # Install to system
-sudo tar -xzf ZPL2PDF-v2.0.0-linux-x64-rpm.tar.gz -C /
+sudo tar -xzf ZPL2PDF-v3.1.4-linux-x64-rpm.tar.gz -C /
 ```
 
 ---

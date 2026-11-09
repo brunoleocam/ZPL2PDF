@@ -10,7 +10,7 @@
 #   - README version badge            (badge/version-X.Y.Z-)
 #   - "What's New in vX.Y.Z" / "Recent highlights (vX.Y.Z)"
 #   - release download URLs/assets    (releases/download/vX.Y.Z/, ZPL2PDF-vX.Y.Z-<platform>, ZPL2PDF-Setup-X.Y.Z.exe)
-#   - markdown headings with vX.Y.Z   (only when -Headings is used, for translated READMEs)
+#   Section headings/prose in translated READMEs ("What's New", thanks) are NOT rewritten; edit them by hand.
 # Files are read and written as UTF-8 without altering line endings, and the BOM
 # state of each file is preserved (Windows PowerShell 5.1 safe).
 # ============================================================================
@@ -33,8 +33,7 @@ function Write-ReleaseTextFile {
 function Update-ReleaseReferences {
     param(
         [Parameter(Mandatory=$true)][AllowEmptyString()][string]$Content,
-        [Parameter(Mandatory=$true)][string]$Version,
-        [switch]$Headings
+        [Parameter(Mandatory=$true)][string]$Version
     )
 
     $semver = '\d+\.\d+\.\d+'
@@ -50,11 +49,6 @@ function Update-ReleaseReferences {
     $result = $result -replace "(ZPL2PDF-v)$semver(-(?:win|linux|osx))", ('${1}' + $Version + '${2}')
     $result = $result -replace "(ZPL2PDF-Setup-)$semver(\.exe)", ('${1}' + $Version + '${2}')
 
-    if ($Headings) {
-        # Translated "What's New" headings, e.g. "## Novidades na v3.1.3"
-        $result = [regex]::Replace($result, "(?m)^(#{1,6}[^\r\n]*?\bv)$semver", ('${1}' + $Version))
-    }
-
     return $result
 }
 
@@ -62,14 +56,13 @@ function Update-ReleaseReferencesInFile {
     param(
         [Parameter(Mandatory=$true)][string]$Path,
         [Parameter(Mandatory=$true)][string]$Version,
-        [switch]$Headings,
         [switch]$DryRun
     )
 
     if (-not (Test-Path $Path)) { return $false }
 
     $original = Read-ReleaseTextFile -Path $Path
-    $updated = Update-ReleaseReferences -Content $original -Version $Version -Headings:$Headings
+    $updated = Update-ReleaseReferences -Content $original -Version $Version
 
     if ($updated -eq $original) { return $false }
 

@@ -52,14 +52,14 @@ chmod +x scripts/build-all-platforms.sh
 ### Output Structure
 ```
 build/publish/
-├── ZPL2PDF-v2.0.0-win-x64.zip
-├── ZPL2PDF-v2.0.0-win-x86.zip
-├── ZPL2PDF-v2.0.0-win-arm64.zip
-├── ZPL2PDF-v2.0.0-linux-x64.tar.gz
-├── ZPL2PDF-v2.0.0-linux-arm64.tar.gz
-├── ZPL2PDF-v2.0.0-linux-arm.tar.gz
-├── ZPL2PDF-v2.0.0-osx-x64.tar.gz
-├── ZPL2PDF-v2.0.0-osx-arm64.tar.gz
+├── ZPL2PDF-v3.1.4-win-x64.zip
+├── ZPL2PDF-v3.1.4-win-x86.zip
+├── ZPL2PDF-v3.1.4-win-arm64.zip
+├── ZPL2PDF-v3.1.4-linux-x64.tar.gz
+├── ZPL2PDF-v3.1.4-linux-arm64.tar.gz
+├── ZPL2PDF-v3.1.4-linux-arm.tar.gz
+├── ZPL2PDF-v3.1.4-osx-x64.tar.gz
+├── ZPL2PDF-v3.1.4-osx-arm64.tar.gz
 └── SHA256SUMS.txt
 ```
 
