@@ -281,7 +281,8 @@ namespace ZPL2PDF
                 Console.WriteLine($"Output folder: {outputFolder}");
                 Console.WriteLine($"Output path: {outputPath}");
                 Console.WriteLine($"Calling PdfGenerator.GeneratePdf with {allImageData.Count} images...");
-                PdfGenerator.GeneratePdf(allImageData, outputPath);
+                PdfGenerator.GeneratePdf(allImageData, outputPath,
+                    RendererEngineParser.ToEffectiveDpi(finalDimensions.Dpi, _rendererEngine));
                 
                 // Verify PDF was created
                 if (File.Exists(outputPath))

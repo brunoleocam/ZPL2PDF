@@ -1,15 +1,16 @@
 # 🏗️ Architecture Overview
 
-Understanding ZPL2PDF's Clean Architecture and design principles.
+Understanding ZPL2PDF's layered architecture and design principles.
 
 ## 🎯 Design Philosophy
 
-ZPL2PDF follows **Clean Architecture** principles:
+ZPL2PDF is organized in layers inspired by **Clean Architecture**:
 - ✅ **Separation of Concerns** - Clear layer boundaries
-- ✅ **Dependency Inversion** - Depend on abstractions
-- ✅ **SOLID Principles** - Maintainable, extensible code
-- ✅ **Testability** - Easy to unit test
+- ✅ **Abstractions in Domain/Application** - Interfaces for renderers, PDF generation and validation
+- ✅ **Testability** - Services are covered by unit and integration tests
 - ✅ **Cross-Platform** - Works on Windows, Linux, macOS
+
+> Note: services are currently wired by direct instantiation (e.g. `new ConversionService()`), not by a DI container. The interfaces exist mainly for testing and future extension.
 
 ---
 
@@ -17,7 +18,7 @@ ZPL2PDF follows **Clean Architecture** principles:
 
 ```
 src/
-├── Application/           # Use Cases & Application Logic
+├── Application/           # Use cases & application logic
 │   ├── Services/
 │   │   ├── ConversionService.cs
 │   │   ├── FileValidationService.cs
@@ -26,54 +27,82 @@ src/
 │   └── Interfaces/
 │       ├── IConversionService.cs
 │       ├── IDaemonService.cs
-│       └── IFileProcessingService.cs
+│       ├── IFileProcessingService.cs
+│       ├── IFileValidationService.cs
+│       ├── IPathService.cs
+│       └── IUnitConversionService.cs
 │
-├── Domain/               # Business Logic & Rules
-│   ├── Services/        # Domain Interfaces
+├── Domain/                # Contracts & value objects
+│   ├── Services/          # Domain interfaces
 │   │   ├── ILabelRenderer.cs
 │   │   ├── IPdfGenerator.cs
 │   │   ├── IFileValidator.cs
 │   │   └── IDimensionExtractor.cs
-│   └── ValueObjects/    # Value Objects
+│   └── ValueObjects/
 │       ├── ConversionOptions.cs
+│       ├── DaemonConfiguration.cs
 │       ├── FileInfo.cs
-│       ├── ProcessingResult.cs
-│       └── DaemonConfiguration.cs
+│       └── ProcessingResult.cs
 │
-├── Infrastructure/       # External Dependencies
-│   ├── FileSystem/
-│   │   ├── FolderMonitor.cs
-│   │   └── FileValidator.cs
+├── Infrastructure/        # I/O and external dependencies
 │   ├── Configuration/
 │   │   └── ConfigManager.cs
+│   ├── FileSystem/
+│   │   └── FolderMonitor.cs
 │   ├── Processing/
 │   │   └── ProcessingQueue.cs
 │   ├── Rendering/
-│   │   ├── LabelRenderer.cs
-│   │   └── PdfGenerator.cs
+│   │   ├── LabelRenderer.cs      # Offline (BinaryKits + SkiaSharp)
+│   │   ├── LabelaryRenderer.cs   # Labelary online API
+│   │   ├── AutoRenderer.cs       # Labelary first, offline fallback
+│   │   └── PdfGenerator.cs       # PNG pages -> PDF (PDFsharp)
+│   ├── TcpServer/
+│   │   └── TcpPrinterServer.cs   # Virtual network printer
 │   ├── DaemonManager.cs
-│   └── PidManager.cs
+│   ├── PidManager.cs
+│   └── ProcessManager.cs
 │
-├── Presentation/         # User Interface (CLI)
-│   ├── Program.cs
+├── Presentation/          # CLI, REST API and mode handlers
+│   ├── Api/Models/        # ConvertRequest / ConvertResponse (REST API)
+│   ├── Program.cs         # Entry point + REST API (Minimal API)
+│   ├── ModeDetector.cs
+│   ├── ArgumentParser.cs
 │   ├── ArgumentProcessor.cs
 │   ├── ArgumentValidator.cs
 │   ├── ConversionModeHandler.cs
 │   ├── DaemonModeHandler.cs
+│   ├── TcpServerModeHandler.cs
 │   └── HelpDisplay.cs
 │
-└── Shared/              # Common Utilities
-    ├── Constants/
+└── Shared/                # Common utilities
+    ├── Constants/         # Includes RendererEngine enum
     ├── Localization/
     ├── DefaultSettings.cs
+    ├── LabelFileReader.cs       # ZPL preprocessing & label splitting
     └── ZplDimensionExtractor.cs
 ```
 
 ---
 
+## 🚦 Operation Modes
+
+`Program.cs` picks the mode; `ModeDetector` decides between the CLI modes.
+
+| Mode | How to start | Handler |
+|------|--------------|---------|
+| **Conversion** | `ZPL2PDF -i file.zpl -o out/` or `-z "<zpl>"` | `ConversionModeHandler` |
+| **Daemon** (watch folder) | `ZPL2PDF start` / `stop` / `status` / `run` (no args = start) | `DaemonModeHandler` |
+| **TCP server** (virtual printer) | `ZPL2PDF server start\|stop\|status -o out/` (default port `9101`) | `TcpServerModeHandler` → `TcpPrinterServer` |
+| **REST API** | `ZPL2PDF --api` (alias `--web`), `--host`, `--port` (default `0.0.0.0:5000`) | `Program.StartApiMode` |
+| **Help** | `-help` or unclear arguments | `HelpDisplay` |
+
+REST API endpoints: `POST /api/convert` (JSON body `zpl` or `zplArray`, `format` = `pdf`\|`png`, `renderer`, `width`, `height`, `unit`, `dpi`) and `GET /api/health`. See [API guide](../docs/guides/API_GUIDE.md).
+
+---
+
 ## 🔄 Data Flow
 
-### Conversion Mode Flow
+### Conversion Mode
 ```
 User Input
     ↓
@@ -82,205 +111,108 @@ ArgumentProcessor → ArgumentValidator
 ConversionModeHandler
     ↓
 ConversionService
+    ├─ LabelFileReader.PreprocessZpl / SplitLabels
+    ├─ ZplDimensionExtractor (^PW / ^LL)
+    ├─ TryConvertPdfDirectWithLabelary (labelary / auto)  → PDF bytes
+    └─ ILabelRenderer (offline / labelary / auto)         → PNG pages
+            ↓
+        PdfGenerator
     ↓
-LabelRenderer → PdfGenerator
-    ↓
-Output PDF
+Output PDF (file or --stdout)
 ```
 
-### Daemon Mode Flow
+### Daemon Mode
 ```
-User Start Command
-    ↓
 DaemonModeHandler → DaemonManager
     ↓
 FolderMonitor (watch files)
     ↓
-ProcessingQueue (queue files)
+ProcessingQueue → FileValidationService
     ↓
-FileValidationService
-    ↓
-ConversionService
-    ↓
-LabelRenderer → PdfGenerator
+ILabelRenderer → PdfGenerator
     ↓
 Output PDFs
 ```
+
+### TCP Server and REST API
+Both reuse `ConversionService` (and therefore the same renderers and the Labelary PDF shortcut) and write/return PDF or PNG output.
+
+---
+
+## 🖨️ Renderers
+
+The renderer is chosen with `--renderer offline|labelary|auto` (CLI) or the `renderer` field (REST API). The enum is `RendererEngine` in `Shared/Constants`.
+
+| Engine | Class | Behavior |
+|--------|-------|----------|
+| `offline` (default) | `LabelRenderer` | BinaryKits.Zpl.Viewer + SkiaSharp; no network. Supports custom fonts (`--fonts-dir`, `--font`). |
+| `labelary` | `LabelaryRenderer` | Labelary online API. Can return a PDF directly (`RenderPdf`) or PNG per label. Errors are thrown. |
+| `auto` | `AutoRenderer` | Tries Labelary per label and falls back to the offline renderer on failure. |
+
+Labelary only accepts 6, 8, 12 or 24 dpmm; `LabelaryRenderer` maps the requested DPI to the closest one.
 
 ---
 
 ## 🧩 Core Components
 
-### 1. Application Layer
-**Purpose**: Orchestrate use cases and business workflows
+### Application Layer
+- `ConversionService`: single conversion pipeline shared by CLI, REST API, TCP server and daemon (preprocess → split → dimensions → render, plus the direct Labelary PDF path).
+- `FileValidationService`: file extension/content checks.
+- `UnitConversionService`: unit conversions (mm, cm, in).
+- `PathService`: path management.
 
-**Key Services**:
-- `ConversionService`: Centralized conversion logic
-- `FileValidationService`: File validation and checking
-- `UnitConversionService`: Unit conversions (mm, cm, in)
-- `PathService`: Path management and validation
+### Domain Layer
+- Contracts: `ILabelRenderer`, `IPdfGenerator`, `IFileValidator`, `IDimensionExtractor`.
+- Value objects: `ConversionOptions`, `ProcessingResult`, `FileInfo`, `DaemonConfiguration`.
 
-### 2. Domain Layer
-**Purpose**: Business logic and domain rules
+### Infrastructure Layer
+- Renderers and `PdfGenerator` (see above), `FolderMonitor`, `ProcessingQueue`, `ConfigManager`, `DaemonManager`/`PidManager`/`ProcessManager`, `TcpPrinterServer`.
 
-**Key Concepts**:
-- `ConversionOptions`: User-specified options
-- `ProcessingResult`: Conversion outcomes
-- Domain interfaces (no implementations)
+### Presentation Layer
+- Argument parsing/validation, mode detection and handlers, help, REST API endpoints, multi-language messages.
 
-### 3. Infrastructure Layer
-**Purpose**: External dependencies and I/O
-
-**Key Components**:
-- `LabelRenderer`: ZPL rendering using Labelary API
-- `PdfGenerator`: PDF document generation
-- `FolderMonitor`: File system watching
-- `ConfigManager`: Configuration management
-
-### 4. Presentation Layer
-**Purpose**: User interaction (CLI)
-
-**Key Features**:
-- Argument parsing and validation
-- Mode detection (conversion vs daemon)
-- Help display and error messages
-- Multi-language support
-
----
-
-## 🔑 Key Design Patterns
-
-### Dependency Injection
-```csharp
-public class ConversionService : IConversionService
-{
-    private readonly ILabelRenderer _renderer;
-    private readonly IPdfGenerator _pdfGenerator;
-    
-    public ConversionService(
-        ILabelRenderer renderer,
-        IPdfGenerator pdfGenerator)
-    {
-        _renderer = renderer;
-        _pdfGenerator = pdfGenerator;
-    }
-}
-```
-
-### Value Objects
-```csharp
-public class ConversionOptions
-{
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public string Unit { get; set; } = "mm";
-    public int Dpi { get; set; } = 203;
-}
-```
-
-### Strategy Pattern
-```csharp
-// Different conversion strategies
-public interface IConversionStrategy
-{
-    ProcessingResult Convert(ConversionOptions options);
-}
-
-public class FileConversionStrategy : IConversionStrategy { }
-public class StringConversionStrategy : IConversionStrategy { }
-```
+### Shared
+- `LabelFileReader`: ZPL preprocessing (`^FN` removal, `^B0` → `^BO` workaround for the offline viewer, `^FH` hex decoding) and label splitting with `~DGR`/`^IDR` graphic state.
+- `ZplDimensionExtractor`: dimension priority is explicit arguments > ZPL (`^PW`/`^LL`) > defaults.
+- `Localization`: resource-based messages in `Resources/Messages.*.resx` (8 languages).
 
 ---
 
 ## 🌍 Cross-Platform Support
 
-### Platform Detection
-```csharp
-if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-{
-    // Windows-specific code
-}
-else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-{
-    // Linux-specific code
-}
-else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-{
-    // macOS-specific code
-}
-```
+Use cross-platform path APIs and avoid OS-specific code unless guarded:
 
-### Path Handling
 ```csharp
-// Use cross-platform path APIs
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { /* ... */ }
+else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) { /* ... */ }
+else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) { /* ... */ }
+
 var defaultFolder = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-    "ZPL2PDF Auto Converter"
-);
+    "ZPL2PDF Auto Converter");
 ```
 
 ---
 
 ## 🔐 Security Considerations
 
-### Input Validation
-- Validate all user inputs
-- Sanitize file paths
-- Check file permissions
-- Validate ZPL content
-
-### File System Security
-- Use read-only mounts when possible
-- Validate file extensions
-- Check file size limits
-- Prevent path traversal attacks
-
----
-
-## ⚡ Performance Optimizations
-
-### Async Processing
-```csharp
-public async Task<ProcessingResult> ConvertAsync(
-    ConversionOptions options,
-    CancellationToken cancellationToken)
-{
-    // Async file I/O
-    var zplContent = await File.ReadAllTextAsync(
-        options.InputPath,
-        cancellationToken
-    );
-    
-    // Async HTTP requests
-    var renderedImage = await _renderer.RenderAsync(
-        zplContent,
-        options.Dimensions
-    );
-    
-    return result;
-}
-```
-
-### Caching
-- Cache dimension extraction results
-- Cache compiled regex patterns
-- Cache configuration settings
+- Validate all user inputs and file extensions
+- Sanitize file paths and prevent path traversal
+- Regexes use timeouts to avoid ReDoS on large inputs
+- Prefer read-only mounts for watch folders in Docker
+- The REST API allows any CORS origin and binds to `0.0.0.0` by default; restrict `--host` / network exposure in production
 
 ---
 
 ## 🔗 External Dependencies
 
 ### NuGet Packages
-- `PdfSharp` - PDF generation
-- `System.Drawing.Common` - Image processing
-- `Microsoft.Extensions.Configuration` - Configuration
-- `Microsoft.Extensions.Logging` - Logging
+- `BinaryKits.Zpl.Label` / `BinaryKits.Zpl.Viewer` - offline ZPL parsing and drawing (SkiaSharp-based)
+- `PDFsharp` - PDF generation
+- ASP.NET Core shared framework (`Microsoft.AspNetCore.App`) - REST API
 
 ### External APIs
-- **Labelary API** - ZPL rendering service
-  - Converts ZPL to PNG
-  - Free tier available
-  - Fallback to local rendering
+- **Labelary API** (`api.labelary.com`) - ZPL rendering service used by the `labelary` and `auto` engines (requires internet; the offline engine needs none).
 
 ---
 

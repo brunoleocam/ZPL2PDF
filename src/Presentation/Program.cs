@@ -147,7 +147,8 @@ namespace ZPL2PDF
             // Parse host and port from arguments
             string host = "0.0.0.0";  // Default: listen on all interfaces (Docker-friendly)
             int port = 5000;
-            
+            string? rendererArg = null;
+
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i] == "--host" && i + 1 < args.Length)
@@ -158,6 +159,18 @@ namespace ZPL2PDF
                 {
                     port = parsedPort;
                 }
+                else if (args[i] == "--renderer" && i + 1 < args.Length)
+                {
+                    rendererArg = args[i + 1];
+                }
+            }
+
+            // Server-wide default renderer (--renderer); a request's "renderer" field overrides it.
+            if (!TryGetRendererEngine(rendererArg, RendererEngine.Offline, out var defaultRendererEngine))
+            {
+                Console.Error.WriteLine($"Error: invalid --renderer '{rendererArg}'. Use 'offline', 'labelary', or 'auto'.");
+                Environment.Exit(1);
+                return;
             }
 
             var builder = WebApplication.CreateBuilder(args);
@@ -226,7 +239,7 @@ namespace ZPL2PDF
                     var dpi = request.Dpi ?? 203;
 
                     // Renderer selection ("offline" | "labelary" | "auto")
-                    if (!TryGetRendererEngine(request.Renderer, out var rendererEngine))
+                    if (!TryGetRendererEngine(request.Renderer, defaultRendererEngine, out var rendererEngine))
                     {
                         await WriteBadRequest(context, "Renderer must be 'offline', 'labelary', or 'auto'");
                         return;
@@ -273,7 +286,7 @@ namespace ZPL2PDF
 
                     if (format == "pdf")
                     {
-                        var pdfBytes = PdfGenerator.GeneratePdfToBytes(imageDataList);
+                        var pdfBytes = PdfGenerator.GeneratePdfToBytes(imageDataList, RendererEngineParser.ToEffectiveDpi(dpi, rendererEngine));
                         response.Pdf = Convert.ToBase64String(pdfBytes);
                     }
                     else // png
@@ -309,6 +322,7 @@ namespace ZPL2PDF
             Console.WriteLine($"ZPL2PDF API is starting on {host}:{port}");
             Console.WriteLine($"API endpoint: http://{host}:{port}/api/convert");
             Console.WriteLine($"Health check: http://{host}:{port}/api/health");
+            Console.WriteLine($"Default renderer: {defaultRendererEngine.ToString().ToLowerInvariant()}");
             Console.WriteLine("Press Ctrl+C to stop the API server");
 
             await app.RunAsync($"http://{host}:{port}");
@@ -325,18 +339,15 @@ namespace ZPL2PDF
             await context.Response.WriteAsJsonAsync(errorResponse);
         }
 
-        private static bool TryGetRendererEngine(string? rendererRaw, out RendererEngine rendererEngine)
+        private static bool TryGetRendererEngine(string? rendererRaw, RendererEngine defaultEngine, out RendererEngine rendererEngine)
         {
-            var renderer = (rendererRaw ?? "offline").Trim().ToLowerInvariant();
-            rendererEngine = renderer switch
+            if (string.IsNullOrWhiteSpace(rendererRaw))
             {
-                "offline" => RendererEngine.Offline,
-                "labelary" => RendererEngine.Labelary,
-                "auto" => RendererEngine.Auto,
-                _ => RendererEngine.Offline
-            };
+                rendererEngine = defaultEngine;
+                return true;
+            }
 
-            return renderer == "offline" || renderer == "labelary" || renderer == "auto";
+            return RendererEngineParser.TryParse(rendererRaw, out rendererEngine);
         }
 
         private static bool TryConvertDirectPdfResponse(

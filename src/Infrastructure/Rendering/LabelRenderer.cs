@@ -7,6 +7,7 @@ using BinaryKits.Zpl.Viewer;
 using BinaryKits.Zpl.Viewer.ElementDrawers;
 using SkiaSharp;
 using ZPL2PDF.Domain.Services;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF {
     /// <summary>
@@ -180,7 +181,7 @@ namespace ZPL2PDF {
             var images = new List<byte[]>();
             
             // Convert DPI to DPMM for the drawer
-            int dpmm = (int)Math.Round(_printDpi / DpiToDpmm);
+            int dpmm = RendererEngineParser.ToDpmm(_printDpi, RendererEngine.Offline);
             
             for (int i = 0; i < labels.Count; i++) {
                 var labelText = labels[i];
