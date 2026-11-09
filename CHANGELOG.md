@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### 🐛 Fixed
+
+- **Issue #82**: PDF page size is now the label's physical size. Rendered pixels are converted to PDF points using the print DPI (e.g. 4x6 in @ 203 dpi → `/MediaBox [0 0 288 432]`) instead of writing the pixel count as points (~2.8x oversized).
+- **Issue #83**: `--renderer` is now honored in API mode (`--api --renderer labelary`) as the server-wide default; a request's `renderer` field still overrides it. An invalid `--renderer` value makes the API fail to start with a clear error.
+- **`--renderer` validation (CLI)**: an unrecognized value in conversion, daemon and TCP server modes is now an error (exit code 1) instead of being silently ignored.
+- **PDF page size for non-standard DPI**: the page size now uses the DPI the engine actually rendered at (Labelary supports only 6/8/12/24 dpmm; `auto` aligns its offline fallback to it), so e.g. 400 dpi no longer produces a mis-sized page with `labelary`/`auto`.
+- **Issue #81**: A ZPL label that declares only `^PW` (no `^LL`), or only `^LL`, no longer falls back to the full 100x150 mm default. The declared axis is kept (e.g. `^PW812` → 101.6 mm) and the missing one comes from explicit `-w/-h` or the default, so content is no longer clipped on the right.
+- **Issue #81 (fonts)**: the offline renderer now falls back to a sans-serif face (Liberation Sans, Noto Sans, DejaVu Sans, ...) when none of BinaryKits' preferred narrow/Helvetica/Arial families is installed, instead of the system default (a wide serif on Linux/Docker). Monospace fonts (ZPL fonts A-Z) get a similar fallback.
+- **Custom fonts (`--fonts-dir` / `--font`)**: the font loader is now registered on BinaryKits' `FontManager`. With BinaryKits.Zpl.Viewer 1.3.x the previous `DrawerOptions.FontLoader` was no longer consulted, so custom fonts were silently ignored since v3.1.0.
+- **Issue #67**: macOS Apple Silicon killed the downloaded `osx-arm64` binary because it was not code-signed. `scripts/build-all-platforms.ps1` now ad-hoc signs `osx-*` binaries before archiving (using `codesign` or `rcodesign` when available, with a warning otherwise), and the macOS installation guide documents the local `codesign --force --sign -` workaround.
+
+---
+
 ## [3.1.3] - 2026-05-11
 
 ### 🐛 Fixed

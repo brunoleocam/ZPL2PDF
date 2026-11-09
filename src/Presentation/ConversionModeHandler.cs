@@ -102,6 +102,9 @@ namespace ZPL2PDF
             }
         }
 
+        private static int EffectiveDpi(ArgumentProcessor args)
+            => RendererEngineParser.ToEffectiveDpi(args.Dpi, args.RendererEngine);
+
         /// <summary>
         /// Processes the generated images and creates PDF
         /// </summary>
@@ -118,7 +121,7 @@ namespace ZPL2PDF
             if (argumentProcessor.StandardOutput)
             {
                 // Write the PDF bytes to stdout only. Do not write additional console text.
-                byte[] data = PdfGenerator.GeneratePdfToBytes(imageDataList);
+                byte[] data = PdfGenerator.GeneratePdfToBytes(imageDataList, EffectiveDpi(argumentProcessor));
                 Stream stdout = Console.OpenStandardOutput();
                 stdout.Write(data, 0, data.Length);
                 stdout.Flush();
@@ -129,7 +132,7 @@ namespace ZPL2PDF
             _pathService.EnsureDirectoryExists(argumentProcessor.OutputFolderPath);
 
             string outputPdf = Path.Combine(argumentProcessor.OutputFolderPath, argumentProcessor.OutputFileName);
-            PdfGenerator.GeneratePdf(imageDataList, outputPdf);
+            PdfGenerator.GeneratePdf(imageDataList, outputPdf, EffectiveDpi(argumentProcessor));
 
             Console.WriteLine($"PDF generated successfully: {outputPdf}");
             Console.WriteLine($"   Images processed: {imageDataList.Count}");

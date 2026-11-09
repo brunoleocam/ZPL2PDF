@@ -198,6 +198,54 @@ namespace ZPL2PDF
                 return result;
             }
 
+            // Priority 1b: ZPL declares only one axis (^PW without ^LL, or ^LL without ^PW).
+            // Keep the declared axis (otherwise content would be clipped, e.g. ^PW812 -> 100mm default),
+            // and fill the other one from explicit parameters, then from the defaults.
+            if (zplDimensions.HasDimensions && (zplDimensions.WidthMm > 0 || zplDimensions.HeightMm > 0))
+            {
+                var defaults = GetDefaultDimensions();
+                bool hasExplicit = explicitWidth.HasValue && explicitHeight.HasValue;
+
+                if (zplDimensions.WidthMm > 0)
+                {
+                    result.Width = zplDimensions.Width;
+                    result.WidthMm = zplDimensions.WidthMm;
+                }
+                else if (hasExplicit)
+                {
+                    result.Width = ConvertMmToPoints(explicitWidth!.Value, dpi);
+                    result.WidthMm = explicitWidth.Value;
+                }
+                else
+                {
+                    result.Width = defaults.Width;
+                    result.WidthMm = defaults.WidthMm;
+                }
+
+                if (zplDimensions.HeightMm > 0)
+                {
+                    result.Height = zplDimensions.Height;
+                    result.HeightMm = zplDimensions.HeightMm;
+                }
+                else if (hasExplicit)
+                {
+                    result.Height = ConvertMmToPoints(explicitHeight!.Value, dpi);
+                    result.HeightMm = explicitHeight.Value;
+                }
+                else
+                {
+                    result.Height = defaults.Height;
+                    result.HeightMm = defaults.HeightMm;
+                }
+
+                if (ValidateDimensions(result))
+                {
+                    result.Dpi = dpi;
+                    result.Source = "zpl_partial";
+                    return result;
+                }
+            }
+
             // Priority 2: Explicit parameters (-w and -h)
             if (explicitWidth.HasValue && explicitHeight.HasValue)
             {
