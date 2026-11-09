@@ -482,9 +482,9 @@ To add a new language:
 ## 📚 Additional Resources
 
 - [README.md](../README.md) - General documentation
-- [README.pt.md](../README.pt.md) - Portuguese documentation
-- [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guide
-- [Resources/](../Resources/) - Translation files (.resx)
+- [README.pt-BR.md](../i18n/README.pt-BR.md) - Portuguese documentation
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) - Contribution guide
+- [Resources/](../../Resources/) - Translation files (.resx)
 
 ---
 
@@ -498,7 +498,7 @@ We welcome translations to new languages! To contribute:
 4. Test thoroughly
 5. Submit a Pull Request
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
