@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Custom fonts (`--fonts-dir` / `--font`)**: the font loader is now registered on BinaryKits' `FontManager`. With BinaryKits.Zpl.Viewer 1.3.x the previous `DrawerOptions.FontLoader` was no longer consulted, so custom fonts were silently ignored since v3.1.0.
 - **Issue #67**: macOS Apple Silicon killed the downloaded `osx-arm64` binary because it was not code-signed. `scripts/build-all-platforms.ps1` now ad-hoc signs `osx-*` binaries before archiving (using `codesign` or `rcodesign` when available, with a warning otherwise), and the macOS installation guide documents the local `codesign --force --sign -` workaround.
 
+### 🛠️ Maintenance
+
+- **Release scripts**: version updates are now targeted (README badge/"What's New"/download URLs, translated headings, Dockerfile `LABEL`) instead of replacing every `vX.Y.Z`; step 1 now bumps `<Version>` in `ZPL2PDF.csproj`; step 5 renames `[Unreleased]` in place; `release-main.ps1` gains `-StopAfterStep` and `-AssumeYes`, confirms before publishing steps (12-16), warns when macOS binaries cannot be signed, and no longer misreads a missing exit code as a failed step.
+
 ---
 
 ## [3.1.3] - 2026-05-11

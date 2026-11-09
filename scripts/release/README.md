@@ -68,6 +68,7 @@ scripts/release/
 ├── README.md                    # This file
 ├── release-main.ps1             # Main script (orchestrates all)
 ├── _checkpoint-utils.ps1        # Checkpoint utilities
+├── _version-utils.ps1           # Targeted version updates (docs, csproj), UTF-8/BOM safe
 ├── show-checkpoint.ps1          # Show checkpoint status
 │
 ├── 01-update-docs.ps1            # Update documentation
@@ -112,7 +113,17 @@ scripts/release/
 
 # Continue from a specific step
 .\scripts\release\release-main.ps1 -Version "3.1.0" -StartFromStep 8
+
+# Only prepare versions/docs/changelog/Dockerfile (steps 1-6), then review the diff before building
+.\scripts\release\release-main.ps1 -Version "3.1.0" -StopAfterStep 6
+
+# Skip the confirmation prompts that appear before steps that publish (12-16)
+.\scripts\release\release-main.ps1 -Version "3.1.0" -AssumeYes
 ```
+
+> **Safety:** before steps 12-16 (push branch/PR, GitHub release, Docker Hub, GHCR, WinGet PR) the main script asks
+> for confirmation unless `-DryRun` or `-AssumeYes` is used. Before step 7 it warns when neither `codesign` nor
+> `rcodesign` is available, because the macOS binaries would then be unsigned and killed by Apple Silicon (issue #67).
 
 ### Run Individual Step
 
@@ -199,13 +210,18 @@ Remove-Item .release-checkpoint-3.1.0.json
 **Script:** `01-update-docs.ps1`
 
 **What it does:**
-- Updates version in `docs/README.md`
-- Updates version in other relevant documentation files
-- Updates version references in guides
+- Sets `<Version>` in `ZPL2PDF.csproj` (this is the assembly version the app reports)
+- Updates **only release markers** in `README.md`, `docs/README.md`, `docs/development/*.md`, `docs/guides/*.md` and `wiki/*.md`:
+  the version badge, "What's New in vX.Y.Z", "Recent highlights (vX.Y.Z)", `releases/download/vX.Y.Z/` URLs,
+  `ZPL2PDF-vX.Y.Z-<platform>` assets and `ZPL2PDF-Setup-X.Y.Z.exe`
+- Historical mentions of older versions and prose (e.g. "Thanks to ... for contributions that landed in vX") are **not** rewritten -
+  edit the README "What's New" / thanks text by hand
 
 **Modified files:**
-- `docs/README.md`
-- Other `.md` files that reference version
+- `ZPL2PDF.csproj`
+- `README.md`, `docs/README.md`, `docs/development/*.md`, `docs/guides/*.md`, `wiki/*.md` (only when they contain release markers)
+
+Shared helpers live in `scripts/release/_version-utils.ps1`.
 
 **Execution:**
 ```powershell
@@ -276,9 +292,9 @@ Remove-Item .release-checkpoint-3.1.0.json
 **Script:** `05-update-changelog.ps1`
 
 **What it does:**
-- Updates `CHANGELOG.md` with the new version
-- Adds release date
-- Moves items from `[Unreleased]` to the new version
+- Renames the `## [Unreleased]` heading to `## [{Version}] - {date}` in place
+- Warns when `[Unreleased]` is empty or appears more than once (merge duplicates first)
+- Does not append an empty `[Unreleased]` template; add a new one by hand when the next change lands
 
 **Modified files:**
 - `CHANGELOG.md`
@@ -294,8 +310,8 @@ Remove-Item .release-checkpoint-3.1.0.json
 **Script:** `06-update-dockerfile.ps1`
 
 **What it does:**
-- Updates version in `Dockerfile` (LABEL version)
-- Updates version references if any
+- Updates only the image `LABEL` `version="..."` in `Dockerfile`
+- Never touches base image tags (`dotnet/sdk`, `alpine`), which Dependabot manages
 
 **Modified files:**
 - `Dockerfile`
@@ -562,6 +578,8 @@ All scripts accept the following parameters:
 | `-SkipGitHubRelease` | switch | Skips GitHub release creation | $false |
 | `-Resume` | switch | Resumes release skipping already completed steps | $false |
 | `-StartFromStep` | int | Starts from a specific step (1-16) | 1 |
+| `-StopAfterStep` | int | Stops after a specific step (1-16) | 16 |
+| `-AssumeYes` | switch | Skips confirmation prompts before publishing steps (12-16) and the macOS signing warning | $false |
 
 ---
 

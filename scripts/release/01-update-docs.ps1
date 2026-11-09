@@ -18,6 +18,7 @@ $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
 # Load checkpoint utilities
 . (Join-Path $ScriptDir "_checkpoint-utils.ps1")
+. (Join-Path $ScriptDir "_version-utils.ps1")
 
 function Write-Step {
     param([string]$Message)
@@ -38,62 +39,37 @@ Write-Step "Updating documentation for version $Version..."
 
 Set-Location $ProjectRoot
 
-# Update docs/README.md
-$docsReadme = Join-Path $ProjectRoot "docs\README.md"
-if (Test-Path $docsReadme) {
-    $content = Get-Content $docsReadme -Raw
-    $content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
-    $content = $content -replace 'version \d+\.\d+\.\d+', "version $Version"
-    if (-not $DryRun) {
-        Set-Content $docsReadme $content -NoNewline
-        Write-Success "Updated: docs/README.md"
+# Project version (ZPL2PDF.csproj <Version>) - also the assembly version shown by the app.
+# NOTE: previous releases bumped this by hand; the scripts did not touch it.
+$previousVersion = Get-ProjectVersion -ProjectRoot $ProjectRoot
+if (Set-ProjectVersion -ProjectRoot $ProjectRoot -Version $Version -DryRun:$DryRun) {
+    if ($DryRun) {
+        Write-Info "[DRY RUN] Would update: ZPL2PDF.csproj <Version> $previousVersion -> $Version"
     } else {
-        Write-Info "[DRY RUN] Would update: docs/README.md"
+        Write-Success "Updated: ZPL2PDF.csproj <Version> $previousVersion -> $Version"
+    }
+} else {
+    Write-Info "ZPL2PDF.csproj already at $Version"
+}
+
+# Files whose release references (badge, "What's New", download URLs/assets) must point to the new version.
+# Only those markers are changed - historical mentions of older versions are left untouched.
+$targets = @("README.md", "docs\README.md")
+foreach ($dir in @("docs\development", "docs\guides", "wiki")) {
+    $fullDir = Join-Path $ProjectRoot $dir
+    if (Test-Path $fullDir) {
+        $targets += Get-ChildItem $fullDir -Filter "*.md" -File | ForEach-Object { Join-Path $dir $_.Name }
     }
 }
 
-# Update main README.md
-$mainReadme = Join-Path $ProjectRoot "README.md"
-if (Test-Path $mainReadme) {
-    $content = Get-Content $mainReadme -Raw
-    $content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
-    $content = $content -replace 'version \d+\.\d+\.\d+', "version $Version"
-    if (-not $DryRun) {
-        Set-Content $mainReadme $content -NoNewline
-        Write-Success "Updated: README.md"
-    } else {
-        Write-Info "[DRY RUN] Would update: README.md"
+foreach ($target in $targets) {
+    $fullPath = Join-Path $ProjectRoot $target
+    if (Update-ReleaseReferencesInFile -Path $fullPath -Version $Version -DryRun:$DryRun) {
+        if ($DryRun) { Write-Info "[DRY RUN] Would update: $target" } else { Write-Success "Updated: $target" }
     }
 }
 
-# Update other documentation files that may have version
-$docFiles = @(
-    "docs\development\CI_CD_WORKFLOW.md",
-    "docs\development\DOCKER_PUBLISH_GUIDE.md",
-    "docs\guides\DOCKER_GUIDE.md"
-)
-
-foreach ($docFile in $docFiles) {
-    $fullPath = Join-Path $ProjectRoot $docFile
-    if (Test-Path $fullPath) {
-        $content = Get-Content $fullPath -Raw
-        $originalContent = $content
-        
-        # Update version references
-        $content = $content -replace 'v\d+\.\d+\.\d+', "v$Version"
-        $content = $content -replace 'version \d+\.\d+\.\d+', "version $Version"
-        $content = $content -replace 'Version: \d+\.\d+\.\d+', "Version: $Version"
-        
-        if ($content -ne $originalContent) {
-            if (-not $DryRun) {
-                Set-Content $fullPath $content -NoNewline
-                Write-Success "Updated: $docFile"
-            } else {
-                Write-Info "[DRY RUN] Would update: $docFile"
-            }
-        }
-    }
-}
+Write-Info "Reminder: review README 'What's New' / 'Thanks' text by hand - the scripts do not rewrite prose."
 
 Write-Success "Documentation updated!"
 
