@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/guides/LINUX-RENDERING.md` (font selection and fallbacks on Linux/Docker, referenced since 3.0.3 but missing).
 - Fixed broken relative links in `README.md`, `docs/README.md`, `docs/guides/LANGUAGE_CONFIGURATION.md`, `scripts/README.md` and `scripts/release/README.md`; README credits PDFsharp instead of PdfSharpCore; README documents Linux fonts and `^POI`.
 
+### 🛠️ Maintenance
+
+- **Release scripts**: version updates are now targeted (README badge/"What's New"/download URLs, translated headings, Dockerfile `LABEL`) instead of replacing every `vX.Y.Z`; step 1 now bumps `<Version>` in `ZPL2PDF.csproj`; step 5 renames `[Unreleased]` in place; `release-main.ps1` gains `-StopAfterStep` and `-AssumeYes`, confirms before publishing steps (12-16), warns when macOS binaries cannot be signed, and no longer misreads a missing exit code as a failed step.
+
 ---
 
 ## [3.1.3] - 2026-05-11
