@@ -92,38 +92,41 @@ scripts/release/
 
 ## 🚀 Quick Usage
 
+> **Path note:** The release scripts live in `scripts/release/`.  
+> If you see older examples with `release-scripts`, use `.\scripts\release\...` instead.
+
 ### Run Complete Release
 
 ```powershell
 # Run all steps in sequence
-.\release-scripts\release-main.ps1 -Version "3.1.0"
+.\scripts\release\release-main.ps1 -Version "3.1.0"
 
 # Run with dry-run (test without publishing)
-.\release-scripts\release-main.ps1 -Version "3.1.0" -DryRun
+.\scripts\release\release-main.ps1 -Version "3.1.0" -DryRun
 
 # Skip specific steps
-.\release-scripts\release-main.ps1 -Version "3.1.0" -SkipDocker -SkipWinGet
+.\scripts\release\release-main.ps1 -Version "3.1.0" -SkipDocker -SkipWinGet
 
 # Resume interrupted release (skips already completed steps)
-.\release-scripts\release-main.ps1 -Version "3.1.0" -Resume
+.\scripts\release\release-main.ps1 -Version "3.1.0" -Resume
 
 # Continue from a specific step
-.\release-scripts\release-main.ps1 -Version "3.1.0" -StartFromStep 8
+.\scripts\release\release-main.ps1 -Version "3.1.0" -StartFromStep 8
 ```
 
 ### Run Individual Step
 
 ```powershell
 # Run only a specific step
-.\release-scripts\01-update-docs.ps1 -Version "3.1.0"
-.\release-scripts\07-build-all-platforms.ps1 -Version "3.1.0"
+.\scripts\release\01-update-docs.ps1 -Version "3.1.0"
+.\scripts\release\07-build-all-platforms.ps1 -Version "3.1.0"
 ```
 
 ### Check Checkpoint Status
 
 ```powershell
 # View current checkpoint status
-.\release-scripts\show-checkpoint.ps1 -Version "3.1.0"
+.\scripts\release\show-checkpoint.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -159,13 +162,13 @@ When you start a release, a `.release-checkpoint-{Version}.json` file is created
 
 ```powershell
 # Start release (creates checkpoint automatically)
-.\release-scripts\release-main.ps1 -Version "3.1.0"
+.\scripts\release\release-main.ps1 -Version "3.1.0"
 
 # If something fails, resume from where it stopped
-.\release-scripts\release-main.ps1 -Version "3.1.0" -Resume
+.\scripts\release\release-main.ps1 -Version "3.1.0" -Resume
 
 # Continue from a specific step
-.\release-scripts\release-main.ps1 -Version "3.1.0" -StartFromStep 8
+.\scripts\release\release-main.ps1 -Version "3.1.0" -StartFromStep 8
 
 # View checkpoint status (via utility script)
 # Status is shown automatically when using -Resume
@@ -206,7 +209,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\01-update-docs.ps1 -Version "3.1.0"
+.\scripts\release\01-update-docs.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -230,7 +233,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\02-update-resources.ps1 -Version "3.1.0"
+.\scripts\release\02-update-resources.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -247,7 +250,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\03-update-i18n.ps1 -Version "3.1.0"
+.\scripts\release\03-update-i18n.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -264,7 +267,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\04-update-resource-keys.ps1 -Version "3.1.0"
+.\scripts\release\04-update-resource-keys.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -282,7 +285,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\05-update-changelog.ps1 -Version "3.1.0"
+.\scripts\release\05-update-changelog.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -299,7 +302,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\06-update-dockerfile.ps1 -Version "3.1.0"
+.\scripts\release\06-update-dockerfile.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -328,7 +331,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\07-build-all-platforms.ps1 -Version "3.1.0" -SkipTests
+.\scripts\release\07-build-all-platforms.ps1 -Version "3.1.0" -SkipTests
 ```
 
 ---
@@ -347,7 +350,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\08-build-installer.ps1 -Version "3.1.0"
+.\scripts\release\08-build-installer.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -366,7 +369,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\09-build-linux-packages.ps1 -Version "3.1.0"
+.\scripts\release\09-build-linux-packages.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -386,7 +389,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\10-update-manifests.ps1 -Version "3.1.0"
+.\scripts\release\10-update-manifests.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -404,7 +407,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\11-build-docker-images.ps1 -Version "3.1.0"
+.\scripts\release\11-build-docker-images.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -420,7 +423,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\12-create-version-branch.ps1 -Version "3.1.0"
+.\scripts\release\12-create-version-branch.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -445,7 +448,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\13-create-github-release.ps1 -Version "3.1.0"
+.\scripts\release\13-create-github-release.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -463,7 +466,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\14-publish-dockerhub.ps1 -Version "3.1.0"
+.\scripts\release\14-publish-dockerhub.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -481,7 +484,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\15-publish-ghcr.ps1 -Version "3.1.0"
+.\scripts\release\15-publish-ghcr.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -503,7 +506,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 **Execution:**
 ```powershell
-.\release-scripts\16-submit-winget-pr.ps1 -Version "3.1.0"
+.\scripts\release\16-submit-winget-pr.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -540,7 +543,7 @@ Remove-Item .release-checkpoint-3.1.0.json
 
 ```powershell
 # Run complete release
-.\release-scripts\release-main.ps1 -Version "3.1.0"
+.\scripts\release\release-main.ps1 -Version "3.1.0"
 ```
 
 ---
@@ -594,10 +597,10 @@ All scripts accept the following parameters:
 # (shown automatically when using -Resume)
 
 # Resume from where it stopped
-.\release-scripts\release-main.ps1 -Version "3.1.0" -Resume
+.\scripts\release\release-main.ps1 -Version "3.1.0" -Resume
 
 # Or continue from a specific step
-.\release-scripts\release-main.ps1 -Version "3.1.0" -StartFromStep 8
+.\scripts\release\release-main.ps1 -Version "3.1.0" -StartFromStep 8
 ```
 
 ### Corrupted Checkpoint
@@ -605,7 +608,7 @@ All scripts accept the following parameters:
 ```powershell
 # Delete checkpoint and start from scratch
 Remove-Item .release-checkpoint-3.1.0.json
-.\release-scripts\release-main.ps1 -Version "3.1.0"
+.\scripts\release\release-main.ps1 -Version "3.1.0"
 ```
 
 ---

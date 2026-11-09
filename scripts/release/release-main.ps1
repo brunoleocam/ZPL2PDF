@@ -200,7 +200,7 @@ foreach ($script in $scripts) {
             Write-Host ""
             Write-Warning "Release interrupted at step $($script.Number)"
             Write-Info "To continue from where it stopped, run:"
-            Write-Info "  .\release\release-main.ps1 -Version `"$Version`" -StartFromStep $($script.Number + 1)"
+            Write-Info "  .\scripts\release\release-main.ps1 -Version `"$Version`" -StartFromStep $($script.Number + 1)"
             Write-Host ""
             
             $continue = Read-Host "Do you want to continue anyway? (Y/N)"
@@ -216,7 +216,7 @@ foreach ($script in $scripts) {
         Write-Host ""
         Write-Warning "Release interrupted at step $($script.Number)"
         Write-Info "To continue from where it stopped, run:"
-        Write-Info "  .\release\release-main.ps1 -Version `"$Version`" -StartFromStep $($script.Number + 1)"
+        Write-Info "  .\scripts\release\release-main.ps1 -Version `"$Version`" -StartFromStep $($script.Number + 1)"
         Write-Host ""
         
         $continue = Read-Host "Do you want to continue anyway? (Y/N)"
@@ -247,7 +247,7 @@ if ($failedSteps.Count -gt 0) {
     Write-Host ""
     Write-Warning "Some steps failed. Review the errors above."
     Write-Info "To run a specific step:"
-    Write-Info "  .\release\XX-script-name.ps1 -Version `"$Version`""
+    Write-Info "  .\scripts\release\XX-script-name.ps1 -Version `"$Version`""
     exit 1
 } else {
     Write-Host ""

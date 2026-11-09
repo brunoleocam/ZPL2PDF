@@ -285,13 +285,13 @@ $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
 
 if ($releaseExists) {
     Write-Info "Release exists; updating notes only..."
-    & gh release edit $tagName --repo "$RepoOwner/$RepoName" --notes-file $notesFile
+    & gh release edit $tagName --repo "$RepoOwner/$RepoName" --title "v$Version" --notes-file $notesFile
     $exitCode = $LASTEXITCODE
 } else {
     $ghArgs = @(
         "release", "create", $tagName,
         "--repo", "$RepoOwner/$RepoName",
-        "--title", "ZPL2PDF v$Version",
+        "--title", "v$Version",
         "--notes-file", $notesFile
     )
     foreach ($f in $releaseFiles) {

@@ -283,8 +283,8 @@ namespace ZPL2PDF {
         /// Currently handles:
         /// - ^FN (Field Number): Removes ^FN tags when followed by ^FD, as BinaryKits.Zpl.Viewer
         ///   doesn't fully support field templates. The ^FD content is preserved for direct rendering.
-        /// - ^FH hex in ^FD: Decodes _XX sequences (UTF-8 bytes) into Unicode so the viewer renders
-        ///   accented characters (ã, ç, ú, etc.) correctly instead of Ã£, Ã§, Ãº.
+        /// - ^FH hex in ^FD: Decodes d+XX sequences (UTF-8 bytes, d = optional ^FH indicator, default '_') into Unicode
+        ///   so the viewer renders accented characters (ã, ç, ú, etc.) correctly instead of Ã£, Ã§, Ãº.
         /// </summary>
         /// <param name="content">Raw ZPL content.</param>
         /// <returns>Preprocessed ZPL content ready for rendering.</returns>
@@ -299,14 +299,15 @@ namespace ZPL2PDF {
             // Work around typo in BinaryKits.Zpl.Viewer: it recognizes ^BO, but not ^B0.
             result = Regex.Replace(result, @"\^B0", "^BO", RegexOptions.IgnoreCase);
 
-            // Decode ^FH hex sequences (_XX) in field data as UTF-8 so ã, ç, ú render correctly
+            // Decode ^FH hex sequences (d+XX per ZPL) in field data as UTF-8 so ã, ç, ú render correctly
             result = DecodeFhHexInFieldData(result);
 
             return result;
         }
 
         /// <summary>
-        /// Replaces _XX hex sequences (from ^FH) in ^FD...^FS blocks with the corresponding UTF-8 character.
+        /// Replaces dXX hex sequences (from ^FH) in ^FD...^FS blocks with the corresponding UTF-8 character,
+        /// where d is the hexadecimal indicator from ^FH (default '_' per ZPL).
         /// Prevents BinaryKits from interpreting UTF-8 bytes as Latin-1 (e.g. Ã£ instead of ã).
         /// </summary>
         private static string DecodeFhHexInFieldData(string zpl) {
@@ -315,22 +316,30 @@ namespace ZPL2PDF {
             var sb = new StringBuilder(zpl.Length);
             int i = 0;
 
-            // Only decode _XX when the next field is explicitly marked with ^FH.
+            // Only decode dXX when the next field is explicitly marked with ^FH (d = '_' by default or the char after ^FH).
             bool decodeHexForNextField = false;
+            char fhHexIndicator = '_';
 
             // Barcode payload fields should NOT be UTF-8 decoded, otherwise content gets truncated/corrupted.
             // This is set when we encounter a ^B* instruction and consumed when we process the next ^FD...^FS.
             bool barcodeFieldPending = false;
 
             while (i < zpl.Length) {
-                // ^FH: next ^FD is hex-encoded field data
+                // ^FH / ^FHd: next ^FD may use d + two hex digits per byte (ZPL default d = '_').
                 if (i + 3 <= zpl.Length &&
                     zpl[i] == '^' &&
                     (zpl[i + 1] == 'F' || zpl[i + 1] == 'f') &&
                     (zpl[i + 2] == 'H' || zpl[i + 2] == 'h')) {
-                    sb.Append(zpl, i, 3);
+                    fhHexIndicator = '_';
+                    int consumed = 3;
+                    if (i + 3 < zpl.Length && zpl[i + 3] != '^') {
+                        fhHexIndicator = zpl[i + 3];
+                        consumed = 4;
+                    }
+
+                    sb.Append(zpl, i, consumed);
                     decodeHexForNextField = true;
-                    i += 3;
+                    i += consumed;
                     continue;
                 }
 
@@ -350,7 +359,7 @@ namespace ZPL2PDF {
                     string fieldData = zpl.Substring(fieldDataStart, fsIndex - fieldDataStart);
 
                     bool shouldDecode = decodeHexForNextField && !barcodeFieldPending;
-                    string decoded = shouldDecode ? DecodeFhHexSequence(fieldData) : fieldData;
+                    string decoded = shouldDecode ? DecodeFhHexSequence(fieldData, fhHexIndicator) : fieldData;
 
                     sb.Append(zpl, i, 3);
                     sb.Append(decoded);
@@ -358,6 +367,7 @@ namespace ZPL2PDF {
 
                     i = fsIndex + 3;
                     decodeHexForNextField = false;
+                    fhHexIndicator = '_';
                     barcodeFieldPending = false;
                     continue;
                 }
@@ -386,16 +396,16 @@ namespace ZPL2PDF {
         }
 
         /// <summary>
-        /// Decodes a string containing _XX (hex byte) sequences into UTF-8 text.
-        /// Consecutive _XX are treated as UTF-8 byte sequence (e.g. _C3_A3 -> ã).
+        /// Decodes a string containing dXX (hex byte) sequences into UTF-8 text, where d is the ^FH indicator (default '_').
+        /// Consecutive dXX are treated as one UTF-8 byte sequence (e.g. _C3_A3 or \C3\A3 with indicator '\' -> ã).
         /// </summary>
-        private static string DecodeFhHexSequence(string fieldData) {
+        private static string DecodeFhHexSequence(string fieldData, char hexIndicator) {
             var sb = new StringBuilder(fieldData.Length);
             int i = 0;
             while (i < fieldData.Length) {
-                if (i + 3 <= fieldData.Length && fieldData[i] == '_' && IsHexDigit(fieldData[i + 1]) && IsHexDigit(fieldData[i + 2])) {
+                if (i + 3 <= fieldData.Length && fieldData[i] == hexIndicator && IsHexDigit(fieldData[i + 1]) && IsHexDigit(fieldData[i + 2])) {
                     var bytes = new List<byte>();
-                    while (i + 3 <= fieldData.Length && fieldData[i] == '_' && IsHexDigit(fieldData[i + 1]) && IsHexDigit(fieldData[i + 2])) {
+                    while (i + 3 <= fieldData.Length && fieldData[i] == hexIndicator && IsHexDigit(fieldData[i + 1]) && IsHexDigit(fieldData[i + 2])) {
                         bytes.Add((byte)Convert.ToInt32(fieldData.Substring(i + 1, 2), 16));
                         i += 3;
                     }

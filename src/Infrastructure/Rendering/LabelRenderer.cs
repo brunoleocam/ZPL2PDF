@@ -7,6 +7,7 @@ using BinaryKits.Zpl.Viewer;
 using BinaryKits.Zpl.Viewer.ElementDrawers;
 using SkiaSharp;
 using ZPL2PDF.Domain.Services;
+using ZPL2PDF.Shared.Constants;
 
 namespace ZPL2PDF {
     /// <summary>
@@ -31,55 +32,129 @@ namespace ZPL2PDF {
         private const double DpiToDpmm = 25.4;
 
         /// <summary>
-        /// Creates DrawerOptions with high quality settings. Optional custom font loader for ^A0N, ^AAN, ^ABN, etc.
+        /// Sans (narrow first) families appended after BinaryKits' own font-0 stack, so hosts without
+        /// Arial/Helvetica (Linux/Docker) still get a sans-serif face instead of the system default (often a wide serif).
+        /// </summary>
+        private static readonly string[] FallbackStack0 = {
+            "Liberation Sans Narrow", "Arial Narrow", "Liberation Sans", "Arimo", "Noto Sans", "Open Sans",
+            "DejaVu Sans Condensed", "DejaVu Sans", "FreeSans"
+        };
+
+        /// <summary>Monospace families appended after BinaryKits' own stack used for ZPL fonts A-Z.</summary>
+        private static readonly string[] FallbackStackA = {
+            "Liberation Mono", "Noto Sans Mono", "Ubuntu Mono", "FreeMono", "Courier New"
+        };
+
+        private static readonly Lazy<HashSet<string>> InstalledFamilies = new Lazy<HashSet<string>>(() =>
+            new HashSet<string>(SKFontManager.Default.GetFontFamilies(), StringComparer.OrdinalIgnoreCase));
+
+        /// <summary>
+        /// Creates DrawerOptions with high quality settings, the extended font fallback stacks and,
+        /// when --fonts-dir / --font are used, a font loader for ^A0N, ^AAN, ^ABN, etc.
         /// </summary>
         private DrawerOptions CreateDrawerOptions() {
-            var options = new DrawerOptions {
+            var fontManager = CreateFontManager();
+            return new DrawerOptions(fontManager) {
                 RenderFormat = SKEncodedImageFormat.Png,
                 RenderQuality = 100,
                 PdfOutput = false,
                 OpaqueBackground = false
             };
+        }
+
+        /// <summary>
+        /// Builds the BinaryKits FontManager. Note: since BinaryKits.Zpl.Viewer 1.3.x the custom loader must be set on
+        /// <see cref="FontManager.FontLoader"/>; <c>DrawerOptions.FontLoader</c> is no longer consulted.
+        /// </summary>
+        private FontManager CreateFontManager() {
+            var fontManager = new FontManager();
+            AppendMissing(fontManager.FontStack0, FallbackStack0);
+            AppendMissing(fontManager.FontStackA, FallbackStackA);
             if (_fontsDirectory != null || (_fontMappings != null && _fontMappings.Count > 0)) {
-                options.FontLoader = CreateFontLoader();
+                fontManager.FontLoader = CreateFontLoader(fontManager);
             }
-            return options;
+            return fontManager;
+        }
+
+        public static void AppendMissing(List<string> stack, IEnumerable<string> fallbacks) {
+            foreach (var family in fallbacks) {
+                if (!stack.Contains(family, StringComparer.OrdinalIgnoreCase)) {
+                    stack.Add(family);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Picks the first installed family of the stack (font 0: bold semi-condensed, like BinaryKits; others: regular).
+        /// </summary>
+        private static SKTypeface ResolveFromStack(string fontId, FontManager fontManager) {
+            bool isFont0 = fontId == "0";
+            var style = isFont0
+                ? new SKFontStyle(SKFontStyleWeight.Bold, SKFontStyleWidth.SemiCondensed, SKFontStyleSlant.Upright)
+                : SKFontStyle.Normal;
+            foreach (var family in isFont0 ? fontManager.FontStack0 : fontManager.FontStackA) {
+                if (InstalledFamilies.Value.Contains(family)) {
+                    var typeface = SKTypeface.FromFamilyName(family, style);
+                    if (typeface != null) return typeface;
+                }
+            }
+            return SKTypeface.FromFamilyName(null, style) ?? SKTypeface.Default;
         }
 
         /// <summary>
         /// Builds a delegate that resolves ZPL font ID (0, A, B, ...) to SKTypeface from --fonts-dir and --font mappings.
+        /// Unmapped IDs use the default font stacks.
         /// </summary>
-        private Func<string, SKTypeface?> CreateFontLoader() {
+        private Func<string, SKTypeface> CreateFontLoader(FontManager fontManager) {
             var fontsDir = _fontsDirectory ?? string.Empty;
             var mappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             if (_fontMappings != null) {
                 foreach (var (id, path) in _fontMappings) {
                     if (string.IsNullOrEmpty(id)) continue;
-                    var resolved = path;
-                    if (!Path.IsPathRooted(resolved) && !string.IsNullOrWhiteSpace(fontsDir)) {
-                        resolved = Path.Combine(fontsDir, Path.GetFileName(resolved));
-                    }
+                    var resolved = ResolveFontPath(path, fontsDir);
                     mappings[id.Trim()] = resolved;
                 }
             }
             return fontId => {
-                if (string.IsNullOrEmpty(fontId)) return SKTypeface.Default;
+                if (string.IsNullOrEmpty(fontId)) return ResolveFromStack("0", fontManager);
                 var key = fontId.Trim();
                 if (mappings.TryGetValue(key, out var path) && File.Exists(path)) {
-                    try { return SKTypeface.FromFile(path) ?? SKTypeface.Default; } catch { /* fallback */ }
+                    try { return SKTypeface.FromFile(path) ?? ResolveFromStack(key, fontManager); } catch { /* fallback */ }
                 }
                 if (!string.IsNullOrWhiteSpace(fontsDir)) {
                     var byName = Path.Combine(fontsDir, key + ".ttf");
                     if (File.Exists(byName)) {
-                        try { return SKTypeface.FromFile(byName) ?? SKTypeface.Default; } catch { }
+                        try { var tf = SKTypeface.FromFile(byName); if (tf != null) return tf; } catch { }
                     }
                     var byNameOtf = Path.Combine(fontsDir, key + ".otf");
                     if (File.Exists(byNameOtf)) {
-                        try { return SKTypeface.FromFile(byNameOtf) ?? SKTypeface.Default; } catch { }
+                        try { var tf = SKTypeface.FromFile(byNameOtf); if (tf != null) return tf; } catch { }
                     }
                 }
-                return SKTypeface.Default;
+                return ResolveFromStack(key, fontManager);
             };
+        }
+
+        /// <summary>
+        /// Resolves font path declared in --font mapping.
+        /// Supports absolute paths and relative paths (with or without nested folders) against --fonts-dir.
+        /// </summary>
+        private static string ResolveFontPath(string declaredPath, string fontsDir) {
+            if (string.IsNullOrWhiteSpace(declaredPath)) {
+                return declaredPath;
+            }
+
+            if (Path.IsPathRooted(declaredPath) || string.IsNullOrWhiteSpace(fontsDir)) {
+                return declaredPath;
+            }
+
+            // Keep nested relative path first (e.g. custom/arial.ttf), then fallback to only filename for compatibility.
+            var combined = Path.Combine(fontsDir, declaredPath);
+            if (File.Exists(combined)) {
+                return combined;
+            }
+
+            return Path.Combine(fontsDir, Path.GetFileName(declaredPath));
         }
 
         /// <summary>
@@ -161,7 +236,7 @@ namespace ZPL2PDF {
             var images = new List<byte[]>();
             
             // Convert DPI to DPMM for the drawer
-            int dpmm = (int)Math.Round(_printDpi / DpiToDpmm);
+            int dpmm = RendererEngineParser.ToDpmm(_printDpi, RendererEngine.Offline);
             
             for (int i = 0; i < labels.Count; i++) {
                 var labelText = labels[i];

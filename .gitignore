@@ -41,8 +41,8 @@ Assets/
 # Release artifacts (build outputs uploaded to GitHub Release; do not version)
 release/*
 !release/README.md
-!release/scripts/
-!release/scripts/**
+!scripts/release/
+!scripts/release/**
 !release/packages/
 !release/packages/**
 
