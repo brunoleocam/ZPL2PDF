@@ -652,12 +652,12 @@ After release:
 
 ## 📚 Related Documentation
 
-- [Git Workflow Guide](../docs/development/GIT_WORKFLOW_GUIDE.md)
-- [CI/CD Guide](../docs/development/CI_CD_WORKFLOW.md)
-- [WinGet Guide](../docs/development/WINGET_GUIDE.md)
-- [Docker Guide](../docs/development/DOCKER_PUBLISH_GUIDE.md)
-- [Installer Guide](../docs/guides/INNO_SETUP_GUIDE.md)
-- [Linux Packages Guide](../docs/guides/LINUX_PACKAGES.md)
+- [Git Workflow Guide](../../docs/development/GIT_WORKFLOW_GUIDE.md)
+- [CI/CD Guide](../../docs/development/CI_CD_WORKFLOW.md)
+- [WinGet Guide](../../docs/development/WINGET_GUIDE.md)
+- [Docker Guide](../../docs/development/DOCKER_PUBLISH_GUIDE.md)
+- [Installer Guide](../../docs/guides/INNO_SETUP_GUIDE.md)
+- [Linux Packages Guide](../../docs/guides/LINUX_PACKAGES.md)
 
 ---
 

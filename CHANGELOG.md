@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Issue #81 (fonts)**: the offline renderer now falls back to a sans-serif face (Liberation Sans, Noto Sans, DejaVu Sans, ...) when none of BinaryKits' preferred narrow/Helvetica/Arial families is installed, instead of the system default (a wide serif on Linux/Docker). Monospace fonts (ZPL fonts A-Z) get a similar fallback.
 - **Custom fonts (`--fonts-dir` / `--font`)**: the font loader is now registered on BinaryKits' `FontManager`. With BinaryKits.Zpl.Viewer 1.3.x the previous `DrawerOptions.FontLoader` was no longer consulted, so custom fonts were silently ignored since v3.1.0.
 - **Issue #67**: macOS Apple Silicon killed the downloaded `osx-arm64` binary because it was not code-signed. `scripts/build-all-platforms.ps1` now ad-hoc signs `osx-*` binaries before archiving (using `codesign` or `rcodesign` when available, with a warning otherwise), and the macOS installation guide documents the local `codesign --force --sign -` workaround.
+- **`^POI` print orientation**: the offline renderer now honors `^POI` (inverted, 180°) by rotating the rendered label, matching Labelary. The last `^PO` in a label wins; `^FD` field data is ignored when detecting it.
+
+### 📚 Documentation
+
+- Added `docs/guides/LINUX-RENDERING.md` (font selection and fallbacks on Linux/Docker, referenced since 3.0.3 but missing).
+- Fixed broken relative links in `README.md`, `docs/README.md`, `docs/guides/LANGUAGE_CONFIGURATION.md`, `scripts/README.md` and `scripts/release/README.md`; README credits PDFsharp instead of PdfSharpCore; README documents Linux fonts and `^POI`.
 
 ---
 

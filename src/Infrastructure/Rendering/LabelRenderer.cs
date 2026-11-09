@@ -260,11 +260,54 @@ namespace ZPL2PDF {
                         
                         // Use DPMM for Draw (BinaryKits library expects DPMM)
                         byte[] imageData = drawer.Draw(labelInfo.ZplElements, _labelWidthMm, _labelHeightMm, dpmm);
+
+                        // BinaryKits ignores ^PO (print orientation); honor ^POI by rotating the whole label 180 degrees.
+                        if (IsInvertedOrientation(labelText)) {
+                            imageData = RotateImage180(imageData);
+                        }
                         images.Add(imageData);
                     }
                 }
             }
             return images;
+        }
+
+        private static readonly System.Text.RegularExpressions.Regex FieldDataRegex = new System.Text.RegularExpressions.Regex(
+            @"\^FD.*?\^FS", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled,
+            TimeSpan.FromSeconds(5));
+
+        private static readonly System.Text.RegularExpressions.Regex PrintOrientationRegex = new System.Text.RegularExpressions.Regex(
+            @"\^PO([NI])", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled,
+            TimeSpan.FromSeconds(5));
+
+        /// <summary>
+        /// Returns true when the label's effective ^PO (print orientation) is I (inverted, 180 degrees).
+        /// The last ^PO in the label wins; ^FD...^FS field data is ignored so text like "^POI" is not misread.
+        /// </summary>
+        public static bool IsInvertedOrientation(string zpl) {
+            if (string.IsNullOrEmpty(zpl)) return false;
+            var withoutFields = FieldDataRegex.Replace(zpl, string.Empty);
+            var matches = PrintOrientationRegex.Matches(withoutFields);
+            return matches.Count > 0 &&
+                   matches[matches.Count - 1].Groups[1].Value.Equals("I", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Rotates a PNG image by 180 degrees (used for ^POI).
+        /// </summary>
+        public static byte[] RotateImage180(byte[] pngData) {
+            using var source = SKBitmap.Decode(pngData);
+            if (source == null) return pngData;
+            using var rotated = new SKBitmap(source.Info);
+            using (var canvas = new SKCanvas(rotated)) {
+                canvas.Clear(SKColors.Transparent);
+                canvas.Translate(source.Width, source.Height);
+                canvas.RotateDegrees(180);
+                canvas.DrawBitmap(source, 0, 0);
+            }
+            using var image = SKImage.FromBitmap(rotated);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            return data.ToArray();
         }
 
         /// <inheritdoc />

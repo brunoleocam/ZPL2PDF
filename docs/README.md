@@ -62,7 +62,7 @@ Documentation for contributors and developers:
 
 ### Internal Documentation
 - 🏗️ [Architecture Overview](../wiki/Architecture-Overview.md)
-- 📚 [API Documentation](development/API.md) *(Coming soon)*
+- 📚 [REST API Guide](guides/API_GUIDE.md)
 
 ---
 
