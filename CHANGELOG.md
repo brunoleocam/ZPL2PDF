@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### 🐛 Fixed
+
+- **Issue #67**: macOS Apple Silicon killed the downloaded `osx-arm64` binary because it was not code-signed. `scripts/build-all-platforms.ps1` now ad-hoc signs `osx-*` binaries before archiving (using `codesign` or `rcodesign` when available, with a warning otherwise), and the macOS installation guide documents the local `codesign --force --sign -` workaround.
+
+---
+
 ## [3.1.3] - 2026-05-11
 
 ### 🐛 Fixed
