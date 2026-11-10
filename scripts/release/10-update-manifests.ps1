@@ -18,6 +18,7 @@ $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
 # Load checkpoint utilities
 . (Join-Path $ScriptDir "_checkpoint-utils.ps1")
+. (Join-Path $ScriptDir "_version-utils.ps1")
 
 function Write-Step {
     param([string]$Message)
@@ -63,7 +64,9 @@ if (Test-Path $installerPath) {
 $manifestFiles = Get-ChildItem $manifestDir -Filter "*.yaml"
 
 foreach ($file in $manifestFiles) {
-    $content = Get-Content $file.FullName -Raw -Encoding UTF8
+    # Read/write without adding a BOM: `Set-Content -Encoding UTF8` writes one on Windows PowerShell 5.1,
+    # and the winget-pkgs validation pipeline rejected manifests (all files "invalid") (v3.1.4 PR).
+    $content = Read-ReleaseTextFile -Path $file.FullName
     $originalContent = $content
     
     # Update version
@@ -79,7 +82,7 @@ foreach ($file in $manifestFiles) {
     
     if ($content -ne $originalContent) {
         if (-not $DryRun) {
-            Set-Content $file.FullName $content -NoNewline -Encoding UTF8
+            Write-ReleaseTextFile -Path $file.FullName -Content $content
             Write-Success "Updated: $($file.Name)"
         } else {
             Write-Info "[DRY RUN] Would update: $($file.Name)"

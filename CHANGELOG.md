@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🛠️ Maintenance
 
 - **Release scripts**: step 15 checks `write:packages` on the active `gh` account only (it used the scopes of every logged-in account); the checkpoint no longer crashes when recording a second failed step.
+- **WinGet manifests**: moved to manifest schema 1.12.0 and saved as UTF-8 without BOM (LF); step 10 no longer adds a BOM on Windows PowerShell 5.1. The winget-pkgs validation pipeline rejected every file of the 3.1.4 submission at schema validation.
 
 ---
 
