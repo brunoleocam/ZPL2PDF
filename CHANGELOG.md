@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed
+
+- **Issue #82 (follow-up)**: label size from `^PW`/`^LL` is now converted from dots using the requested DPI at the density the renderer draws (203 dpi → 8 dpmm, 300 dpi → 12 dpmm). It always used 203 dpi, so 300/600 dpi labels sized from the ZPL came out 1.5x/3x too large (4x6 in @ 300 dpi → 6 in wide), and at 203 dpi the page was one pixel too large (`^PW813` → 288.425 pt instead of 288.071 pt). `^PW812` is now 101.5 mm (was 101.6 mm). Regression tests check the exact PDF page box from ZPL input.
+
 ### 🛠️ Maintenance
 
 - **Release scripts**: step 15 checks `write:packages` on the active `gh` account only (it used the scopes of every logged-in account); the checkpoint no longer crashes when recording a second failed step.

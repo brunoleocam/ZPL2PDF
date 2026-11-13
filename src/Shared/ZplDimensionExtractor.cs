@@ -170,6 +170,22 @@ namespace ZPL2PDF
         }
 
         /// <summary>
+        /// Converts ZPL dots (^PW/^LL) to mm at the density the renderer actually draws:
+        /// an integer dots-per-mm, <c>round(dpi / 25.4)</c> (203 dpi -> 8 dpmm, 300 dpi -> 12 dpmm).
+        /// Dividing by the nominal DPI instead adds a pixel at 203 dpi, and ignoring the requested
+        /// DPI makes 300/600 dpi labels 1.5x/3x too large (issue #82 follow-up).
+        /// Falls back to <paramref name="fallbackMm"/> when no dot value is available.
+        /// </summary>
+        private static double DotsToMm(int dots, double fallbackMm, int dpi)
+        {
+            if (dots <= 0)
+                return fallbackMm;
+            int dpmm = (int)Math.Round((dpi > 0 ? dpi : DefaultSettings.DEFAULT_DPI) / DefaultSettings.POINTS_TO_MM_FACTOR);
+            if (dpmm < 1) dpmm = 1;
+            return dots / (double)dpmm;
+        }
+
+        /// <summary>
         /// Applies priority logic for dimensions
         /// </summary>
         /// <param name="explicitWidth">Explicit width (parameter -w)</param>
@@ -191,8 +207,8 @@ namespace ZPL2PDF
             {
                 result.Width = zplDimensions.Width;
                 result.Height = zplDimensions.Height;
-                result.WidthMm = zplDimensions.WidthMm;
-                result.HeightMm = zplDimensions.HeightMm;
+                result.WidthMm = DotsToMm(zplDimensions.Width, zplDimensions.WidthMm, dpi);
+                result.HeightMm = DotsToMm(zplDimensions.Height, zplDimensions.HeightMm, dpi);
                 result.Dpi = dpi; // Use the provided DPI
                 result.Source = "zpl_extraction";
                 return result;
@@ -209,7 +225,7 @@ namespace ZPL2PDF
                 if (zplDimensions.WidthMm > 0)
                 {
                     result.Width = zplDimensions.Width;
-                    result.WidthMm = zplDimensions.WidthMm;
+                    result.WidthMm = DotsToMm(zplDimensions.Width, zplDimensions.WidthMm, dpi);
                 }
                 else if (hasExplicit)
                 {
@@ -225,7 +241,7 @@ namespace ZPL2PDF
                 if (zplDimensions.HeightMm > 0)
                 {
                     result.Height = zplDimensions.Height;
-                    result.HeightMm = zplDimensions.HeightMm;
+                    result.HeightMm = DotsToMm(zplDimensions.Height, zplDimensions.HeightMm, dpi);
                 }
                 else if (hasExplicit)
                 {
