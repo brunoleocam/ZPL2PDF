@@ -32,7 +32,7 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.Services
             var result = _extractor.ApplyPriorityLogic(null, null, "mm", zpl, 203);
 
             // Assert: width must not be clipped to the 100 mm default
-            result.WidthMm.Should().BeApproximately(812 / 203.0 * 25.4, 0.01);
+            result.WidthMm.Should().BeApproximately(812 / 8.0, 0.01); // 203 dpi renders at 8 dpmm
             result.HeightMm.Should().Be(defaults.HeightMm);
             result.Source.Should().Be("zpl_partial");
         }
@@ -45,7 +45,7 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.Services
 
             var result = _extractor.ApplyPriorityLogic(null, null, "mm", zpl, 203);
 
-            result.HeightMm.Should().BeApproximately(1218 / 203.0 * 25.4, 0.01);
+            result.HeightMm.Should().BeApproximately(1218 / 8.0, 0.01); // 203 dpi renders at 8 dpmm
             result.WidthMm.Should().Be(defaults.WidthMm);
         }
 
@@ -56,7 +56,7 @@ namespace ZPL2PDF.Tests.UnitTests.Domain.Services
 
             var result = _extractor.ApplyPriorityLogic(50, 80, "mm", zpl, 203);
 
-            result.WidthMm.Should().BeApproximately(812 / 203.0 * 25.4, 0.01);
+            result.WidthMm.Should().BeApproximately(812 / 8.0, 0.01); // 203 dpi renders at 8 dpmm
             result.HeightMm.Should().Be(80);
         }
 
