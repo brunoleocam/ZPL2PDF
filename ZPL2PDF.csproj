@@ -24,7 +24,7 @@
   <ItemGroup>
     <PackageReference Include="BinaryKits.Zpl.Label" Version="3.3.1" />
     <PackageReference Include="BinaryKits.Zpl.Viewer" Version="1.3.1" />
-    <PackageReference Include="PDFSharp" Version="6.2.4" />
+    <PackageReference Include="PDFSharp" Version="6.5.0" />
   </ItemGroup>
 
   <PropertyGroup>
